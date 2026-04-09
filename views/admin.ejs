@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { background: #0f172a; color: white; font-family: sans-serif; padding: 20px; }
+        .card { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; }
+        input, select, textarea { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: none; background: rgba(0,0,0,0.2); color: white; box-sizing: border-box; }
+        .btn { background: #00d2ff; color: black; padding: 12px 25px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>অ্যাডমিন কন্ট্রোল</h1>
+        <a href="/profile" style="color: white; text-decoration: none;">← প্রোফাইলে ফিরুন</a>
+        
+        <div style="margin-top: 30px;">
+            <h3>নতুন জনশক্তি যোগ করুন</h3>
+            <form action="/admin/add-member" method="POST" enctype="multipart/form-data">
+                <input type="text" name="name" placeholder="পূর্ণ নাম" required>
+                <input type="text" name="password" placeholder="গোপন পাসওয়ার্ড" required>
+                <select name="type">
+                    <option value="সাথী">সাথী</option>
+                    <option value="কর্মী">কর্মী</option>
+                </select>
+                <select name="location_type">
+                    <option value="ওয়ার্ড">ওয়ার্ড</option>
+                    <option value="উপশাখা">উপশাখা</option>
+                </select>
+                <input type="text" name="location_name" placeholder="ওয়ার্ড/উপশাখার নাম">
+                <input type="text" name="responsibility" placeholder="দায়িত্ব (যেমন: সভাপতি)">
+                <input type="date" name="dob">
+                <textarea name="edu" placeholder="শিক্ষাগত তথ্য..."></textarea>
+                <label>ছবি:</label>
+                <input type="file" name="photo">
+                <button type="submit" class="btn">মেম্বার সেভ করুন</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

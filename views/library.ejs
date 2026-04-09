@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style.css">
+    <title>Office Library</title>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">Library Hub</div>
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/library">Library</a></li>
+        </ul>
+    </nav>
+
+    <div style="padding: 20px;">
+        <h2>Books & Documents</h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+            <% const docs = books.filter(b => b.type === 'book'); %>
+            <% if(docs.length === 0) { %> <p>No books uploaded yet.</p> <% } %>
+            <% docs.forEach(book => { %>
+                <div style="border: 1px solid #ccc; padding: 10px; border-radius: 8px; width: 200px;">
+                    <h4><%= book.name %></h4>
+                    <a href="/uploads/<%= book.filename %>" target="_blank">View/Download</a>
+                </div>
+            <% }) %>
+        </div>
+
+        <hr>
+
+        <h2>Audio Gallery</h2>
+        <% const audios = books.filter(b => b.type === 'audio'); %>
+        <% if(audios.length === 0) { %> <p>No audio files uploaded yet.</p> <% } %>
+        <% audios.forEach(audio => { %>
+            <div style="margin-bottom: 20px; background: #eee; padding: 10px; border-radius: 8px;">
+                <p><strong><%= audio.name %></strong></p>
+                <audio controls>
+                    <source src="/uploads/<%= audio.filename %>" type="audio/mpeg">
+                    Your browser does not support audio.
+                </audio>
+            </div>
+        <% }) %>
+    </div>
+</body>
+</html>

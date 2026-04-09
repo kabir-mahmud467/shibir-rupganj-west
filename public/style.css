@@ -1,0 +1,31 @@
+body { font-family: 'Arial', sans-serif; margin: 0; background-color: #f4f7f6; }
+
+/* Navbar */
+.navbar { background: #2c3e50; color: white; display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; position: sticky; top: 0; z-index: 1000; }
+.nav-links { list-style: none; display: flex; }
+.nav-links li { margin-left: 20px; }
+.nav-links a { color: white; text-decoration: none; font-weight: bold; }
+
+/* Mobile Menu */
+.hamburger { display: none; cursor: pointer; flex-direction: column; gap: 5px; }
+.hamburger span { width: 25px; height: 3px; background: white; }
+
+@media (max-width: 768px) {
+    .nav-links { display: none; flex-direction: column; position: absolute; top: 60px; right: 0; background: #2c3e50; width: 100%; text-align: center; padding: 20px 0; }
+    .nav-links.active { display: flex; }
+    .hamburger { display: flex; }
+}
+
+/* Floating Animation */
+.hero { height: 400px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; background: white; }
+.float-img { position: absolute; width: 120px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); animation: float 5s ease-in-out infinite; }
+.img1 { left: 10%; top: 20%; }
+.img2 { right: 10%; bottom: 20%; animation-delay: 2s; }
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+/* Notice Board */
+.notice-card { background: white; margin: 20px auto; padding: 20px; border-left: 6px solid #3498db; width: 80%; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }

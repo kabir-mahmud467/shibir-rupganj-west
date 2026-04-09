@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>প্রোফাইল</title>
+    <style>
+        body { background: #020617; color: white; font-family: sans-serif; margin: 0; display: flex; justify-content: center; min-height: 100vh; align-items: center; }
+        .p-card { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); border-radius: 30px; width: 90%; max-width: 400px; padding: 30px; text-align: center; }
+        .p-img { width: 110px; height: 110px; border-radius: 50%; border: 3px solid #00d2ff; object-fit: cover; }
+        .info { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; text-align: left; margin-top: 15px; border-left: 4px solid #00d2ff; }
+        input { width: 100%; padding: 10px; margin-top: 5px; border-radius: 8px; border: none; background: rgba(0,0,0,0.3); color: white; box-sizing: border-box; }
+        .btn { width: 100%; background: #00d2ff; color: black; padding: 12px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; text-decoration: none; display: block; box-sizing: border-box; }
+    </style>
+</head>
+<body>
+    <div class="p-card">
+        <img src="/uploads/<%= profile.photo %>" class="p-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
+        <h2><%= profile.name %></h2>
+        <span style="color: #00d2ff;">● <%= role %></span>
+
+        <% if(role === 'admin') { %>
+            <form action="/admin/update-profile" method="POST" enctype="multipart/form-data" style="margin-top: 15px;">
+                <input type="text" name="name" value="<%= profile.name %>">
+                <input type="text" name="password" value="<%= profile.password %>">
+                <input type="file" name="photo" style="font-size: 0.7rem;">
+                <button type="submit" class="btn">আপডেট করুন</button>
+            </form>
+        <% } else { %>
+            <div class="info"><b>দায়িত্ব:</b> <%= profile.responsibility %></div>
+            <div class="info"><b>শাখা:</b> <%= profile.location_type %> - <%= profile.location_name %></div>
+            <div class="info"><b>পড়াশোনা:</b> <%= profile.edu %></div>
+        <% } %>
+
+        <a href="/" class="btn" style="background:rgba(255,255,255,0.1); color:white;">হোমে যান</a>
+        <% if(role === 'admin') { %><a href="/admin" class="btn" style="background:#fbbf24;">অ্যাডমিন প্যানেল</a><% } %>
+        <a href="/logout" class="btn" style="background:#ef4444; color:white;">লগআউট</a>
+    </div>
+</body>
+</html>

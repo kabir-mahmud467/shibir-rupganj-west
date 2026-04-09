@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>লগইন | রূপগঞ্জ পশ্চিম</title>
+    <style>
+        body { background: #020617; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(15px); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); width: 85%; max-width: 350px; text-align: center; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: none; background: rgba(0,0,0,0.3); color: white; box-sizing: border-box; }
+        .btn { width: 100%; background: #00d2ff; color: black; padding: 12px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        .error { background: rgba(239, 68, 68, 0.2); color: #ef4444; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-size: 0.9rem; border: 1px solid #ef4444; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h3>লগইন করুন</h3>
+        <% if (locals.error) { %>
+            <div class="error"><%= error %></div>
+        <% } %>
+        <form action="/login" method="POST">
+            <input type="password" name="password" placeholder="গোপন পাসওয়ার্ড" required autofocus>
+            <button type="submit" class="btn">প্রবেশ করুন</button>
+        </form>
+    </div>
+</body>
+</html>

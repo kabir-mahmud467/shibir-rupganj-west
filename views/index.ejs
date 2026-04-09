@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>রূপগঞ্জ পশ্চিম থানা</title>
+    <style>
+        body { background: #0f172a; color: white; font-family: sans-serif; margin: 0; }
+        .nav { background: rgba(15, 23, 42, 0.9); height: 60px; display: flex; justify-content: space-between; align-items: center; padding: 0 5%; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .hero { text-align: center; padding: 40px 20px; }
+        .card { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 20px; margin: 15px auto; max-width: 600px; border: 1px solid rgba(255,255,255,0.1); }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <b>রূপগঞ্জ পশ্চিম</b>
+        <% if(role === 'public') { %>
+            <a href="/login-page" style="color:#00d2ff; text-decoration:none;">লগইন</a>
+        <% } else { %>
+            <a href="/profile" style="color:white; text-decoration:none;">প্রোফাইল</a>
+        <% } %>
+    </div>
+
+    <div class="hero">
+        <h2>বাংলাদেশ ইসলামী ছাত্রশিবির</h2>
+        <p>রূপগঞ্জ পশ্চিম থানা</p>
+    </div>
+
+    <div class="card">
+        <h3>নোটিশ বোর্ড</h3>
+        <% notices.forEach(n => { %>
+            <p><b><%= n.name %>:</b> <%= n.content %></p>
+        <% }) %>
+    </div>
+</body>
+</html>
