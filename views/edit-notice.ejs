@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>নোটিশ এডিট</title>
+    <style>
+        body { background: #020617; color: white; font-family: sans-serif; padding: 50px; }
+        .card { background: rgba(30, 41, 59, 0.5); padding: 30px; border-radius: 15px; max-width: 500px; margin: auto; }
+        input, textarea, select { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; background: #0f172a; color: white; border: 1px solid #334155; }
+        .btn { background: #3b82f6; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h3>নোটিশ এডিট করুন</h3>
+        <form action="/admin/update-notice/<%= notice.id %>" method="POST">
+            <input type="text" name="title" value="<%= notice.title %>" required>
+            <textarea name="content" rows="5"><%= notice.content %></textarea>
+            <select name="visibility">
+                <option value="পাবলিক" <%= notice.visibility === 'পাবলিক' ? 'selected' : '' %>>পাবলিক</option>
+                <option value="কর্মী" <%= notice.visibility === 'কর্মী' ? 'selected' : '' %>>কর্মী</option>
+                <option value="সাথী" <%= notice.visibility === 'সাথী' ? 'selected' : '' %>>সাথী</option>
+            </select>
+            <button type="submit" class="btn">আপডেট করুন</button>
+            <a href="/admin" style="color: #94a3b8; display: block; text-align: center; margin-top: 15px;">ফিরে যান</a>
+        </form>
+    </div>
+</body>
+</html>

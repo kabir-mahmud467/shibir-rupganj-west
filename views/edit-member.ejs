@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>জনশক্তি তথ্য পরিবর্তন | রূপগঞ্জ পশ্চিম</title>
+    <style>
+        body { background: #020617; color: white; font-family: sans-serif; padding: 20px; }
+        .card { background: rgba(30, 41, 59, 0.5); padding: 30px; border-radius: 20px; max-width: 700px; margin: auto; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        label { display: block; margin-top: 10px; color: #94a3b8; font-size: 14px; }
+        input, select, textarea { width: 100%; padding: 12px; margin: 5px 0; border-radius: 10px; background: #0f172a; color: white; border: 1px solid #334155; box-sizing: border-box; outline: none; }
+        input:focus, select:focus { border-color: #3b82f6; }
+        .btn { background: linear-gradient(45deg, #00d2ff, #3a7bd5); color: white; border: none; padding: 15px; border-radius: 10px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 20px; font-size: 16px; }
+        .other-box { display: <%= (member.edu === 'অন্যান্য' || member.inst === 'অন্যান্য') ? 'block' : 'none' %>; border-left: 2px solid #3b82f6; padding-left: 10px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2 style="text-align:center; color:#00d2ff; margin-bottom:25px;"><i class="fas fa-user-edit"></i> সদস্যের তথ্য আপডেট</h2>
+        
+        <form action="/admin/update-member/<%= member.id %>" method="POST" enctype="multipart/form-data">
+            
+            <div class="grid">
+                <div>
+                    <label>নাম (অবশ্যই):</label>
+                    <input type="text" name="name" value="<%= member.name %>" required>
+                </div>
+                <div>
+                    <label>সাংগঠনিক মান:</label>
+                    <select name="type">
+                        <option value="কর্মী" <%= member.type === 'কর্মী' ? 'selected' : '' %>>কর্মী</option>
+                        <option value="সাথী" <%= member.type === 'সাথী' ? 'selected' : '' %>>সাথী</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div>
+                    <label>পিতার নাম:</label>
+                    <input type="text" name="father" value="<%= member.father %>">
+                </div>
+                <div>
+                    <label>মাতার নাম:</label>
+                    <input type="text" name="mother" value="<%= member.mother %>">
+                </div>
+            </div>
+
+            <div class="grid">
+                <div>
+                    <label>জন্ম তারিখ:</label>
+                    <input type="date" name="dob" value="<%= member.dob %>">
+                </div>
+                <div>
+                    <label>গোপন কোড (পাসওয়ার্ড):</label>
+                    <input type="text" name="password" value="<%= member.password %>" required>
+                </div>
+            </div>
+
+            <label>শিক্ষা স্তর:</label>
+            <select name="edu" onchange="toggleBox(this, 'eduO')">
+                <% ['৫ম শ্রেণি','৬ষ্ঠ শ্রেণি','৭ম শ্রেণি','৮ম শ্রেণি','৯ম শ্রেণি','১০ম শ্রেণি','একাদশ শ্রেণি','দ্বাদশ শ্রেণি','অনার্স ১ম বর্ষ','অনার্স ২য় বর্ষ','অনার্স ৩য় বর্ষ','অনার্স ৪র্থ বর্ষ','মাস্টার্স','অন্যান্য'].forEach(opt => { %>
+                    <option value="<%= opt %>" <%= member.edu === opt ? 'selected' : '' %>><%= opt %></option>
+                <% }) %>
+            </select>
+            <div id="eduO" class="other-box" style="display: <%= member.edu === 'অন্যান্য' ? 'block' : 'none' %>">
+                <input type="text" name="edu_other" value="<%= member.edu_other %>" placeholder="শিক্ষার বিস্তারিত...">
+            </div>
+
+            <label>শিক্ষা প্রতিষ্ঠান:</label>
+            <select name="inst" onchange="toggleBox(this, 'instO')">
+                <% ['প্রাথমিক বিদ্যালয়','মাধ্যমিক বিদ্যালয়','কওমী মাদ্রাসা','ইবতেদায়ী মাদ্রাসা','দাখিল মাদ্রাসা','ফাজিল মাদ্রাসা','আলিম মাদ্রাসা','কামিল মাদ্রাসা','কলেজ','বিশ্ববিদ্যালয় (সরকারী)','বিশ্ববিদ্যালয় (বেসরকারী)','মেডিকেল কলেজ','ডেন্টাল কলেজ','নার্সিং কলেজ','কৃষি বিশ্ববিদ্যালয়','পলিটেকনিক ইন্সটিটিউট','ইঞ্জিনিয়ারিং কলেজ','ইঞ্জিনিয়ারিং বিশ্ববিদ্যালয়','অন্যান্য'].forEach(opt => { %>
+                    <option value="<%= opt %>" <%= member.inst === opt ? 'selected' : '' %>><%= opt %></option>
+                <% }) %>
+            </select>
+            <div id="instO" class="other-box" style="display: <%= member.inst === 'অন্যান্য' ? 'block' : 'none' %>">
+                <input type="text" name="inst_other" value="<%= member.inst_other %>" placeholder="প্রতিষ্ঠানের নাম...">
+            </div>
+
+            <label>দায়িত্ব:</label>
+            <select name="responsibility">
+                <% ['থানা সভাপতি','থানা সেক্রেটারি','থানা সাংগঠনিক সম্পাদক','থানা বায়তুলমাল সম্পাদক','থানা সেক্রেটারিয়েট','ওয়ার্ড সভাপতি','ওয়ার্ড সেক্রেটারি','ওয়ার্ড সাংগঠনিক সম্পাদক','ওয়ার্ড বায়তুলমাল সম্পাদক','ওয়ার্ড সেক্রেটারিয়েট','উপশাখা সভাপতি','উপশাখা সেক্রেটারি','উপশাখা সাংগঠনিক সম্পাদক','উপশাখা বায়তুলমাল সম্পাদক','উপশাখা সেক্রেটারিয়েট'].forEach(opt => { %>
+                    <option value="<%= opt %>" <%= member.responsibility === opt ? 'selected' : '' %>><%= opt %></option>
+                <% }) %>
+            </select>
+
+            <label>অগ্রগতি:</label>
+            <select name="progress">
+                <% ['নেই','সাধারণ','মোটামুটি','ভালো','উত্তম'].forEach(opt => { %>
+                    <option value="<%= opt %>" <%= member.progress === opt ? 'selected' : '' %>><%= opt %></option>
+                <% }) %>
+            </select>
+
+            <label>মন্তব্য:</label>
+            <textarea name="comment" rows="3"><%= member.comment %></textarea>
+
+            <label>নতুন ছবি (পরিবর্তন করতে চাইলে):</label>
+            <input type="file" name="photo">
+
+            <button type="submit" class="btn">আপডেট নিশ্চিত করুন</button>
+            <a href="/admin" style="display:block; text-align:center; margin-top:15px; color:#94a3b8; text-decoration:none;">বাতিল করুন</a>
+        </form>
+    </div>
+
+    <script>
+        function toggleBox(select, id) {
+            document.getElementById(id).style.display = (select.value === 'অন্যান্য') ? 'block' : 'none';
+        }
+    </script>
+</body>
+</html>
