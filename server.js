@@ -9,7 +9,7 @@ const path = require('path');
 
 const app = express();
 
-// --- ১. কনফিগারেশন ও ডাটাবেজ লিঙ্ক ---
+// --- ১. কনফিগারেশন ---
 const MONGO_URI = "mongodb://kabirmahmud467_db_user:shibir@ac-l2lby6j-shard-00-00.4y2um2c.mongodb.net:27017,ac-l2lby6j-shard-00-01.4y2um2c.mongodb.net:27017,ac-l2lby6j-shard-00-02.4y2um2c.mongodb.net:27017/RupganjWestDB?ssl=true&replicaSet=atlas-90vaxd-shard-0&authSource=admin&appName=ShibirRupganjWest";
 
 cloudinary.config({
@@ -21,9 +21,9 @@ cloudinary.config({
 // --- ২. ডাটাবেজ মডেল (Schema) ---
 const Member = mongoose.model('Member', new mongoose.Schema({
     name: String,
-    type: String,            // ড্রপডাউন: সদস্য/সাথী/কর্মী
-    responsibility: String,  // ড্রপডাউন: সভাপতি/সম্পাদক ইত্যাদি
-    progress: String,        // ড্রপডাউন: চলমান/উন্নত
+    type: String,            
+    responsibility: String,  
+    progress: String,        
     password: { type: String, unique: true },
     photo: String
 }));
@@ -50,10 +50,15 @@ const storage = new CloudinaryStorage({
 });
 const upload = multer({ storage: storage });
 
-// --- ৪. মিডলওয়্যার ও সেশন ---
+// --- ৪. মিডলওয়্যার ও সেশন (ভার্সেল পাথ ফিক্সড) ---
+
+// ভিউ ইঞ্জিন এবং পাথ সেটআপ
 app.set('view engine', 'ejs');
-app.use(express.static('public'));
+app.set('views', path.join(__dirname, 'views')); // এটি ভার্সেলের ৫00 error সমাধান করবে
+
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 if (MongoStore.default) { MongoStore = MongoStore.default; }
 
@@ -75,16 +80,22 @@ app.use((req, res, next) => {
 
 // --- ৫. রুটস (Routes) ---
 
+// হোম পেজ
 app.get('/', async (req, res) => {
     try {
         const notices = await Notice.find().sort({ _id: -1 }).limit(5);
         const resources = await Resource.find().limit(5);
         res.render('index', { notices, resources });
-    } catch (err) { res.status(500).send("Home Page Error"); }
+    } catch (err) { 
+        console.error("Home Error:", err);
+        res.status(500).send("Home Page Error: " + err.message); 
+    }
 });
 
+// লগইন পেজ
 app.get('/login-page', (req, res) => res.render('login-page', { error: null }));
 
+// লগইন লজিক
 app.post('/login', async (req, res) => {
     const { password } = req.body;
     if (password === "admin") { 
@@ -101,8 +112,10 @@ app.post('/login', async (req, res) => {
     res.render('login-page', { error: "ভুল পাসওয়ার্ড!" });
 });
 
+// লগআউট
 app.get('/logout', (req, res) => req.session.destroy(() => res.redirect('/')));
 
+// অ্যাডমিন প্যানেল
 app.get('/admin', async (req, res) => {
     if (!req.session.user || req.session.user.role !== 'admin') return res.redirect('/login-page');
     try {
@@ -110,23 +123,18 @@ app.get('/admin', async (req, res) => {
         const notices = await Notice.find().sort({ _id: -1 });
         const resources = await Resource.find();
         const apps = await Application.find();
-        // আপনার admin.ejs ফাইলে 'data' অবজেক্টের চাহিদা অনুযায়ী পাঠানো হলো
         res.render('admin', { data: { members, notices, resources, applications: apps } });
     } catch (err) { res.status(500).send("Admin Error"); }
 });
 
-// জনশক্তি/মেম্বার অ্যাড রুট (Fixed for all fields)
+// মেম্বার অ্যাড করা
 app.post('/admin/add-member', upload.single('photo'), async (req, res) => {
     try {
         const { name, type, responsibility, progress, password } = req.body;
+        const photoUrl = req.file ? req.file.path : 'https://res.cloudinary.com/dz9ifigag/image/upload/v1/default.png';
 
         const newMember = new Member({
-            name,
-            type,
-            responsibility,
-            progress,
-            password,
-            photo: req.file ? req.file.path : 'https://res.cloudinary.com/dz9ifigag/image/upload/v1/default.png'
+            name, type, responsibility, progress, password, photo: photoUrl
         });
 
         await newMember.save();
@@ -139,20 +147,13 @@ app.post('/admin/add-member', upload.single('photo'), async (req, res) => {
     }
 });
 
-// আবেদন জমা দেওয়া
-app.post('/submit-form', async (req, res) => {
-    try {
-        await new Application({ ...req.body, date: new Date().toLocaleString('bn-BD') }).save();
-        res.send("<script>alert('আবেদন সফল হয়েছে!'); window.location.href='/';</script>");
-    } catch (err) { res.status(500).send("Form Submission Failed"); }
-});
+// --- ৬. সার্ভার স্টার্ট এবং এক্সপোর্ট ---
 
-// --- ৬. মঙ্গোডিবি কানেকশন এবং এক্সপোর্ট ---
 mongoose.connect(MONGO_URI)
     .then(() => console.log("✅ MongoDB Connected!"))
     .catch(err => console.log("❌ DB Error:", err.message));
 
-// লোকাল হোস্টে চালানোর জন্য
+// লোকাল হোস্টের জন্য
 if (process.env.NODE_ENV !== 'production') {
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {
@@ -160,9 +161,5 @@ if (process.env.NODE_ENV !== 'production') {
     });
 }
 
-// ভার্সেল ডিপ্লয়মেন্টের জন্য জরুরি
+// ভার্সেলের জন্য মডিউল এক্সপোর্ট
 module.exports = app;
-
-// ক্রাশ ঠেকানোর গ্লোবাল হ্যান্ডলার
-process.on('unhandledRejection', () => {});
-process.on('uncaughtException', () => {});
