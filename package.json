@@ -2,20 +2,32 @@
   "name": "rupganj-west-website",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kabir-mahmud467/shibir-rupganj-west.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/kabir-mahmud467/shibir-rupganj-west/issues"
+  },
+  "homepage": "https://github.com/kabir-mahmud467/shibir-rupganj-west#readme",
   "dependencies": {
-    "body-parser": "^2.2.2",
+    "cloudinary": "^2.9.0",
+    "connect-mongo": "^6.0.0",
     "ejs": "^5.0.1",
     "express": "^5.2.1",
     "express-session": "^1.19.0",
+    "mongodb": "^7.1.1",
+    "mongoose": "^9.4.1",
     "multer": "^2.1.1",
-    "nodemon": "^3.1.14"
+    "multer-storage-cloudinary": "^4.0.0"
   }
 }

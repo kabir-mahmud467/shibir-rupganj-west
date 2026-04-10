@@ -1,33 +1,301 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <title>হোম | রূপগঞ্জ পশ্চিম</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>হোম | বাংলাদেশ ইসলামী ছাত্রশিবির - রূপগঞ্জ পশ্চিম</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    
     <style>
-        body { background: #020617; color: white; font-family: sans-serif; }
-        .notice { border-left: 4px solid #f59e0b; background: rgba(245, 158, 11, 0.1); padding: 15px; margin-bottom: 10px; border-radius: 5px; }
+        :root {
+            --primary-green: #006837;
+            --dark-bg: #0a0f0d;
+            --glass-white: rgba(255, 255, 255, 0.07);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --accent-yellow: #fbb040;
+            --whatsapp-green: #25D366;
+            --telegram-blue: #0088cc;
+            --youtube-red: #FF0000;
+        }
+
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+            background: radial-gradient(circle at 10% 20%, #003a1d, var(--dark-bg) 70%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .glass-card {
+            background: var(--glass-white);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            transition: 0.3s ease;
+        }
+
+        /* Side Menu */
+        .side-floating-menu {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .side-item {
+            width: 48px;
+            height: 48px;
+            background: var(--glass-white);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: 0.4s;
+        }
+        .side-item:hover { transform: scale(1.1) translateX(-5px); color: white; }
+        .yt:hover { background: var(--youtube-red); }
+        .tg:hover { background: var(--telegram-blue); }
+        .wt:hover { background: var(--whatsapp-green); }
+
+        /* Navbar */
+        .navbar { 
+            background: rgba(10, 15, 13, 0.9); 
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 12px 0;
+        }
+        .navbar-brand img { height: 45px; }
+
+        .hero-title {
+            font-size: 3.2rem;
+            font-weight: 800;
+            background: linear-gradient(to bottom, #fff, #aaa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .quick-btn-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin: 40px 0;
+        }
+        .q-btn {
+            background: var(--glass-white);
+            border: 1px solid var(--glass-border);
+            padding: 22px 10px;
+            border-radius: 18px;
+            text-align: center;
+            color: white;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        .q-btn:hover { background: rgba(0, 104, 55, 0.4); border-color: var(--accent-yellow); color: var(--accent-yellow); transform: translateY(-5px); }
+
+        .notice-container { height: 250px; overflow: hidden; position: relative; }
+        .notice-scroller { animation: scrollUp 20s linear infinite; }
+        .notice-scroller:hover { animation-play-state: paused; }
+        @keyframes scrollUp { 0% { transform: translateY(0); } 100% { transform: translateY(-100%); } }
+
+        .sticky-column { position: sticky; top: 100px; height: fit-content; }
+        .info-tag { background: var(--primary-green); color: white; padding: 4px 12px; border-radius: 50px; font-size: 11px; display: inline-block; margin-bottom: 8px; }
+
+        .main-footer {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--glass-border);
+            padding: 80px 0 30px;
+            margin-top: 100px;
+        }
+        .footer-title { color: white; font-weight: 700; margin-bottom: 25px; position: relative; padding-bottom: 10px; }
+        .footer-title::after { content: ''; position: absolute; left: 0; bottom: 0; width: 35px; height: 3px; background: var(--primary-green); }
+        .footer-link { color: #aaa; text-decoration: none; display: block; margin-bottom: 12px; transition: 0.3s; font-size: 0.9rem; }
+        .footer-link:hover { color: var(--accent-yellow); padding-left: 5px; }
+
+        @media (max-width: 768px) {
+            .side-floating-menu { bottom: 20px; top: auto; right: 20px; flex-direction: row; width: 100%; justify-content: center; left: 0; }
+            .hero-title { font-size: 2.2rem; }
+        }
     </style>
 </head>
-<body>
-    <%- include('partials/nav', {user: user}) %>
-    <div style="max-width:1000px; margin:20px auto; padding:20px;">
-        <h2><i class="fas fa-bullhorn"></i> নোটিশবোর্ড</h2>
-        <% notices.forEach(n => { %>
-            <div class="notice">
-                <strong><%= n.title %></strong> <small>(<%= n.date %>)</small>
-                <p><%= n.content %></p>
-            </div>
-        <% }) %>
 
-        <h2 style="margin-top:40px;"><i class="fas fa-book"></i> লাইব্রেরি</h2>
-        <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap:15px;">
-            <% resources.forEach(r => { %>
-                <div style="background:#1e293b; padding:15px; border-radius:10px; text-align:center;">
-                    <h4><%= r.title %></h4>
-                    <a href="<%= r.url %>" style="color:#00d2ff;">ডাউনলোড/ওপেন</a>
+<body>
+
+    <div class="side-floating-menu d-none d-md-flex">
+        <a href="https://facebook.com/dushibir" target="_blank" class="side-item fb"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://youtube.com/shibironline" target="_blank" class="side-item yt"><i class="fab fa-youtube"></i></a>
+        <a href="https://t.me/shibironline" target="_blank" class="side-item tg"><i class="fab fa-telegram-plane"></i></a>
+        <a href="https://wa.me/8801700000000" target="_blank" class="side-item wt"><i class="fab fa-whatsapp"></i></a>
+    </div>
+
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <img src="https://www.dushibir.org/storage/setting_images/wKFhZtq3w8jQDZT9wLfeJJXeGW09yJss7WACq03k.png" alt="Logo">
+                <div class="ms-2">
+                    <span class="d-block text-white fw-bold lh-1">বাংলাদেশ ইসলামী ছাত্রশিবির</span>
+                    <small class="text-success small">রূপগঞ্জ পশ্চিম শাখা</small>
                 </div>
-            <% }) %>
+            </a>
+            <button class="navbar-toggler border-0 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#mobileNav">
+                <i class="fas fa-bars-staggered"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="mobileNav">
+                <ul class="navbar-nav ms-auto text-center">
+                    <li class="nav-item"><a class="nav-link" href="/">হোম</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/about">পরিচিতি</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/news">সংবাদ</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/profile">প্রোফাইল</a></li>
+                    <li class="nav-item"><a class="btn btn-warning rounded-pill px-4 ms-lg-3 mt-2 mt-lg-0 fw-bold" href="/login-page">লগইন পোর্টাল</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        
+        <div class="glass-card p-4 mb-5 text-center" style="border-left: 5px solid var(--accent-yellow) !important;">
+            <div id="quoteCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <h5 class="fw-bold text-white italic">"বাতিল যখন সুসংগঠিত হয়, তখন হকপন্থীদের পরাজয়ের প্রধান কারণ হয় তাদের অসংগঠিত থাকা।"</h5>
+                        <p class="text-warning small mb-0 mt-2">— সায়্যেদ আবুল আ’লা মওদূদী (র)</p>
+                    </div>
+                    <div class="carousel-item">
+                        <h5 class="fw-bold text-white italic">"যদি ইসলামকে বিজয়ী করতে চান, তবে আগে নিজেদের চরিত্রে ইসলামের প্রতিফলন ঘটান।"</h5>
+                        <p class="text-warning small mb-0 mt-2">— শহীদ আব্দুল মালেক (র)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mb-5">
+            <h1 class="hero-title">সত্য ও সুন্দরের পথে কাফেলা</h1>
+            <p class="text-muted fs-5">একটি আদর্শিক ছাত্র সমাজ গঠনের প্রত্যয়ে আমরা নিরলস কাজ করে যাচ্ছি।</p>
+            
+            <div class="quick-btn-grid">
+                <a href="/form" class="q-btn"><i class="fas fa-user-plus d-block mb-2 fs-4 text-success"></i> সমর্থক ফরম</a>
+                <a href="/syllabus" class="q-btn"><i class="fas fa-book d-block mb-2 fs-4 text-info"></i> সিলেবাস</a>
+                <a href="/news" class="q-btn"><i class="fas fa-bullhorn d-block mb-2 fs-4 text-danger"></i> শাখা নিউজ</a>
+                <a href="/scholarship" class="q-btn"><i class="fas fa-graduation-cap d-block mb-2 fs-4 text-warning"></i> শিক্ষাবৃত্তি</a>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <h4 class="fw-bold mb-4 d-flex align-items-center"><i class="fas fa-newspaper text-success me-3"></i> সর্বশেষ আপডেট</h4>
+                <div class="row g-3">
+                    <% if(notices && notices.length > 0) { %>
+                        <% notices.slice(0, 4).forEach(n => { %>
+                            <div class="col-md-6">
+                                <div class="glass-card p-4 h-100">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="info-tag">নিউজ</span>
+                                        <small class="text-muted"><%= n.date %></small>
+                                    </div>
+                                    <h6 class="text-white fw-bold"><%= n.title %></h6>
+                                    <p class="text-secondary small mb-3"><%= n.content.substring(0, 110) %>...</p>
+                                    <a href="/news/<%= n.id %>" class="text-warning small text-decoration-none fw-bold">বিস্তারিত পড়ুন →</a>
+                                </div>
+                            </div>
+                        <% }) %>
+                    <% } %>
+                </div>
+
+                <div class="glass-card p-4 mt-5">
+                    <h5 class="text-success fw-bold border-bottom border-secondary pb-3 mb-3">আমাদের সম্পর্কে</h5>
+                    <p class="text-secondary lh-lg">
+                        বাংলাদেশ ইসলামী ছাত্রশিবির চায় এমন এক ছাত্র সমাজ গড়ে তুলতে যারা হবে একাধারে আল্লাহর একনিষ্ঠ বান্দা এবং দেশপ্রেমিক নাগরিক। শহীদ আব্দুল মালেক ভাইয়ের রক্তস্নাত এই ময়দানে আমরা তাওহীদের ঝাণ্ডা সমুন্নত রাখতে প্রতিশ্রুতিবদ্ধ। 
+                    </p>
+                    <a href="/about" class="btn btn-outline-success btn-sm rounded-pill mt-2">আরও জানুন</a>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="sticky-column">
+                    <div class="glass-card mb-4 overflow-hidden">
+                        <div class="bg-success p-3 text-white fw-bold"><i class="fas fa-bell me-2"></i> নোটিশ বোর্ড</div>
+                        <div class="notice-container p-3">
+                            <div class="notice-scroller">
+                                <% if(notices && notices.length > 0) { %>
+                                    <% notices.forEach(n => { %>
+                                        <div class="pb-3 mb-3 border-bottom border-secondary">
+                                            <a href="/notices/<%= n.id %>" class="text-white small text-decoration-none d-block"><%= n.title %></a>
+                                            <small class="text-muted"><i class="far fa-clock"></i> <%= n.date %></small>
+                                        </div>
+                                    <% }) %>
+                                <% } %>
+                            </div>
+                        </div>
+                        <div class="p-2 text-center border-top border-secondary">
+                            <a href="/news" class="small text-success text-decoration-none">সব নোটিশ দেখুন</a>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-4">
+                        <h5 class="text-warning fw-bold mb-3"><i class="fas fa-file-download me-2"></i> ডাউনলোডসমূহ</h5>
+                        <div class="list-group list-group-flush bg-transparent">
+                            <% if(resources && resources.length > 0) { %>
+                                <% resources.forEach(r => { %>
+                                    <a href="<%= r.url %>" target="_blank" class="list-group-item bg-transparent text-secondary border-secondary small py-2 px-0">
+                                        <i class="far fa-file-pdf text-danger me-2"></i> <%= r.title %>
+                                    </a>
+                                <% }) %>
+                            <% } %>
+                        </div>
+                        <a href="/resources" class="btn btn-sm btn-outline-warning w-100 mt-3 rounded-pill">সব ফাইল</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
+    <footer class="main-footer">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-4 col-md-6">
+                    <img src="https://www.dushibir.org/storage/setting_images/wKFhZtq3w8jQDZT9wLfeJJXeGW09yJss7WACq03k.png" alt="Logo" width="60" class="mb-3">
+                    <h5 class="text-white fw-bold">রূপগঞ্জ পশ্চিম শাখা</h5>
+                    <p class="text-muted small lh-lg">চরিত্রবান ছাত্র গঠনে অনন্য এক কাফেলা। ১৯৭৭ সাল থেকে আমরা ছাত্রদের মাঝে দ্বীনের দাওয়াত এবং দেশপ্রেমের চেতনা জাগ্রত করতে বদ্ধপরিকর।</p>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h6 class="footer-title">লিংকসমূহ</h6>
+                    <a href="/about" class="footer-link">আমাদের ইতিহাস</a>
+                    <a href="/syllabus" class="footer-link">অধ্যয়ন সিলেবাস</a>
+                    <a href="/login-page" class="footer-link">অনলাইন পোর্টাল</a>
+                    <a href="/contact" class="footer-link">যোগাযোগ</a>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h6 class="footer-title">সরাসরি যোগাযোগ</h6>
+                    <p class="small text-muted mb-2"><i class="fas fa-map-marker-alt text-success me-2"></i> রূপগঞ্জ, নারায়ণগঞ্জ</p>
+                    <p class="small text-muted mb-2"><i class="fas fa-phone-alt text-success me-2"></i> +৮৮০ ১৭০০-০০০০০০</p>
+                    <p class="small text-muted"><i class="fas fa-envelope text-success me-2"></i> info@rupganjwest.org</p>
+                </div>
+                <div class="col-lg-3 col-md-6 text-center">
+                    <h6 class="footer-title">সোশ্যাল মিডিয়া</h6>
+                    <div class="d-flex gap-2 justify-content-center mt-3">
+                        <a href="https://youtube.com" class="side-item yt"><i class="fab fa-youtube"></i></a>
+                        <a href="https://t.me" class="side-item tg"><i class="fab fa-telegram-plane"></i></a>
+                        <a href="https://wa.me" class="side-item wt"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center pt-5 mt-5 border-top border-secondary">
+                <p class="small text-muted mb-0">&copy; ২০২৬ রূপগঞ্জ পশ্চিম শাখা | বাংলাদেশ ইসলামী ছাত্রশিবির।</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

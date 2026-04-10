@@ -13,22 +13,25 @@
         h3 { border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-top: 0; display: flex; align-items: center; gap: 10px; }
         input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #334155; background: #0f172a; color: white; box-sizing: border-box; }
         
-        .btn { width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; color: white; display: inline-block; text-align: center; text-decoration: none; }
+        .btn { width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; color: white; display: inline-block; text-align: center; text-decoration: none; transition: 0.3s; }
+        .btn:hover { opacity: 0.8; transform: translateY(-2px); }
         .btn-blue { background: linear-gradient(45deg, #00d2ff, #3a7bd5); }
         .btn-orange { background: #f59e0b; }
         .btn-green { background: #10b981; }
         .btn-red { background: #ef4444; padding: 5px 10px; font-size: 12px; width: auto; }
         .btn-edit { background: #3b82f6; padding: 5px 10px; font-size: 12px; width: auto; }
+        .btn-whatsapp { background: #25D366; padding: 5px 10px; font-size: 12px; width: auto; }
 
         .list-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        .list-table th { background: rgba(255,255,255,0.05); color: #94a3b8; font-weight: 500; font-size: 14px; }
-        .list-table th, .list-table td { padding: 15px; text-align: left; border-bottom: 1px solid #1e293b; }
+        .list-table th { background: rgba(255,255,255,0.05); color: #94a3b8; font-weight: 500; font-size: 14px; text-align: left; }
+        .list-table th, .list-table td { padding: 15px; border-bottom: 1px solid #1e293b; }
         .list-table tr:hover { background: rgba(255,255,255,0.02); }
         
         .other-box { display: none; border-left: 3px solid #00d2ff; padding-left: 10px; }
         .badge { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; }
         .badge-pub { background: rgba(16, 185, 129, 0.2); color: #10b981; }
         .badge-priv { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .badge-app { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
     </style>
 </head>
 <body>
@@ -62,25 +65,17 @@
 
                     <select name="inst" onchange="toggleBox(this, 'instO')">
                         <option value="">শিক্ষা প্রতিষ্ঠান</option>
-                        <% ['প্রাথমিক বিদ্যালয়','মাধ্যমিক বিদ্যালয়','কওমী মাদ্রাসা','ইবতেদায়ী মাদ্রাসা','দাখিল মাদ্রাসা','ফাজিল মাদ্রাসা','আলিম মাদ্রাসা','কামিল মাদ্রাসা','কলেজ','বিশ্ববিদ্যালয় (সরকারী)','বিশ্ববিদ্যালয় (বেসরকারী)','মেডিকেল কলেজ','ডেন্টাল কলেজ','নার্সিং কলেজ','কৃষি বিশ্ববিদ্যালয়','পলিটেকনিক ইন্সটিটিউট','ইঞ্জিনিয়ারিং কলেজ','ইঞ্জিনিয়ারিং বিশ্ববিদ্যালয়','অন্যান্য'].forEach(opt => { %>
+                        <% ['প্রাথমিক বিদ্যালয়','মাধ্যমিক বিদ্যালয়','কওমী মাদ্রাসা','ইবতেদায়ী মাদ্রাসা','দাখিল মাদ্রাসা','ফাজিল মাদ্রাসা','আলিম মাদ্রাসা','কামিল মাদ্রাসা','কলেজ','বিশ্ববিদ্যালয় (সরকারী)','বিশ্ববিদ্যালয় (বেসরকারী)','মেডিকেল কলেজ','ডেন্টাল কলেজ','নার্সিং কলেজ','কৃষি বিশ্ববিদ্যালয়','পলিটেকনিক ইন্সটিটিউট','ইঞ্জিনিয়ারিং কলেজ','ইঞ্জিনিয়ারিং বিশ্ববিদ্যালয়','অন্যান্য'].forEach(opt => { %>
                             <option value="<%= opt %>"><%= opt %></option>
                         <% }) %>
                     </select>
                     <div id="instO" class="other-box"><input type="text" name="inst_other" placeholder="প্রতিষ্ঠানের নাম..."></div>
 
                     <select name="responsibility">
-                        <option value="">দায়িত্ব</option>
+                        <option value="">দায়িত্ব</option>
                         <% ['থানা সভাপতি','থানা সেক্রেটারি','থানা সাংগঠনিক সম্পাদক','থানা বায়তুলমাল সম্পাদক','থানা সেক্রেটারিয়েট','ওয়ার্ড সভাপতি','ওয়ার্ড সেক্রেটারি','ওয়ার্ড সাংগঠনিক সম্পাদক','ওয়ার্ড বায়তুলমাল সম্পাদক','ওয়ার্ড সেক্রেটারিয়েট','উপশাখা সভাপতি','উপশাখা সেক্রেটারি','উপশাখা সাংগঠনিক সম্পাদক','উপশাখা বায়তুলমাল সম্পাদক','উপশাখা সেক্রেটারিয়েট'].forEach(opt => { %>
                             <option value="<%= opt %>"><%= opt %></option>
                         <% }) %>
-                    </select>
-
-                    <select name="progress">
-                        <option value="নেই">অগ্রগতি: নেই</option>
-                        <option value="সাধারণ">সাধারণ</option>
-                        <option value="মোটামুটি">মোটামুটি</option>
-                        <option value="ভালো">ভালো</option>
-                        <option value="উত্তম">উত্তম</option>
                     </select>
 
                     <textarea name="comment" placeholder="মন্তব্য..."></textarea>
@@ -123,13 +118,48 @@
         </div>
 
         <div class="glass-card">
+            <h3 style="color:#3b82f6;"><i class="fas fa-hand-holding-heart"></i> নতুন সমর্থক আবেদনসমূহ</h3>
+            <div style="overflow-x:auto;">
+                <table class="list-table">
+                    <thead>
+                        <tr>
+                            <th>নাম</th>
+                            <th>মোবাইল</th>
+                            <th>প্রতিষ্ঠান</th>
+                            <th>সময়</th>
+                            <th>অ্যাকশন</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if(data.applications && data.applications.length > 0) { %>
+                            <% data.applications.forEach(app => { %>
+                                <tr>
+                                    <td><strong><%= app.name %></strong></td>
+                                    <td><%= app.phone %></td>
+                                    <td><span class="badge badge-app"><%= app.institution %></span></td>
+                                    <td><small><%= app.date %></small></td>
+                                    <td>
+                                        <a href="https://wa.me/88<%= app.phone %>" target="_blank" class="btn btn-whatsapp"><i class="fab fa-whatsapp"></i></a>
+                                        <a href="/admin/delete-app/<%= app.id %>" class="btn btn-red" onclick="return confirm('আবেদনটি মুছতে চান?')"><i class="fas fa-trash"></i></a>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        <% } else { %>
+                            <tr><td colspan="5" style="text-align:center; color:#64748b;">কোনো নতুন আবেদন নেই</td></tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="glass-card">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <h3><i class="fas fa-users"></i> জনশক্তি তালিকা</h3>
                 <a href="/admin/download-list" class="btn btn-green" style="width:auto; padding:8px 15px;"><i class="fas fa-file-excel"></i> Excel ডাউনলোড</a>
             </div>
             <div style="overflow-x:auto;">
                 <table class="list-table">
-                    <thead><tr><th>নাম</th><th>মান</th><th>দায়িত্ব</th><th>অ্যাকশন</th></tr></thead>
+                    <thead><tr><th>নাম</th><th>মান</th><th>দায়িত্ব</th><th>অ্যাকশন</th></tr></thead>
                     <tbody>
                         <% data.members.forEach(m => { %>
                             <tr>
@@ -159,8 +189,7 @@
                                     <td><%= n.title %></td>
                                     <td><span class="badge badge-priv"><%= n.visibility %></span></td>
                                     <td>
-                                        <a href="/admin/edit-notice/<%= n.id %>" style="color:#3b82f6;"><i class="fas fa-edit"></i></a>
-                                        <a href="/admin/delete-notice/<%= n.id %>" style="color:#ef4444; margin-left:10px;"><i class="fas fa-trash"></i></a>
+                                        <a href="/admin/delete-notice/<%= n.id %>" style="color:#ef4444;"><i class="fas fa-trash"></i></a>
                                     </td>
                                 </tr>
                             <% }) %>
@@ -180,8 +209,7 @@
                                     <td><%= r.title %></td>
                                     <td><span class="badge badge-pub"><%= r.visibility %></span></td>
                                     <td>
-                                        <a href="/admin/edit-resource/<%= r.id %>" style="color:#3b82f6;"><i class="fas fa-edit"></i></a>
-                                        <a href="/admin/delete-resource/<%= r.id %>" style="color:#ef4444; margin-left:10px;"><i class="fas fa-trash"></i></a>
+                                        <a href="/admin/delete-resource/<%= r.id %>" style="color:#ef4444;"><i class="fas fa-trash"></i></a>
                                     </td>
                                 </tr>
                             <% }) %>
