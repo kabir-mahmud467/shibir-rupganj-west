@@ -2,36 +2,77 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>অ্যাডমিন কন্ট্রোল | রূপগঞ্জ পশ্চিম</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background: #020617; color: white; font-family: 'Segoe UI', Arial, sans-serif; margin: 0; }
-        .container { max-width: 1240px; margin: 20px auto; padding: 15px; }
-        .glass-card { background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(15px); border-radius: 20px; padding: 25px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 25px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; }
+        :root {
+            --card-bg: rgba(30, 41, 59, 0.6);
+            --border: rgba(255, 255, 255, 0.1);
+            --primary-blue: #00d2ff;
+        }
+
+        body { background: #020617; color: white; font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding-bottom: 50px; }
+        .container { max-width: 1240px; margin: 0 auto; padding: 15px; }
         
-        h3 { border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-top: 0; display: flex; align-items: center; gap: 10px; }
-        input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #334155; background: #0f172a; color: white; box-sizing: border-box; }
+        .glass-card { 
+            background: var(--card-bg); 
+            backdrop-filter: blur(15px); 
+            border-radius: 20px; 
+            padding: 20px; 
+            border: 1px solid var(--border); 
+            margin-bottom: 25px; 
+        }
+
+        /* গ্রিড সিস্টেম - পিসিতে ২ কলাম, মোবাইলে ১ কলাম */
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+            gap: 20px; 
+        }
+
+        h3 { border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-top: 0; display: flex; align-items: center; gap: 10px; font-size: 1.2rem; }
         
-        .btn { width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; color: white; display: inline-block; text-align: center; text-decoration: none; transition: 0.3s; }
+        input, select, textarea { 
+            width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; 
+            border: 1px solid #334155; background: #0f172a; color: white; 
+            box-sizing: border-box; font-size: 14px;
+        }
+
+        .btn { 
+            width: 100%; padding: 12px; border-radius: 10px; border: none; 
+            font-weight: bold; cursor: pointer; color: white; display: inline-block; 
+            text-align: center; text-decoration: none; transition: 0.3s; 
+        }
+        
         .btn:hover { opacity: 0.8; transform: translateY(-2px); }
         .btn-blue { background: linear-gradient(45deg, #00d2ff, #3a7bd5); }
         .btn-orange { background: #f59e0b; }
         .btn-green { background: #10b981; }
-        .btn-red { background: #ef4444; padding: 5px 10px; font-size: 12px; width: auto; }
-        .btn-edit { background: #3b82f6; padding: 5px 10px; font-size: 12px; width: auto; }
-        .btn-whatsapp { background: #25D366; padding: 5px 10px; font-size: 12px; width: auto; }
+        .btn-red { background: #ef4444; padding: 6px 12px; font-size: 12px; width: auto; }
+        .btn-edit { background: #3b82f6; padding: 6px 12px; font-size: 12px; width: auto; }
+        .btn-whatsapp { background: #25D366; padding: 6px 12px; font-size: 12px; width: auto; }
 
-        .list-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        .list-table th { background: rgba(255,255,255,0.05); color: #94a3b8; font-weight: 500; font-size: 14px; text-align: left; }
-        .list-table th, .list-table td { padding: 15px; border-bottom: 1px solid #1e293b; }
-        .list-table tr:hover { background: rgba(255,255,255,0.02); }
-        
-        .other-box { display: none; border-left: 3px solid #00d2ff; padding-left: 10px; }
-        .badge { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; }
+        /* টেবিল রেসপনসিভ করার জন্য */
+        .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .list-table { width: 100%; border-collapse: collapse; margin-top: 15px; min-width: 500px; }
+        .list-table th { background: rgba(255,255,255,0.05); color: #94a3b8; font-weight: 500; font-size: 13px; text-align: left; }
+        .list-table th, .list-table td { padding: 12px; border-bottom: 1px solid #1e293b; font-size: 14px; }
+
+        .other-box { display: none; border-left: 3px solid var(--primary-blue); padding-left: 10px; }
+        .badge { padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
         .badge-pub { background: rgba(16, 185, 129, 0.2); color: #10b981; }
         .badge-priv { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
         .badge-app { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+
+        /* মোবাইল স্ক্রিনের জন্য বিশেষ পরিবর্তন */
+        @media (max-width: 600px) {
+            .container { padding: 10px; }
+            .glass-card { padding: 15px; border-radius: 15px; }
+            h3 { font-size: 1rem; }
+            .btn { padding: 10px; font-size: 14px; }
+            .list-table th, .list-table td { padding: 10px 8px; }
+        }
     </style>
 </head>
 <body>
@@ -40,7 +81,7 @@
     <div class="container">
         <div class="grid">
             <div class="glass-card">
-                <h3 style="color:#00d2ff;"><i class="fas fa-user-plus"></i> জনশক্তি যোগ</h3>
+                <h3 style="color:var(--primary-blue);"><i class="fas fa-user-plus"></i> জনশক্তি যোগ</h3>
                 <form action="/admin/add-member" method="POST" enctype="multipart/form-data">
                     <input type="text" name="name" placeholder="নাম" required>
                     <div style="display: flex; gap: 10px;">
@@ -65,20 +106,21 @@
 
                     <select name="inst" onchange="toggleBox(this, 'instO')">
                         <option value="">শিক্ষা প্রতিষ্ঠান</option>
-                        <% ['প্রাথমিক বিদ্যালয়','মাধ্যমিক বিদ্যালয়','কওমী মাদ্রাসা','ইবতেদায়ী মাদ্রাসা','দাখিল মাদ্রাসা','ফাজিল মাদ্রাসা','আলিম মাদ্রাসা','কামিল মাদ্রাসা','কলেজ','বিশ্ববিদ্যালয় (সরকারী)','বিশ্ববিদ্যালয় (বেসরকারী)','মেডিকেল কলেজ','ডেন্টাল কলেজ','নার্সিং কলেজ','কৃষি বিশ্ববিদ্যালয়','পলিটেকনিক ইন্সটিটিউট','ইঞ্জিনিয়ারিং কলেজ','ইঞ্জিনিয়ারিং বিশ্ববিদ্যালয়','অন্যান্য'].forEach(opt => { %>
+                        <% ['প্রাথমিক বিদ্যালয়','মাধ্যমিক বিদ্যালয়','কওমী মাদ্রাসা','ইবতেদায়ী মাদ্রাসা','দাখিল মাদ্রাসা','ফাজিল মাদ্রাসা','আলিম মাদ্রাসা','কামিল মাদ্রাসা','কলেজ','বিশ্ববিদ্যালয় (সরকারী)','বিশ্ববিদ্যালয় (বেসরকারী)','মেডিকেল কলেজ','ডেন্টাল কলেজ','নার্সিং কলেজ','কৃষি বিশ্ববিদ্যালয়','পলিটেকনিক ইন্সটিটিউট','ইঞ্জিনিয়ারিং কলেজ','ইঞ্জিনিয়ারিং বিশ্ববিদ্যালয়','অন্যান্য'].forEach(opt => { %>
                             <option value="<%= opt %>"><%= opt %></option>
                         <% }) %>
                     </select>
                     <div id="instO" class="other-box"><input type="text" name="inst_other" placeholder="প্রতিষ্ঠানের নাম..."></div>
 
                     <select name="responsibility">
-                        <option value="">দায়িত্ব</option>
+                        <option value="">দায়িত্ব</option>
                         <% ['থানা সভাপতি','থানা সেক্রেটারি','থানা সাংগঠনিক সম্পাদক','থানা বায়তুলমাল সম্পাদক','থানা সেক্রেটারিয়েট','ওয়ার্ড সভাপতি','ওয়ার্ড সেক্রেটারি','ওয়ার্ড সাংগঠনিক সম্পাদক','ওয়ার্ড বায়তুলমাল সম্পাদক','ওয়ার্ড সেক্রেটারিয়েট','উপশাখা সভাপতি','উপশাখা সেক্রেটারি','উপশাখা সাংগঠনিক সম্পাদক','উপশাখা বায়তুলমাল সম্পাদক','উপশাখা সেক্রেটারিয়েট'].forEach(opt => { %>
                             <option value="<%= opt %>"><%= opt %></option>
                         <% }) %>
                     </select>
 
                     <textarea name="comment" placeholder="মন্তব্য..."></textarea>
+                    <label style="font-size: 12px; color: #94a3b8; margin-left: 5px;">সদস্যের ছবি:</label>
                     <input type="file" name="photo">
                     <input type="password" name="password" placeholder="গোপন কোড (পাসওয়ার্ড)" required>
                     <button type="submit" class="btn btn-blue">তথ্য সেভ করুন</button>
@@ -90,7 +132,7 @@
                     <h3 style="color:#f59e0b;"><i class="fas fa-bullhorn"></i> নতুন নোটিশ</h3>
                     <form action="/admin/add-notice" method="POST">
                         <input type="text" name="title" placeholder="নোটিশের শিরোনাম" required>
-                        <textarea name="content" placeholder="নোটিশের বিস্তারিত লিখুন..."></textarea>
+                        <textarea name="content" placeholder="নোটিশের বিস্তারিত লিখুন..." rows="4"></textarea>
                         <select name="visibility">
                             <option value="পাবলিক">পাবলিক (সবাই দেখবে)</option>
                             <option value="কর্মী">কর্মী (শুধু কর্মীরা)</option>
@@ -119,14 +161,13 @@
 
         <div class="glass-card">
             <h3 style="color:#3b82f6;"><i class="fas fa-hand-holding-heart"></i> নতুন সমর্থক আবেদনসমূহ</h3>
-            <div style="overflow-x:auto;">
+            <div class="table-responsive">
                 <table class="list-table">
                     <thead>
                         <tr>
                             <th>নাম</th>
                             <th>মোবাইল</th>
                             <th>প্রতিষ্ঠান</th>
-                            <th>সময়</th>
                             <th>অ্যাকশন</th>
                         </tr>
                     </thead>
@@ -134,18 +175,19 @@
                         <% if(data.applications && data.applications.length > 0) { %>
                             <% data.applications.forEach(app => { %>
                                 <tr>
-                                    <td><strong><%= app.name %></strong></td>
+                                    <td><strong><%= app.name %></strong><br><small class="text-muted"><%= app.date %></small></td>
                                     <td><%= app.phone %></td>
                                     <td><span class="badge badge-app"><%= app.institution %></span></td>
-                                    <td><small><%= app.date %></small></td>
                                     <td>
-                                        <a href="https://wa.me/88<%= app.phone %>" target="_blank" class="btn btn-whatsapp"><i class="fab fa-whatsapp"></i></a>
-                                        <a href="/admin/delete-app/<%= app.id %>" class="btn btn-red" onclick="return confirm('আবেদনটি মুছতে চান?')"><i class="fas fa-trash"></i></a>
+                                        <div style="display: flex; gap: 5px;">
+                                            <a href="https://wa.me/88<%= app.phone %>" target="_blank" class="btn btn-whatsapp"><i class="fab fa-whatsapp"></i></a>
+                                            <a href="/admin/delete-app/<%= app.id %>" class="btn btn-red" onclick="return confirm('আবেদনটি মুছতে চান?')"><i class="fas fa-trash"></i></a>
+                                        </div>
                                     </td>
                                 </tr>
                             <% }) %>
                         <% } else { %>
-                            <tr><td colspan="5" style="text-align:center; color:#64748b;">কোনো নতুন আবেদন নেই</td></tr>
+                            <tr><td colspan="4" style="text-align:center; color:#64748b;">কোনো নতুন আবেদন নেই</td></tr>
                         <% } %>
                     </tbody>
                 </table>
@@ -153,13 +195,13 @@
         </div>
 
         <div class="glass-card">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h3><i class="fas fa-users"></i> জনশক্তি তালিকা</h3>
-                <a href="/admin/download-list" class="btn btn-green" style="width:auto; padding:8px 15px;"><i class="fas fa-file-excel"></i> Excel ডাউনলোড</a>
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">
+                <h3 style="margin-bottom:0; border:none;"><i class="fas fa-users"></i> জনশক্তি তালিকা</h3>
+                <a href="/admin/download-list" class="btn btn-green" style="width:auto; padding:8px 15px; font-size: 13px;"><i class="fas fa-file-excel"></i> Excel</a>
             </div>
-            <div style="overflow-x:auto;">
+            <div class="table-responsive">
                 <table class="list-table">
-                    <thead><tr><th>নাম</th><th>মান</th><th>দায়িত্ব</th><th>অ্যাকশন</th></tr></thead>
+                    <thead><tr><th>নাম</th><th>মান</th><th>দায়িত্ব</th><th>অ্যাকশন</th></tr></thead>
                     <tbody>
                         <% data.members.forEach(m => { %>
                             <tr>
@@ -167,8 +209,10 @@
                                 <td><span class="badge badge-pub"><%= m.type %></span></td>
                                 <td><%= m.responsibility %></td>
                                 <td>
-                                    <a href="/admin/edit-member/<%= m.id %>" class="btn btn-edit">এডিট</a>
-                                    <a href="/admin/delete-member/<%= m.id %>" class="btn btn-red" onclick="return confirm('আপনি কি নিশ্চিত?')">মুছুন</a>
+                                    <div style="display: flex; gap: 5px;">
+                                        <a href="/admin/edit-member/<%= m.id %>" class="btn btn-edit">এডিট</a>
+                                        <a href="/admin/delete-member/<%= m.id %>" class="btn btn-red" onclick="return confirm('আপনি কি নিশ্চিত?')">মুছুন</a>
+                                    </div>
                                 </td>
                             </tr>
                         <% }) %>
@@ -179,8 +223,8 @@
 
         <div class="grid">
             <div class="glass-card">
-                <h3><i class="fas fa-list-check"></i> নোটিশ ম্যানেজমেন্ট</h3>
-                <div style="overflow-x:auto;">
+                <h3><i class="fas fa-list-check"></i> নোটিশ লিস্ট</h3>
+                <div class="table-responsive">
                     <table class="list-table">
                         <thead><tr><th>শিরোনাম</th><th>দৃশ্যমানতা</th><th>অ্যাকশন</th></tr></thead>
                         <tbody>
@@ -199,8 +243,8 @@
             </div>
 
             <div class="glass-card">
-                <h3><i class="fas fa-folder-open"></i> ফাইল ম্যানেজমেন্ট</h3>
-                <div style="overflow-x:auto;">
+                <h3><i class="fas fa-folder-open"></i> ফাইল লিস্ট</h3>
+                <div class="table-responsive">
                     <table class="list-table">
                         <thead><tr><th>ফাইলের নাম</th><th>টাইপ</th><th>অ্যাকশন</th></tr></thead>
                         <tbody>
