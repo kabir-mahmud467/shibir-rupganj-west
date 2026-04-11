@@ -14,6 +14,32 @@
         }
 
         body { background: #020617; color: white; font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding-bottom: 50px; }
+        
+        /* নববার স্টাইল - আপনার মূল থিমের সাথে মিল রেখে */
+        .admin-nav {
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .nav-container {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 0 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-brand { text-decoration: none; color: #fff; font-weight: bold; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
+        .nav-brand i { color: var(--primary-blue); }
+        .nav-links { display: flex; gap: 20px; align-items: center; }
+        .nav-link { color: #cbd5e0; text-decoration: none; font-size: 14px; transition: 0.3s; }
+        .nav-link:hover { color: var(--primary-blue); }
+        .logout-btn { color: #ef4444 !important; }
+
         .container { max-width: 1240px; margin: 0 auto; padding: 15px; }
         
         .glass-card { 
@@ -70,10 +96,165 @@
             .glass-card { padding: 15px; border-radius: 15px; }
             h3 { font-size: 1rem; }
             .btn { padding: 10px; font-size: 14px; }
+            .nav-links { gap: 10px; }
+            .nav-link { font-size: 12px; }
         }
     </style>
 </head>
 <body>
+
+   <nav class="admin-nav">
+    <div class="nav-container">
+        <a class="nav-brand" href="/admin">
+            <i class="fas fa-shield-halved"></i>
+            <span>অ্যাডমিন <small>প্যানেল</small></span>
+        </a>
+
+        <button class="nav-toggle" onclick="toggleNav()">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <div class="nav-menu" id="navMenu">
+            <div class="nav-links">
+                <a href="/" class="nav-item">
+                    <i class="fas fa-globe"></i> হোম পেজ 
+                </a>
+                <a href="/admin" class="nav-item active">
+                    <i class="fas fa-gauge-high"></i> ড্যাশবোর্ড
+                </a>
+                <div class="user-profile">
+                    <i class="fas fa-circle-user"></i>
+                    <span><%= user.name || 'Admin' %></span>
+                    <a href="/logout" class="logout-link" title="লগআউট">
+                        <i class="fas fa-right-from-bracket"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<style>
+    .admin-nav {
+        background: rgba(15, 23, 42, 0.9);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 12px 0;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        font-family: 'Hind Siliguri', sans-serif;
+    }
+
+    .nav-container {
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .nav-brand {
+        text-decoration: none;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        font-size: 1.3rem;
+    }
+
+    .nav-brand i { color: #00d2ff; }
+    .nav-brand small { font-size: 0.8rem; color: #94a3b8; font-weight: 400; }
+
+    .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 25px;
+    }
+
+    .nav-item {
+        color: #cbd5e0;
+        text-decoration: none;
+        font-size: 0.95rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: 0.3s;
+    }
+
+    .nav-item:hover, .nav-item.active {
+        color: #00d2ff;
+    }
+
+    .user-profile {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding-left: 20px;
+        border-left: 1px solid rgba(255,255,255,0.1);
+        color: #fff;
+    }
+
+    .logout-link {
+        color: #ef4444;
+        font-size: 1.1rem;
+        margin-left: 10px;
+        transition: 0.3s;
+    }
+
+    .logout-link:hover { transform: scale(1.2); color: #ff5f5f; }
+
+    .nav-toggle {
+        display: none;
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 1.5rem;
+        cursor: pointer;
+    }
+
+    /* মোবাইল রেসপনসিভ */
+    @media (max-width: 768px) {
+        .nav-toggle { display: block; }
+        
+        .nav-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: #0f172a;
+            padding: 20px;
+            border-bottom: 2px solid #00d2ff;
+        }
+
+        .nav-menu.show { display: block; }
+
+        .nav-links {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .user-profile {
+            border-left: none;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 15px 0 0;
+            width: 100%;
+            justify-content: space-between;
+        }
+    }
+</style>
+
+<script>
+    function toggleNav() {
+        const menu = document.getElementById('navMenu');
+        menu.classList.toggle('show');
+    }
+</script>
     
     <div class="container">
         <div class="grid">
