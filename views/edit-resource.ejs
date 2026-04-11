@@ -2,39 +2,153 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <title>ফাইল এডিট করুন</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ফাইল এডিট করুন | রূপগঞ্জ পশ্চিম</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background: #020617; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .card { background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(10px); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 450px; }
-        h3 { color: #10b981; margin-top: 0; text-align: center; }
-        input, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #334155; background: #0f172a; color: white; box-sizing: border-box; }
-        .btn { width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; background: #10b981; color: white; transition: 0.3s; }
-        .btn:hover { opacity: 0.8; }
-        .back-link { display: block; text-align: center; margin-top: 15px; color: #94a3b8; text-decoration: none; font-size: 14px; }
+        body { 
+            background: #020617; 
+            color: white; 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            margin: 0; 
+            padding: 20px;
+        }
+        
+        .card { 
+            background: rgba(30, 41, 59, 0.4); 
+            backdrop-filter: blur(12px); 
+            padding: 30px; 
+            border-radius: 20px; 
+            border: 1px solid rgba(255,255,255,0.1); 
+            width: 100%; 
+            max-width: 480px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+        }
+
+        h3 { 
+            color: #10b981; 
+            margin-top: 0; 
+            text-align: center; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 12px;
+            font-size: 1.5rem;
+        }
+
+        label { 
+            display: block; 
+            margin-top: 15px; 
+            color: #94a3b8; 
+            font-size: 14px; 
+            font-weight: 500;
+        }
+
+        input, select { 
+            width: 100%; 
+            padding: 12px; 
+            margin: 8px 0; 
+            border-radius: 10px; 
+            border: 1px solid #334155; 
+            background: #0f172a; 
+            color: white; 
+            box-sizing: border-box; 
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus, select:focus { 
+            border-color: #10b981; 
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.2); 
+        }
+
+        .current-info {
+            background: rgba(16, 185, 129, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #10b981;
+            margin-bottom: 5px;
+            border: 1px dashed rgba(16, 185, 129, 0.3);
+        }
+
+        .btn { 
+            width: 100%; 
+            padding: 14px; 
+            border-radius: 10px; 
+            border: none; 
+            font-weight: bold; 
+            cursor: pointer; 
+            background: linear-gradient(45deg, #10b981, #059669); 
+            color: white; 
+            font-size: 16px;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+
+        .btn:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
+        }
+
+        .back-link { 
+            display: block; 
+            text-align: center; 
+            margin-top: 15px; 
+            color: #94a3b8; 
+            text-decoration: none; 
+            font-size: 14px; 
+            transition: 0.3s;
+        }
+        
+        .back-link:hover { color: white; }
+
+        input[type="file"] {
+            padding: 8px;
+            font-size: 13px;
+        }
     </style>
 </head>
 <body>
     <div class="card">
-        <h3>ফাইল তথ্য আপডেট</h3>
+        <h3><i class="fas fa-file-pen"></i> ফাইল তথ্য আপডেট</h3>
+        
         <form action="/admin/update-resource/<%= resource.id %>" method="POST" enctype="multipart/form-data">
-            <label>ফাইলের নাম:</label>
-            <input type="text" name="title" value="<%= resource.title %>" required>
             
-            <label>দৃশ্যমানতা:</label>
+            <label>ফাইলের নাম বা শিরোনাম:</label>
+            <input type="text" name="title" value="<%= resource.title %>" placeholder="যেমন: সিলেবাস ২০২৪" required>
+            
+            <label>দৃশ্যমানতা (Visibility):</label>
             <select name="visibility">
-                <option value="পাবলিক" <%= resource.visibility === 'পাবলিক' ? 'selected' : '' %>>পাবলিক</option>
-                <option value="কর্মী" <%= resource.visibility === 'কর্মী' ? 'selected' : '' %>>কর্মী</option>
-                <option value="সাথী" <%= resource.visibility === 'সাথী' ? 'selected' : '' %>>সাথী</option>
+                <option value="পাবলিক" <%= resource.visibility === 'পাবলিক' ? 'selected' : '' %>>পাবলিক (সবাই দেখবে)</option>
+                <option value="কর্মী" <%= resource.visibility === 'কর্মী' ? 'selected' : '' %>>কর্মী (শুধু কর্মীরা)</option>
+                <option value="সাথী" <%= resource.visibility === 'সাথী' ? 'selected' : '' %>>সাথী (শুধু সাথীরা)</option>
             </select>
 
-            <label>নতুন ফাইল (পরিবর্তন না করতে চাইলে খালি রাখুন):</label>
+            <label>বর্তমান ফাইল/লিঙ্ক:</label>
+            <div class="current-info">
+                <i class="fas fa-link"></i> 
+                <% if (resource.url) { %>
+                    <%= resource.url.substring(0, 40) %>...
+                <% } else { %>
+                    কোনো ফাইল আপলোড করা নেই
+                <% } %>
+            </div>
+
+            <label>নতুন ফাইল আপলোড (ঐচ্ছিক):</label>
             <input type="file" name="file">
 
-            <label>বাহ্যিক লিঙ্ক (যদি থাকে):</label>
-            <input type="url" name="external_url" value="<%= resource.external_url || '' %>">
+            <label>বাহ্যিক লিঙ্ক (Google Drive/অন্যান্য):</label>
+            <input type="url" name="external_url" value="<%= resource.url.startsWith('http') ? resource.url : '' %>" placeholder="https://drive.google.com/...">
 
             <button type="submit" class="btn">আপডেট নিশ্চিত করুন</button>
-            <a href="/admin" class="back-link">ফিরে যান</a>
+            <a href="/admin" class="back-link">
+                <i class="fas fa-arrow-left"></i> পরিবর্তন ছাড়াই ফিরে যান
+            </a>
         </form>
     </div>
 </body>

@@ -2,31 +2,66 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>জনশক্তি তথ্য পরিবর্তন | রূপগঞ্জ পশ্চিম</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background: #020617; color: white; font-family: sans-serif; padding: 20px; }
-        .card { background: rgba(30, 41, 59, 0.5); padding: 30px; border-radius: 20px; max-width: 700px; margin: auto; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        body { background: #020617; color: white; font-family: 'Segoe UI', Arial, sans-serif; padding: 20px; margin: 0; }
+        .card { 
+            background: rgba(30, 41, 59, 0.4); 
+            backdrop-filter: blur(15px);
+            padding: 30px; 
+            border-radius: 20px; 
+            max-width: 700px; 
+            margin: 20px auto; 
+            border: 1px solid rgba(255,255,255,0.1); 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+        }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        label { display: block; margin-top: 10px; color: #94a3b8; font-size: 14px; }
-        input, select, textarea { width: 100%; padding: 12px; margin: 5px 0; border-radius: 10px; background: #0f172a; color: white; border: 1px solid #334155; box-sizing: border-box; outline: none; }
-        input:focus, select:focus { border-color: #3b82f6; }
-        .btn { background: linear-gradient(45deg, #00d2ff, #3a7bd5); color: white; border: none; padding: 15px; border-radius: 10px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 20px; font-size: 16px; }
-        .other-box { display: <%= (member.edu === 'অন্যান্য' || member.inst === 'অন্যান্য') ? 'block' : 'none' %>; border-left: 2px solid #3b82f6; padding-left: 10px; }
+        label { display: block; margin-top: 15px; color: #94a3b8; font-size: 14px; font-weight: 500; }
+        input, select, textarea { 
+            width: 100%; padding: 12px; margin: 5px 0; border-radius: 10px; 
+            background: #0f172a; color: white; border: 1px solid #334155; 
+            box-sizing: border-box; outline: none; transition: 0.3s;
+        }
+        input:focus, select:focus, textarea:focus { border-color: #3b82f6; box-shadow: 0 0 10px rgba(59, 130, 246, 0.2); }
+        
+        .btn { 
+            background: linear-gradient(45deg, #00d2ff, #3a7bd5); 
+            color: white; border: none; padding: 15px; border-radius: 10px; 
+            cursor: pointer; width: 100%; font-weight: bold; margin-top: 25px; 
+            font-size: 16px; transition: 0.3s;
+        }
+        .btn:hover { transform: translateY(-2px); opacity: 0.9; }
+        
+        .other-box { border-left: 3px solid #3b82f6; padding-left: 15px; margin-top: 10px; }
+        
+        .current-photo {
+            display: flex; align-items: center; gap: 15px;
+            background: rgba(255,255,255,0.05); padding: 10px; border-radius: 10px; margin-top: 5px;
+        }
+
+        @media (max-width: 600px) {
+            .grid { grid-template-columns: 1fr; gap: 0; }
+            .card { padding: 20px; }
+        }
     </style>
 </head>
 <body>
     <div class="card">
-        <h2 style="text-align:center; color:#00d2ff; margin-bottom:25px;"><i class="fas fa-user-edit"></i> সদস্যের তথ্য আপডেট</h2>
+        <h2 style="text-align:center; color:#00d2ff; margin-bottom:25px;">
+            <i class="fas fa-user-edit"></i> সদস্যের তথ্য আপডেট
+        </h2>
         
         <form action="/admin/update-member/<%= member.id %>" method="POST" enctype="multipart/form-data">
             
             <div class="grid">
                 <div>
-                    <label>নাম (অবশ্যই):</label>
+                    <label><i class="fas fa-user me-1"></i> নাম (অবশ্যই):</label>
                     <input type="text" name="name" value="<%= member.name %>" required>
                 </div>
                 <div>
-                    <label>সাংগঠনিক মান:</label>
+                    <label><i class="fas fa-layer-group me-1"></i> সাংগঠনিক মান:</label>
                     <select name="type">
                         <option value="কর্মী" <%= member.type === 'কর্মী' ? 'selected' : '' %>>কর্মী</option>
                         <option value="সাথী" <%= member.type === 'সাথী' ? 'selected' : '' %>>সাথী</option>
@@ -51,8 +86,37 @@
                     <input type="date" name="dob" value="<%= member.dob %>">
                 </div>
                 <div>
-                    <label>গোপন কোড (পাসওয়ার্ড):</label>
+                    <label><i class="fas fa-phone me-1"></i> ফোন নম্বর:</label>
+                    <input type="text" name="phone" value="<%= member.phone %>" required>
+                </div>
+            </div>
+
+            <label><i class="fab fa-facebook me-1"></i> ফেসবুক আইডি লিঙ্ক:</label>
+            <input type="url" name="facebook" value="<%= member.facebook %>" placeholder="https://facebook.com/username">
+
+            <div class="grid">
+                <div>
+                    <label>বর্তমান ঠিকানা:</label>
+                    <textarea name="present_address" rows="2"><%= member.present_address %></textarea>
+                </div>
+                <div>
+                    <label>স্থায়ী ঠিকানা:</label>
+                    <textarea name="permanent_address" rows="2"><%= member.permanent_address %></textarea>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div>
+                    <label style="color: #fbbf24;"><i class="fas fa-key me-1"></i> গোপন কোড (পাসওয়ার্ড):</label>
                     <input type="text" name="password" value="<%= member.password %>" required>
+                </div>
+                <div>
+                    <label>দায়িত্ব:</label>
+                    <select name="responsibility">
+                        <% ['থানা সভাপতি','থানা সেক্রেটারি','থানা সাংগঠনিক সম্পাদক','থানা বায়তুলমাল সম্পাদক','থানা সেক্রেটারিয়েট','ওয়ার্ড সভাপতি','ওয়ার্ড সেক্রেটারি','ওয়ার্ড সাংগঠনিক সম্পাদক','ওয়ার্ড বায়তুলমাল সম্পাদক','ওয়ার্ড সেক্রেটারিয়েট','উপশাখা সভাপতি','উপশাখা সেক্রেটারি','উপশাখা সাংগঠনিক সম্পাদক','উপশাখা বায়তুলমাল সম্পাদক','উপশাখা সেক্রেটারিয়েট'].forEach(opt => { %>
+                            <option value="<%= opt %>" <%= member.responsibility === opt ? 'selected' : '' %>><%= opt %></option>
+                        <% }) %>
+                    </select>
                 </div>
             </div>
 
@@ -62,8 +126,8 @@
                     <option value="<%= opt %>" <%= member.edu === opt ? 'selected' : '' %>><%= opt %></option>
                 <% }) %>
             </select>
-            <div id="eduO" class="other-box" style="display: <%= member.edu === 'অন্যান্য' ? 'block' : 'none' %>">
-                <input type="text" name="edu_other" value="<%= member.edu_other %>" placeholder="শিক্ষার বিস্তারিত...">
+            <div id="eduO" class="other-box" style="display: <%= (member.edu && !['৫ম শ্রেণি','৬ষ্ঠ শ্রেণি','৭ম শ্রেণি','৮ম শ্রেণি','৯ম শ্রেণি','১০ম শ্রেণি','একাদশ শ্রেণি','দ্বাদশ শ্রেণি','অনার্স ১ম বর্ষ','অনার্স ২য় বর্ষ','অনার্স ৩য় বর্ষ','অনার্স ৪র্থ বর্ষ','মাস্টার্স'].includes(member.edu)) ? 'block' : 'none' %>">
+                <input type="text" name="edu_other" value="<%= member.edu %>" placeholder="শিক্ষার বিস্তারিত...">
             </div>
 
             <label>শিক্ষা প্রতিষ্ঠান:</label>
@@ -72,32 +136,24 @@
                     <option value="<%= opt %>" <%= member.inst === opt ? 'selected' : '' %>><%= opt %></option>
                 <% }) %>
             </select>
-            <div id="instO" class="other-box" style="display: <%= member.inst === 'অন্যান্য' ? 'block' : 'none' %>">
-                <input type="text" name="inst_other" value="<%= member.inst_other %>" placeholder="প্রতিষ্ঠানের নাম...">
+            <div id="instO" class="other-box" style="display: <%= (member.inst && !['প্রাথমিক বিদ্যালয়','মাধ্যমিক বিদ্যালয়','কওমী মাদ্রাসা','ইবতেদায়ী মাদ্রাসা','দাখিল মাদ্রাসা','ফাজিল মাদ্রাসা','আলিম মাদ্রাসা','কামিল মাদ্রাসা','কলেজ','বিশ্ববিদ্যালয় (সরকারী)','বিশ্ববিদ্যালয় (বেসরকারী)','মেডিকেল কলেজ','ডেন্টাল কলেজ','নার্সিং কলেজ','কৃষি বিশ্ববিদ্যালয়','পলিটেকনিক ইন্সটিটিউট','ইঞ্জিনিয়ারিং কলেজ','ইঞ্জিনিয়ারিং বিশ্ববিদ্যালয়'].includes(member.inst)) ? 'block' : 'none' %>">
+                <input type="text" name="inst_other" value="<%= member.inst %>" placeholder="প্রতিষ্ঠানের নাম...">
             </div>
 
-            <label>দায়িত্ব:</label>
-            <select name="responsibility">
-                <% ['থানা সভাপতি','থানা সেক্রেটারি','থানা সাংগঠনিক সম্পাদক','থানা বায়তুলমাল সম্পাদক','থানা সেক্রেটারিয়েট','ওয়ার্ড সভাপতি','ওয়ার্ড সেক্রেটারি','ওয়ার্ড সাংগঠনিক সম্পাদক','ওয়ার্ড বায়তুলমাল সম্পাদক','ওয়ার্ড সেক্রেটারিয়েট','উপশাখা সভাপতি','উপশাখা সেক্রেটারি','উপশাখা সাংগঠনিক সম্পাদক','উপশাখা বায়তুলমাল সম্পাদক','উপশাখা সেক্রেটারিয়েট'].forEach(opt => { %>
-                    <option value="<%= opt %>" <%= member.responsibility === opt ? 'selected' : '' %>><%= opt %></option>
-                <% }) %>
-            </select>
-
-            <label>অগ্রগতি:</label>
-            <select name="progress">
-                <% ['নেই','সাধারণ','মোটামুটি','ভালো','উত্তম'].forEach(opt => { %>
-                    <option value="<%= opt %>" <%= member.progress === opt ? 'selected' : '' %>><%= opt %></option>
-                <% }) %>
-            </select>
-
             <label>মন্তব্য:</label>
-            <textarea name="comment" rows="3"><%= member.comment %></textarea>
+            <textarea name="comment" rows="3" placeholder="সদস্য সম্পর্কে বিশেষ তথ্য..."><%= member.comment %></textarea>
 
-            <label>নতুন ছবি (পরিবর্তন করতে চাইলে):</label>
-            <input type="file" name="photo">
+            <label>সদস্যের ছবি:</label>
+            <div class="current-photo">
+                <img src="<%= member.photo %>" alt="Current" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid #00d2ff;">
+                <div style="font-size: 12px; color: #94a3b8;">বর্তমান ছবি দেখা যাচ্ছে। পরিবর্তন করতে চাইলে নিচে ফাইল সিলেক্ট করুন।</div>
+            </div>
+            <input type="file" name="photo" style="margin-top: 10px;">
 
             <button type="submit" class="btn">আপডেট নিশ্চিত করুন</button>
-            <a href="/admin" style="display:block; text-align:center; margin-top:15px; color:#94a3b8; text-decoration:none;">বাতিল করুন</a>
+            <a href="/admin" style="display:block; text-align:center; margin-top:15px; color:#94a3b8; text-decoration:none; font-size: 14px;">
+                <i class="fas fa-times me-1"></i> বাতিল করুন
+            </a>
         </form>
     </div>
 

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>অ্যাডমিন কন্ট্রোল | রূপগঞ্জ পশ্চিম</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         :root {
             --card-bg: rgba(30, 41, 59, 0.6);
@@ -24,7 +25,6 @@
             margin-bottom: 25px; 
         }
 
-        /* গ্রিড সিস্টেম - পিসিতে ২ কলাম, মোবাইলে ১ কলাম */
         .grid { 
             display: grid; 
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
@@ -36,8 +36,9 @@
         input, select, textarea { 
             width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; 
             border: 1px solid #334155; background: #0f172a; color: white; 
-            box-sizing: border-box; font-size: 14px;
+            box-sizing: border-box; font-size: 14px; outline: none;
         }
+        input:focus, textarea:focus { border-color: var(--primary-blue); }
 
         .btn { 
             width: 100%; padding: 12px; border-radius: 10px; border: none; 
@@ -49,34 +50,30 @@
         .btn-blue { background: linear-gradient(45deg, #00d2ff, #3a7bd5); }
         .btn-orange { background: #f59e0b; }
         .btn-green { background: #10b981; }
-        .btn-red { background: #ef4444; padding: 6px 12px; font-size: 12px; width: auto; }
-        .btn-edit { background: #3b82f6; padding: 6px 12px; font-size: 12px; width: auto; }
-        .btn-whatsapp { background: #25D366; padding: 6px 12px; font-size: 12px; width: auto; }
+        .btn-red { background: #ef4444; padding: 6px 12px; font-size: 12px; width: auto; color: white !important; cursor: pointer; }
+        .btn-edit { background: #3b82f6; padding: 6px 12px; font-size: 12px; width: auto; color: white !important; text-decoration: none; }
+        .btn-whatsapp { background: #25D366; padding: 6px 12px; font-size: 12px; width: auto; color: white !important; }
 
-        /* টেবিল রেসপনসিভ করার জন্য */
         .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
         .list-table { width: 100%; border-collapse: collapse; margin-top: 15px; min-width: 500px; }
         .list-table th { background: rgba(255,255,255,0.05); color: #94a3b8; font-weight: 500; font-size: 13px; text-align: left; }
         .list-table th, .list-table td { padding: 12px; border-bottom: 1px solid #1e293b; font-size: 14px; }
 
-        .other-box { display: none; border-left: 3px solid var(--primary-blue); padding-left: 10px; }
+        .other-box { display: none; border-left: 3px solid var(--primary-blue); padding-left: 10px; margin-bottom: 10px; }
         .badge { padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
         .badge-pub { background: rgba(16, 185, 129, 0.2); color: #10b981; }
         .badge-priv { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
         .badge-app { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
 
-        /* মোবাইল স্ক্রিনের জন্য বিশেষ পরিবর্তন */
         @media (max-width: 600px) {
             .container { padding: 10px; }
             .glass-card { padding: 15px; border-radius: 15px; }
             h3 { font-size: 1rem; }
             .btn { padding: 10px; font-size: 14px; }
-            .list-table th, .list-table td { padding: 10px 8px; }
         }
     </style>
 </head>
 <body>
-    <%- include('partials/nav', {user: user}) %>
     
     <div class="container">
         <div class="grid">
@@ -88,7 +85,16 @@
                         <input type="text" name="father" placeholder="পিতার নাম">
                         <input type="text" name="mother" placeholder="মাতার নাম">
                     </div>
-                    <input type="date" name="dob">
+                    
+                    <div style="display: flex; gap: 10px;">
+                        <input type="date" name="dob" title="জন্ম তারিখ">
+                        <input type="text" name="phone" placeholder="ফোন নম্বর" required>
+                    </div>
+
+                    <input type="url" name="facebook" placeholder="ফেসবুক আইডি লিঙ্ক (https://...)">
+
+                    <textarea name="present_address" placeholder="বর্তমান ঠিকানা" rows="2"></textarea>
+                    <textarea name="permanent_address" placeholder="স্থায়ী ঠিকানা" rows="2"></textarea>
                     
                     <select name="type" required>
                         <option value="">সাংগঠনিক মান</option>
@@ -175,13 +181,13 @@
                         <% if(data.applications && data.applications.length > 0) { %>
                             <% data.applications.forEach(app => { %>
                                 <tr>
-                                    <td><strong><%= app.name %></strong><br><small class="text-muted"><%= app.date %></small></td>
+                                    <td><strong><%= app.name %></strong><br><small style="color:#64748b;"><%= app.date %></small></td>
                                     <td><%= app.phone %></td>
                                     <td><span class="badge badge-app"><%= app.institution %></span></td>
                                     <td>
                                         <div style="display: flex; gap: 5px;">
                                             <a href="https://wa.me/88<%= app.phone %>" target="_blank" class="btn btn-whatsapp"><i class="fab fa-whatsapp"></i></a>
-                                            <a href="/admin/delete-app/<%= app.id %>" class="btn btn-red" onclick="return confirm('আবেদনটি মুছতে চান?')"><i class="fas fa-trash"></i></a>
+                                            <button onclick="confirmDel('/admin/delete-app/<%= app._id %>')" class="btn btn-red"><i class="fas fa-trash"></i></button>
                                         </div>
                                     </td>
                                 </tr>
@@ -195,23 +201,24 @@
         </div>
 
         <div class="glass-card">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">
-                <h3 style="margin-bottom:0; border:none;"><i class="fas fa-users"></i> জনশক্তি তালিকা</h3>
-                <a href="/admin/download-list" class="btn btn-green" style="width:auto; padding:8px 15px; font-size: 13px;"><i class="fas fa-file-excel"></i> Excel</a>
-            </div>
+            <h3 style="color:#3b82f6; border:none;"><i class="fas fa-users"></i> জনশক্তি তালিকা</h3>
             <div class="table-responsive">
                 <table class="list-table">
-                    <thead><tr><th>নাম</th><th>মান</th><th>দায়িত্ব</th><th>অ্যাকশন</th></tr></thead>
+                    <thead><tr><th>নাম ও ফোন</th><th>মান</th><th>দায়িত্ব</th><th>ঠিকানা</th><th>অ্যাকশন</th></tr></thead>
                     <tbody>
                         <% data.members.forEach(m => { %>
                             <tr>
-                                <td><strong><%= m.name %></strong></td>
+                                <td>
+                                    <strong><%= m.name %></strong><br>
+                                    <small style="color:var(--primary-blue)"><%= m.phone %></small>
+                                </td>
                                 <td><span class="badge badge-pub"><%= m.type %></span></td>
                                 <td><%= m.responsibility %></td>
+                                <td><small><%= m.present_address %></small></td>
                                 <td>
                                     <div style="display: flex; gap: 5px;">
-                                        <a href="/admin/edit-member/<%= m.id %>" class="btn btn-edit">এডিট</a>
-                                        <a href="/admin/delete-member/<%= m.id %>" class="btn btn-red" onclick="return confirm('আপনি কি নিশ্চিত?')">মুছুন</a>
+                                        <a href="/admin/edit-member/<%= m._id %>" class="btn btn-edit">এডিট</a>
+                                        <button onclick="confirmDel('/admin/delete-member/<%= m._id %>')" class="btn btn-red">মুছুন</button>
                                     </div>
                                 </td>
                             </tr>
@@ -233,7 +240,10 @@
                                     <td><%= n.title %></td>
                                     <td><span class="badge badge-priv"><%= n.visibility %></span></td>
                                     <td>
-                                        <a href="/admin/delete-notice/<%= n.id %>" style="color:#ef4444;"><i class="fas fa-trash"></i></a>
+                                        <div style="display: flex; gap: 12px; align-items: center;">
+                                            <a href="/admin/edit-notice/<%= n._id %>" style="color:#3b82f6;"><i class="fas fa-edit"></i></a>
+                                            <i onclick="confirmDel('/admin/delete-notice/<%= n._id %>')" class="fas fa-trash" style="color:#ef4444; cursor:pointer;"></i>
+                                        </div>
                                     </td>
                                 </tr>
                             <% }) %>
@@ -253,7 +263,10 @@
                                     <td><%= r.title %></td>
                                     <td><span class="badge badge-pub"><%= r.visibility %></span></td>
                                     <td>
-                                        <a href="/admin/delete-resource/<%= r.id %>" style="color:#ef4444;"><i class="fas fa-trash"></i></a>
+                                        <div style="display: flex; gap: 12px; align-items: center;">
+                                            <a href="/admin/edit-resource/<%= r._id %>" style="color:#3b82f6;"><i class="fas fa-edit"></i></a>
+                                            <i onclick="confirmDel('/admin/delete-resource/<%= r._id %>')" class="fas fa-trash" style="color:#ef4444; cursor:pointer;"></i>
+                                        </div>
                                     </td>
                                 </tr>
                             <% }) %>
@@ -267,6 +280,25 @@
     <script>
         function toggleBox(select, id) {
             document.getElementById(id).style.display = (select.value === 'অন্যান্য') ? 'block' : 'none';
+        }
+
+        function confirmDel(url) {
+            Swal.fire({
+                title: 'আপনি কি নিশ্চিত?',
+                text: "এটি ডিলিট করলে আর ফিরে পাওয়া যাবে না!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'হ্যাঁ, ডিলিট করুন!',
+                cancelButtonText: 'বাতিল',
+                background: '#0f172a',
+                color: '#fff'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url;
+                }
+            })
         }
     </script>
 </body>

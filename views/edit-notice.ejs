@@ -2,27 +2,90 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <title>নোটিশ এডিট</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>নোটিশ এডিট | রূপগঞ্জ পশ্চিম</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background: #020617; color: white; font-family: sans-serif; padding: 50px; }
-        .card { background: rgba(30, 41, 59, 0.5); padding: 30px; border-radius: 15px; max-width: 500px; margin: auto; }
-        input, textarea, select { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; background: #0f172a; color: white; border: 1px solid #334155; }
-        .btn { background: #3b82f6; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%; }
+        body { background: #020617; color: white; font-family: 'Segoe UI', Arial, sans-serif; padding: 20px; margin: 0; }
+        
+        .card { 
+            background: rgba(30, 41, 59, 0.4); 
+            backdrop-filter: blur(15px);
+            padding: 30px; 
+            border-radius: 20px; 
+            max-width: 550px; 
+            margin: 50px auto; 
+            border: 1px solid rgba(255,255,255,0.1); 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+
+        h3 { 
+            text-align: center; 
+            color: #f59e0b; 
+            margin-bottom: 25px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 10px;
+        }
+
+        label { display: block; margin-top: 15px; color: #94a3b8; font-size: 14px; }
+
+        input, textarea, select { 
+            width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; 
+            background: #0f172a; color: white; border: 1px solid #334155; 
+            box-sizing: border-box; outline: none; transition: 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus { 
+            border-color: #f59e0b; 
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.2); 
+        }
+
+        .btn { 
+            background: linear-gradient(45deg, #f59e0b, #d97706); 
+            color: white; border: none; padding: 14px; border-radius: 10px; 
+            cursor: pointer; width: 100%; font-weight: bold; margin-top: 20px; 
+            font-size: 16px; transition: 0.3s;
+        }
+
+        .btn:hover { transform: translateY(-2px); opacity: 0.9; }
+
+        .back-link { 
+            display: block; text-align: center; margin-top: 15px; 
+            color: #94a3b8; text-decoration: none; font-size: 14px; 
+            transition: 0.3s;
+        }
+        
+        .back-link:hover { color: white; }
+
+        @media (max-width: 600px) {
+            .card { padding: 20px; margin: 20px 10px; }
+        }
     </style>
 </head>
 <body>
     <div class="card">
-        <h3>নোটিশ এডিট করুন</h3>
+        <h3><i class="fas fa-edit"></i> নোটিশ এডিট করুন</h3>
+        
         <form action="/admin/update-notice/<%= notice.id %>" method="POST">
-            <input type="text" name="title" value="<%= notice.title %>" required>
-            <textarea name="content" rows="5"><%= notice.content %></textarea>
+            <label>নোটিশের শিরোনাম:</label>
+            <input type="text" name="title" value="<%= notice.title %>" placeholder="শিরোনাম লিখুন..." required>
+            
+            <label>নোটিশের বিস্তারিত:</label>
+            <textarea name="content" rows="6" placeholder="বিস্তারিত এখানে লিখুন..."><%= notice.content %></textarea>
+            
+            <label>দৃশ্যমানতা:</label>
             <select name="visibility">
-                <option value="পাবলিক" <%= notice.visibility === 'পাবলিক' ? 'selected' : '' %>>পাবলিক</option>
-                <option value="কর্মী" <%= notice.visibility === 'কর্মী' ? 'selected' : '' %>>কর্মী</option>
-                <option value="সাথী" <%= notice.visibility === 'সাথী' ? 'selected' : '' %>>সাথী</option>
+                <option value="পাবলিক" <%= notice.visibility === 'পাবলিক' ? 'selected' : '' %>>পাবলিক (সবাই দেখবে)</option>
+                <option value="কর্মী" <%= notice.visibility === 'কর্মী' ? 'selected' : '' %>>কর্মী (শুধু কর্মীরা)</option>
+                <option value="সাথী" <%= notice.visibility === 'সাথী' ? 'selected' : '' %>>সাথী (শুধু সাথীরা)</option>
             </select>
-            <button type="submit" class="btn">আপডেট করুন</button>
-            <a href="/admin" style="color: #94a3b8; display: block; text-align: center; margin-top: 15px;">ফিরে যান</a>
+            
+            <button type="submit" class="btn">আপডেট নিশ্চিত করুন</button>
+            <a href="/admin" class="back-link">
+                <i class="fas fa-arrow-left"></i> পরিবর্তন ছাড়াই ফিরে যান
+            </a>
         </form>
     </div>
 </body>
