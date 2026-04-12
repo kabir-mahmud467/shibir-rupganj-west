@@ -1,37 +1,191 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>প্রোফাইল</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>আমার প্রোফাইল - রূপগঞ্জ পশ্চিম থানা ছাত্রশিবির</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background: #020617; color: white; font-family: sans-serif; }
-        .card { max-width: 600px; margin: 50px auto; background: rgba(30, 41, 59, 0.5); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
-        .info { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        .box { background: #0f172a; padding: 10px; border-radius: 8px; }
-        label { font-size: 0.8rem; color: #94a3b8; }
-        .val { font-weight: bold; color: #00d2ff; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a1a2e 0%, #1a3a4a 50%, #0d2635 100%);
+            min-height: 100vh;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            color: #ffffff;
+        }
+
+        .container {
+            margin-top: 2rem;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: rgba(0, 129, 68, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            object-fit: cover;
+            border: 3px solid #00b74a;
+        }
+
+        .profile-info-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            background: rgba(0, 129, 68, 0.1);
+            padding: 15px;
+            border-radius: 12px;
+            border-left: 3px solid #00b74a;
+        }
+
+        .info-label {
+            color: #80c956;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            color: #ffffff;
+            font-size: 1rem;
+        }
+
+        .btn-edit {
+            background: linear-gradient(135deg, #00b74a, #00a859);
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: 0.3s;
+        }
+
+        .btn-edit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 129, 68, 0.4);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .profile-info-row {
+                grid-template-columns: 1fr;
+            }
+
+            .glass-card {
+                padding: 20px;
+            }
+        }
     </style>
 </head>
 <body>
-    <%- include('partials/nav', {user: user}) %>
-    <div class="card">
-        <center>
-            <img src="/uploads/<%= profile.photo %>" style="width:120px; height:120px; border-radius:50%; border:3px solid #00d2ff; object-fit:cover;">
-            <h2><%= profile.name %></h2>
-            <span style="background:#10b981; padding:5px 15px; border-radius:20px;"><%= profile.type %></span>
-        </center>
-        
-        <div class="info">
-            <div class="box"><label>পিতার নাম</label><div class="val"><%= profile.father || '-' %></div></div>
-            <div class="box"><label>মাতার নাম</label><div class="val"><%= profile.mother || '-' %></div></div>
-            <div class="box"><label>জন্ম তারিখ</label><div class="val"><%= profile.dob || '-' %></div></div>
-            <div class="box"><label>শিক্ষা</label><div class="val"><%= profile.edu === 'অন্যান্য' ? profile.edu_other : profile.edu %></div></div>
-            <div class="box"><label>প্রতিষ্ঠান</label><div class="val"><%= profile.inst === 'অন্যান্য' ? profile.inst_other : profile.inst %></div></div>
-            <div class="box"><label>দায়িত্ব</label><div class="val"><%= profile.responsibility %></div></div>
-            <div class="box"><label>অগ্রগতি</label><div class="val"><%= profile.progress %></div></div>
+    <%- include('partials/main-nav') %>
+
+    <div class="container mt-5 mb-5">
+        <div class="glass-card">
+            <div class="profile-header">
+                <% if (member && member.photo) { %>
+                    <img src="<%= member.photo %>" alt="প্রোফাইল" class="profile-photo">
+                <% } else { %>
+                    <div class="profile-photo">
+                        <i class="fas fa-user fa-3x"></i>
+                    </div>
+                <% } %>
+                <h2 class="text-white fw-bold"><%= member.name %></h2>
+                <p class="text-success fw-bold"><i class="fas fa-circle-check me-2"></i><%= member.type %></p>
+            </div>
+
+            <div class="profile-info-row">
+                <div class="info-item">
+                    <div class="info-label"><i class="fas fa-person me-2"></i>বাবার নাম</div>
+                    <div class="info-value"><%= member.father || 'যোগ করা হয়নি' %></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label"><i class="fas fa-person-dress me-2"></i>মায়ের নাম</div>
+                    <div class="info-value"><%= member.mother || 'যোগ করা হয়নি' %></div>
+                </div>
+            </div>
+
+            <div class="profile-info-row">
+                <div class="info-item">
+                    <div class="info-label"><i class="fas fa-birthday-cake me-2"></i>জন্মতারিখ</div>
+                    <div class="info-value"><%= member.dob || 'যোগ করা হয়নি' %></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label"><i class="fas fa-phone me-2"></i>ফোন নম্বর</div>
+                    <div class="info-value"><%= member.phone || 'যোগ করা হয়নি' %></div>
+                </div>
+            </div>
+
+            <div class="profile-info-row">
+                <div class="info-item">
+                    <div class="info-label"><i class="fas fa-school me-2"></i>শিক্ষা প্রতিষ্ঠান</div>
+                    <div class="info-value"><%= member.inst || 'যোগ করা হয়নি' %></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label"><i class="fas fa-book me-2"></i>শিক্ষা স্তর</div>
+                    <div class="info-value"><%= member.edu || 'যোগ করা হয়নি' %></div>
+                </div>
+            </div>
+
+            <div class="profile-info-row">
+                <div class="info-item">
+                    <div class="info-label"><i class="fas fa-map-marker-alt me-2"></i>বর্তমান ঠিকানা</div>
+                    <div class="info-value" style="font-size: 0.95rem;"><%= member.present_address || 'যোগ করা হয়নি' %></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label"><i class="fas fa-home me-2"></i>স্থায়ী ঠিকানা</div>
+                    <div class="info-value" style="font-size: 0.95rem;"><%= member.permanent_address || 'যোগ করা হয়নি' %></div>
+                </div>
+            </div>
+
+            <div class="profile-info-row">
+                <div class="info-item">
+                    <div class="info-label"><i class="fas fa-facebook me-2"></i>ফেসবুক আইডি</div>
+                    <div class="info-value"><%= member.facebook || 'যোগ করা হয়নি' %></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label"><i class="fas fa-phone me-2"></i>অভিভাবক ফোন</div>
+                    <div class="info-value"><%= member.guardian_phone || 'যোগ করা হয়নি' %></div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="/edit-profile" class="btn-edit">
+                    <i class="fas fa-edit me-2"></i> প্রোফাইল এডিট করুন
+                </a>
+            </div>
         </div>
-        <div class="box" style="margin-top:15px;"><label>মন্তব্য</label><div class="val"><%= profile.comment %></div></div>
-        <p style="text-align:center; color:#ef4444; font-size:0.8rem; margin-top:20px;">* তথ্য পরিবর্তনের জন্য অ্যাডমিনের সাথে যোগাযোগ করুন।</p>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

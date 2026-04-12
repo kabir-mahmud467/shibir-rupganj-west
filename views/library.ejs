@@ -1,46 +1,86 @@
 <!DOCTYPE html>
-<html>
+<html lang="bn">
 <head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/style.css">
-    <title>Office Library</title>
+    <title>অনলাইন লাইব্রেরি | রূপগঞ্জ পশ্চিম</title>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        :root {
+            --primary-green: #008144;
+            --dark-bg: #0a0f0d;
+            --footer-bg: #051a0f;
+            --glass-white: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --accent-yellow: #ffb700;
+        }
+
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+            background: radial-gradient(circle at top left, #071d11, #081110 65%);
+            color: #edf2f7;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .content { max-width: 1140px; margin: 30px auto; padding: 0 18px; }
+        .card-grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+        .lib-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 24px;
+            transition: transform 0.25s ease, border-color 0.25s ease;
+        }
+        .lib-card:hover { transform: translateY(-4px); border-color: #84cc16; }
+        .lib-card h4 { margin-bottom: 12px; font-size: 1.05rem; }
+        .lib-card p { color: #cbd5e1; font-size: 0.95rem; line-height: 1.6; }
+        .lib-card a { display: inline-flex; align-items: center; gap: 8px; margin-top: 16px; color: #d9f99d; text-decoration: none; font-weight: 600; }
+        .lib-card a:hover { color: #bef264; }
+        .badge-type { font-size: 0.8rem; padding: 5px 10px; border-radius: 999px; background: rgba(255,255,255,0.08); color: #d1fae5; }
+        .empty-state { color: #94a3b8; font-size: 1rem; }
+    </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="logo">Library Hub</div>
-        <ul class="nav-links">
-            <li><a href="/">Home</a></li>
-            <li><a href="/library">Library</a></li>
-        </ul>
-    </nav>
+    <%- include('partials/main-nav') %>
 
-    <div style="padding: 20px;">
-        <h2>Books & Documents</h2>
-        <div style="display: flex; flex-wrap: wrap; gap: 20px;">
-            <% const docs = books.filter(b => b.type === 'book'); %>
-            <% if(docs.length === 0) { %> <p>No books uploaded yet.</p> <% } %>
-            <% docs.forEach(book => { %>
-                <div style="border: 1px solid #ccc; padding: 10px; border-radius: 8px; width: 200px;">
-                    <h4><%= book.name %></h4>
-                    <a href="/uploads/<%= book.filename %>" target="_blank">View/Download</a>
+    <main class="content">
+        <section class="mb-4">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
+                <div>
+                    <h2 class="fw-bold">লাইব্রেরি সামগ্রী</h2>
+                    <p class="text-muted">নিচের আছে বই, ডকুমেন্ট ও পড়ার লিঙ্ক। ছবি বা বই পড়ুন এ ক্লিক করলে সরাসরি সেটি খুলবে।</p>
                 </div>
-            <% }) %>
-        </div>
-
-        <hr>
-
-        <h2>Audio Gallery</h2>
-        <% const audios = books.filter(b => b.type === 'audio'); %>
-        <% if(audios.length === 0) { %> <p>No audio files uploaded yet.</p> <% } %>
-        <% audios.forEach(audio => { %>
-            <div style="margin-bottom: 20px; background: #eee; padding: 10px; border-radius: 8px;">
-                <p><strong><%= audio.name %></strong></p>
-                <audio controls>
-                    <source src="/uploads/<%= audio.filename %>" type="audio/mpeg">
-                    Your browser does not support audio.
-                </audio>
+                <a href="/admin" class="btn btn-outline-success btn-sm">অ্যাডমিন প্যানেলে যান</a>
             </div>
-        <% }) %>
-    </div>
+        </section>
+
+        <section class="card-grid">
+            <% if (resources && resources.length > 0) { %>
+                <% resources.forEach(resource => { %>
+                    <article class="lib-card">
+                        <% if (resource.imageUrl) { %>
+                            <a href="<%= resource.url %>" target="_blank" style="display: block; overflow: hidden; border-radius: 10px; margin-bottom: 12px;">
+                                <img src="<%= resource.imageUrl %>" alt="<%= resource.title %>" style="width: 100%; height: 200px; object-fit: cover; transition: 0.3s;" />
+                            </a>
+                        <% } %>
+                        <span class="badge-type"><%= resource.visibility %></span>
+                        <h4><%= resource.title %></h4>
+                        <% if (resource.imageUrl) { %>
+                            <p style="font-size: 0.9rem; color: #a0a0a0;">বইয়ের কভার দেখুন এবং পড়ুন</p>
+                        <% } else { %>
+                            <p><%= resource.url %></p>
+                        <% } %>
+                        <a href="<%= resource.url %>" target="_blank"><i class="fas fa-arrow-right"></i> বই পড়ুন বা লিঙ্ক খুলুন</a>
+                    </article>
+                <% }) %>
+            <% } else { %>
+                <div class="empty-state">কোনো পাবলিক লাইব্রেরি লিঙ্ক পাওয়া যায়নি।</div>
+            <% } %>
+        </section>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

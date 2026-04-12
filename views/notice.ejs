@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= notice.title %> | নোটিশ</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: linear-gradient(135deg, #0a1a2e 0%, #1a3a4a 50%, #0d2635 100%); color: #f8fafc; font-family: 'Hind Siliguri', sans-serif; }
+        
+        .navbar { background: rgba(10, 15, 13, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.12); padding: 12px 0; }
+        .navbar-brand { font-weight: 700; letter-spacing: 0.5px; }
+        .nav-link { font-weight: 500; transition: 0.3s; }
+        .nav-link:hover { color: #80c956 !important; }
+        
+        .container { max-width: 860px; margin: auto; margin-top: 2rem; }
+        .card { background: rgba(255,255,255,0.08); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 40px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); }
+        a { color: #84cc16; text-decoration: none; }
+        a:hover { color: #bef264; }
+        .meta { color: #94a3b8; margin-bottom: 20px; }
+        pre { white-space: pre-wrap; line-height: 1.8; }
+        h1 { color: #ffffff; font-weight: 700; }
+    </style>
+</head>
+<body>
+    <%- include('partials/main-nav') %>
+
+    <div class="container">
+        <div class="card">
+            <h1 style="margin-bottom: 12px;"><%= notice.title %></h1>
+            <div class="meta">প্রকাশিত: <%= notice.date %> | দৃশ্যমান: <%= notice.visibility %></div>
+            <pre><%= notice.content %></pre>
+            <p style="margin-top: 30px;"><a href="/">← হোমে ফিরুন</a></p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

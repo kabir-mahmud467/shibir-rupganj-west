@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>প্রোফাইল এডিট করুন | রূপগঞ্জ পশ্চিম</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        :root {
+            --primary-green: #008144;
+            --dark-bg: #0a0f0d;
+            --glass-white: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+        }
+
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+            background: radial-gradient(circle at 10% 20%, #002b16, var(--dark-bg) 80%);
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(10, 15, 13, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 12px 0;
+        }
+
+        .form-container {
+            max-width: 700px;
+            margin: 30px auto;
+        }
+
+        .glass-card {
+            background: var(--glass-white);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 40px;
+        }
+
+        .form-label {
+            color: #80c956;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+        }
+
+        .form-control, .form-select {
+            background: rgba(0, 129, 68, 0.1);
+            border: 1px solid var(--glass-border);
+            color: white;
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            transition: 0.3s;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background: rgba(0, 129, 68, 0.2);
+            border-color: var(--primary-green);
+            box-shadow: 0 0 15px rgba(0, 129, 68, 0.3);
+            color: white;
+        }
+
+        .form-control::placeholder {
+            color: #666;
+        }
+
+        .section-title {
+            color: #80c956;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 25px 0 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, var(--primary-green), #00a859);
+            border: none;
+            color: white;
+            font-weight: 700;
+            padding: 14px;
+            border-radius: 10px;
+            width: 100%;
+            margin-top: 20px;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 129, 68, 0.4);
+        }
+
+        .back-link {
+            color: #80c956;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .back-link:hover {
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <%- include('partials/main-nav') %>
+
+    <div class="form-container">
+        <div class="glass-card">
+            <a href="/profile" class="back-link"><i class="fas fa-arrow-left"></i> ফিরে যান</a>
+            
+            <h2 class="text-white fw-bold mb-4"><i class="fas fa-user-edit me-2" style="color: #80c956;"></i> প্রোফাইল এডিট করুন</h2>
+
+            <form action="/update-profile" method="POST">
+                <div class="section-title"><i class="fas fa-person me-2"></i> ব্যক্তিগত তথ্য</div>
+                
+                <label class="form-label">নাম *</label>
+                <input type="text" name="name" class="form-control" value="<%= member.name %>" required>
+
+                <label class="form-label">বাবার নাম</label>
+                <input type="text" name="father" class="form-control" value="<%= member.father || '' %>">
+
+                <label class="form-label">মায়ের নাম</label>
+                <input type="text" name="mother" class="form-control" value="<%= member.mother || '' %>">
+
+                <label class="form-label">জন্মতারিখ</label>
+                <input type="date" name="dob" class="form-control" value="<%= member.dob || '' %>">
+
+                <label class="form-label">ফোন নম্বর</label>
+                <input type="tel" name="phone" class="form-control" value="<%= member.phone || '' %>">
+
+                <label class="form-label">অভিভাবক ফোন নম্বর</label>
+                <input type="tel" name="guardian_phone" class="form-control" value="<%= member.guardian_phone || '' %>">
+
+                <label class="form-label">ফেসবুক আইডি</label>
+                <input type="text" name="facebook" class="form-control" value="<%= member.facebook || '' %>">
+
+                <div class="section-title"><i class="fas fa-school me-2"></i> শিক্ষা তথ্য</div>
+
+                <label class="form-label">শিক্ষা প্রতিষ্ঠানের নাম</label>
+                <input type="text" name="inst" class="form-control" value="<%= member.inst || '' %>">
+
+                <label class="form-label">শিক্ষা স্তর</label>
+                <input type="text" name="edu" class="form-control" value="<%= member.edu || '' %>" placeholder="যেমন: দশম শ্রেণী, অনার্স ২য় বর্ষ">
+
+                <div class="section-title"><i class="fas fa-map-marker-alt me-2"></i> ঠিকানা</div>
+
+                <label class="form-label">বর্তমান ঠিকানা</label>
+                <textarea name="present_address" class="form-control" rows="3"><%= member.present_address || '' %></textarea>
+
+                <label class="form-label">স্থায়ী ঠিকানা</label>
+                <textarea name="permanent_address" class="form-control" rows="3"><%= member.permanent_address || '' %></textarea>
+
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-save me-2"></i> পরিবর্তন সংরক্ষণ করুন
+                </button>
+
+                <div style="text-align: center; margin-top: 15px;">
+                    <a href="/profile" style="color: #999; text-decoration: none;">বাতিল করুন</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

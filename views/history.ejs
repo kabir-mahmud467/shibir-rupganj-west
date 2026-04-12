@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ইতিহাস | রূপগঞ্জ পশ্চিম</title>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body { background: #07130f; color: #f8fafc; font-family: 'Hind Siliguri', sans-serif; margin: 0; }
+        .content { max-width: 1120px; margin: 28px auto; padding: 0 18px; }
+        .tab-button { border-radius: 999px; border: 1px solid rgba(255,255,255,0.12); padding: 10px 18px; color: #f8fafc; background: transparent; cursor: pointer; }
+        .tab-button:hover { background: rgba(255,255,255,0.08); }
+        .tab-button.active { background: #1f2937; border-color: #84cc16; color: #c7f9cc; }
+        .history-item { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.14); border-radius: 18px; padding: 22px; margin-bottom: 18px; }
+        .history-item h4 { margin-bottom: 10px; }
+        .empty-state { color: #94a3b8; }
+        .section-intro { display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .section-intro h1 { margin: 0; font-size: 2rem; }
+        .section-intro p { margin: 0; color: #cbd5e0; }
+    </style>
+</head>
+<body>
+    <%- include('partials/main-nav') %>
+    <main class="content">
+        <div class="section-intro">
+            <div>
+                <h1>তিনটি কategory</h1>
+                <p>আপনার জন্য সংরক্ষিত ইতিহাস, কার্যক্রম ও শহীদ স্মৃতিচারণ।</p>
+            </div>
+        </div>
+
+        <div class="d-flex flex-wrap gap-3 my-4">
+            <button class="tab-button active" data-tab="history">থানার ইতিহাস</button>
+            <button class="tab-button" data-tab="officials">প্রাক্তন দায়িত্বশীল</button>
+            <button class="tab-button" data-tab="martyrs">শহীদদের তালিকা</button>
+        </div>
+
+        <section id="history" class="tab-panel">
+            <% if (histories && histories.length > 0) { %>
+                <% histories.forEach(item => { %>
+                    <div class="history-item">
+                        <h4><%= item.title %></h4>
+                        <p><%= item.body %></p>
+                        <% if (item.extra) { %><small class="text-muted"><%= item.extra %></small><% } %>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <p class="empty-state">এখনও কোন ইতিহাস লিখা হয়নি।</p>
+            <% } %>
+        </section>
+
+        <section id="officials" class="tab-panel" style="display:none;">
+            <% if (officials && officials.length > 0) { %>
+                <% officials.forEach(item => { %>
+                    <div class="history-item">
+                        <h4><%= item.title %></h4>
+                        <p><%= item.body %></p>
+                        <% if (item.extra) { %><small class="text-muted"><%= item.extra %></small><% } %>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <p class="empty-state">এখনো কোন দায়িত্বশীল তথ্য যোগ করা হয়নি।</p>
+            <% } %>
+        </section>
+
+        <section id="martyrs" class="tab-panel" style="display:none;">
+            <% if (martyrs && martyrs.length > 0) { %>
+                <% martyrs.forEach(item => { %>
+                    <div class="history-item">
+                        <h4><%= item.title %></h4>
+                        <p><%= item.body %></p>
+                        <% if (item.extra) { %><small class="text-muted"><%= item.extra %></small><% } %>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <p class="empty-state">এখনো কোন শহীদ তালিকা প্রকাশিত হয়নি।</p>
+            <% } %>
+        </section>
+    </main>
+    <script>
+        const tabs = document.querySelectorAll('.tab-button');
+        const panels = document.querySelectorAll('.tab-panel');
+        tabs.forEach(button => {
+            button.addEventListener('click', () => {
+                tabs.forEach(btn => btn.classList.remove('active'));
+                panels.forEach(panel => panel.style.display = 'none');
+                button.classList.add('active');
+                document.getElementById(button.dataset.tab).style.display = 'block';
+            });
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

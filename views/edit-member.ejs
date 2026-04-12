@@ -107,9 +107,27 @@
 
             <div class="grid">
                 <div>
+                    <label>ওয়ার্ডের নাম:</label>
+                    <input type="text" name="ward" value="<%= member.ward %>">
+                </div>
+                <div>
+                    <label>উপশাখার নাম:</label>
+                    <input type="text" name="branch" value="<%= member.branch %>">
+                </div>
+            </div>
+
+            <div class="grid">
+                <div>
+                    <label>অভিভাবকের ফোন নম্বর:</label>
+                    <input type="text" name="guardian_phone" value="<%= member.guardian_phone %>">
+                </div>
+                <div>
                     <label style="color: #fbbf24;"><i class="fas fa-key me-1"></i> গোপন কোড (পাসওয়ার্ড):</label>
                     <input type="text" name="password" value="<%= member.password %>" required>
                 </div>
+            </div>
+
+            <div class="grid">
                 <div>
                     <label>দায়িত্ব:</label>
                     <select name="responsibility">

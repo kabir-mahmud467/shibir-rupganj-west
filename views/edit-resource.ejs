@@ -129,21 +129,21 @@
                 <option value="সাথী" <%= resource.visibility === 'সাথী' ? 'selected' : '' %>>সাথী (শুধু সাথীরা)</option>
             </select>
 
-            <label>বর্তমান ফাইল/লিঙ্ক:</label>
+            <label>বর্তমান লিঙ্ক:</label>
             <div class="current-info">
                 <i class="fas fa-link"></i> 
                 <% if (resource.url) { %>
-                    <%= resource.url.substring(0, 40) %>...
+                    <%= resource.url %>
                 <% } else { %>
-                    কোনো ফাইল আপলোড করা নেই
+                    কোনো লিঙ্ক নেই
                 <% } %>
             </div>
 
-            <label>নতুন ফাইল আপলোড (ঐচ্ছিক):</label>
-            <input type="file" name="file">
+            <label>বইয়ের লিঙ্ক (Google Drive/URL):</label>
+            <input type=\"url\" name=\"url\" value=\"<%= resource.url || '' %>\" placeholder=\"https://drive.google.com/...\" required>
 
-            <label>বাহ্যিক লিঙ্ক (Google Drive/অন্যান্য):</label>
-            <input type="url" name="external_url" value="<%= resource.url.startsWith('http') ? resource.url : '' %>" placeholder="https://drive.google.com/...">
+            <label>বইয়ের ছবির URL (Cloudinary/অন্যান্য):</label>
+            <input type=\"url\" name=\"imageUrl\" value=\"<%= resource.imageUrl || '' %>\" placeholder=\"https://example.com/book-image.jpg\">
 
             <button type="submit" class="btn">আপডেট নিশ্চিত করুন</button>
             <a href="/admin" class="back-link">

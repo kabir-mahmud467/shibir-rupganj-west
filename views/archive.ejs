@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>আর্কাইভ | রূপগঞ্জ পশ্চিম</title>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body { background: #07130f; color: #f8fafc; font-family: 'Hind Siliguri', sans-serif; margin: 0; }
+        .content { max-width: 1120px; margin: 28px auto; padding: 0 18px; }
+        .archive-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 22px; padding: 24px; margin-bottom: 24px; }
+        .embed-box { margin-top: 18px; border-radius: 18px; overflow: hidden; }
+        iframe, img { width: 100%; border-radius: 18px; }
+        .empty-state { color: #94a3b8; }
+    </style>
+</head>
+<body>
+    <%- include('partials/main-nav') %>
+    <main class="content">
+        <% if (items && items.length > 0) { %>
+            <% items.forEach(item => { %>
+                <section class="archive-card">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
+                        <div>
+                            <h3><%= item.title %></h3>
+                            <p class="text-muted"><%= item.description || 'এই আইটেমটি আর্কাইভে যুক্ত হয়েছে।' %></p>
+                        </div>
+                        <span class="badge bg-success"><%= item.itemType || 'অন্যান্য' %></span>
+                    </div>
+                    <% if (item.url && item.url.includes('drive.google.com')) { %>
+                        <div class="embed-box mt-4">
+                            <iframe src="<%= item.url.replace('/view', '/preview').replace('/open?', '/preview?') %>" height="420" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    <% } else if (item.url && (item.url.includes('youtube.com') || item.url.includes('youtu.be'))) { %>
+                        <div class="embed-box mt-4">
+                            <iframe src="https://www.youtube.com/embed/<%= item.url.split('v=')[1] ? item.url.split('v=')[1].split('&')[0] : item.url.split('youtu.be/')[1] %>" height="420" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    <% } else if (item.url && (item.url.endsWith('.jpg') || item.url.endsWith('.jpeg') || item.url.endsWith('.png') || item.url.endsWith('.gif'))) { %>
+                        <div class="embed-box mt-4"><img src="<%= item.url %>" alt="Archive Image"></div>
+                    <% } else if (item.url) { %>
+                        <p class="mt-4"><a href="<%= item.url %>" target="_blank" class="btn btn-outline-light">আর্কাইভ লিঙ্কে যান</a></p>
+                    <% } %>
+                </section>
+            <% }) %>
+        <% } else { %>
+            <p class="empty-state">এখনও কোনো আর্কাইভ আইটেম যোগ করা হয়নি।</p>
+        <% } %>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

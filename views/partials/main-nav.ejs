@@ -1,0 +1,257 @@
+ <style>
+        :root {
+            --primary-green: #008144;
+            --dark-bg: #0a0f0d;
+            --footer-bg: #051a0f;
+            --glass-white: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --accent-yellow: #ffb700;
+        }
+
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+            background: radial-gradient(circle at 10% 20%, #002b16, var(--dark-bg) 80%);
+            color: #ffffff;
+            font-weight: 500;
+            min-height: 100vh;
+            overflow-x: hidden;
+            opacity: 1;
+        }
+
+        .glass-card {
+            background: var(--glass-white);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            transition: 0.3s ease;
+        }
+
+        /* Navbar Style */
+        .navbar { 
+            background: rgba(10, 15, 13, 0.95); 
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 12px 0;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(to bottom, #ffffff 40%, #a0a0a0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+
+        /* বাটন গ্রিড (মোবাইলে ২ কলাম, পিসিতে ৪ কলাম) */
+        .quick-btn-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 40px 0;
+        }
+
+        @media (min-width: 768px) {
+            .quick-btn-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+
+        .q-btn {
+            background: var(--glass-white);
+            border: 1px solid var(--glass-border);
+            padding: 25px 10px;
+            border-radius: 18px;
+            text-align: center;
+            color: #ffffff !important;
+            text-decoration: none;
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .q-btn:hover {
+            background: rgba(0, 129, 68, 0.3);
+            border-color: var(--accent-yellow);
+            transform: translateY(-5px);
+        }
+
+        .q-btn i { font-size: 1.8rem; margin-bottom: 12px; }
+
+        /* নোটিশ বোর্ড এনিমেশন */
+        .notice-container { height: 260px; overflow: hidden; }
+        .notice-container { min-height: 260px; }
+
+        .hero-banner {
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 40px;
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(5, 10, 8, 0.45);
+        }
+        .hero-banner::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top right, rgba(0,255,144,0.18), transparent 35%);
+            pointer-events: none;
+        }
+        #threeCanvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        .hero-area {
+            position: relative;
+            z-index: 1;
+            padding: 40px 30px;
+        }
+        .hero-area h1, .hero-area p { position: relative; z-index: 1; }
+        .hero-slide {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(0,0,0,0.34);
+            border-radius: 18px;
+            border: 1px solid rgba(255,255,255,0.12);
+            color: #f8f8f8;
+        }
+        .hero-slide .slide-title { color: #ffeb3b; }
+        .floating-labels {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-top: 35px;
+        }
+        .float-chip {
+            background: rgba(255,255,255,0.06);
+            border: 2px solid rgba(255,255,255,0.12);
+            padding: 18px 16px;
+            border-radius: 18px;
+            text-align: center;
+            font-size: 0.95rem;
+            font-weight: 600;
+            animation: floatUp 8s ease-in-out infinite;
+            transition: 0.3s ease;
+            color: #ffffff;
+        }
+        .float-chip:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        .float-chip:nth-child(1) {
+            background: rgba(0, 129, 68, 0.2);
+            border-color: #00b366;
+            color: #7fff9f;
+            animation-delay: 0s;
+        }
+        .float-chip:nth-child(2) {
+            background: rgba(0, 99, 58, 0.2);
+            border-color: #009944;
+            color: #66d9a0;
+            animation-delay: 1.2s;
+        }
+        .float-chip:nth-child(3) {
+            background: rgba(0, 129, 68, 0.2);
+            border-color: #00b366;
+            color: #7fff9f;
+            animation-delay: 2.4s;
+        }
+        .float-chip:nth-child(4) {
+            background: rgba(0, 99, 58, 0.2);
+            border-color: #009944;
+            color: #66d9a0;
+            animation-delay: 3.6s;
+        }
+        .float-chip:nth-child(5) {
+            background: rgba(0, 129, 68, 0.2);
+            border-color: #00b366;
+            color: #7fff9f;
+            animation-delay: 4.8s;
+        }
+        @keyframes floatUp { 0%,100%{transform: translateY(0);}50%{transform: translateY(-10px);} }
+
+        /* dushibir.org Style Footer */
+        .main-footer {
+            background: var(--footer-bg);
+            border-top: 4px solid var(--primary-green);
+            color: #fff;
+            padding: 60px 0 0px;
+            margin-top: 80px;
+        }
+
+        .footer-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            position: relative;
+            color: var(--accent-yellow);
+        }
+
+        .footer-links { list-style: none; padding: 0; }
+        .footer-links li { margin-bottom: 12px; }
+        .footer-links a {
+            color: #cbd5e0;
+            text-decoration: none;
+            transition: 0.3s;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .footer-links a:hover { color: var(--accent-yellow); padding-left: 8px; }
+
+        .social-links { display: flex; gap: 12px; margin-top: 20px; }
+        .social-icon {
+            width: 38px; height: 38px;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; color: #fff; text-decoration: none; transition: 0.3s;
+        }
+        .social-icon:hover { background: var(--primary-green); transform: translateY(-3px); }
+
+        .copyright-area {
+            background-color: #03110a;
+            padding: 20px 0;
+            margin-top: 50px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+
+        }
+
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.2rem; }
+        }
+    </style>  <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <img src="https://www.dushibir.org/storage/setting_images/wKFhZtq3w8jQDZT9wLfeJJXeGW09yJss7WACq03k.png" alt="Logo" height="45">
+                <div class="ms-2">
+                    <span class="d-block text-white fw-bold lh-1">বাংলাদেশ ইসলামী ছাত্রশিবির</span>
+                    <small class="text-success fw-bold" style="font-size: 18px;">রূপগঞ্জ পশ্চিম থানা </small>
+                </div>
+            </a>
+            <button class="navbar-toggler text-white border-0" data-bs-toggle="collapse" data-bs-target="#mNav">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="mNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link text-white" href="/">হোম</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="/form">সমর্থক ফরম</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="/library">অনলাইন লাইব্রেরি</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="/archive">আর্কাইভ</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="/history">থানার ইতিহাস</a></li>
+                    <% if (user && user.role === 'admin') { %>
+                        <li class="nav-item"><a class="nav-link text-info fw-bold" href="/admin"><i class="fas fa-shield-halved me-1"></i>অ্যাডমিন প্যানেল</a></li>
+                        <li class="nav-item"><a class="btn btn-danger rounded-pill px-4 ms-lg-3 mt-2 mt-lg-0 fw-bold" href="/logout">লগআউট</a></li>
+                    <% } else if (user && user.role !== 'admin') { %>
+                        <li class="nav-item"><a class="nav-link text-success fw-bold" href="/profile"><i class="fas fa-user me-1"></i>প্রোফাইল</a></li>
+                        <li class="nav-item"><a class="btn btn-danger rounded-pill px-4 ms-lg-3 mt-2 mt-lg-0 fw-bold" href="/logout">লগআউট</a></li>
+                    <% } else if (!user) { %>
+                        <li class="nav-item"><a class="btn btn-warning rounded-pill px-4 ms-lg-3 mt-2 mt-lg-0 fw-bold" href="/login-page">লগইন পোর্টাল</a></li>
+                    <% } %>
+                </ul>
+            </div>
+        </div>
+    </nav>

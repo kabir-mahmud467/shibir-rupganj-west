@@ -23,7 +23,6 @@
             background: radial-gradient(circle at 10% 20%, #003a1d, var(--dark-bg) 80%);
             color: #e0e0e0;
             min-height: 100vh;
-            padding: 40px 0;
         }
 
         .form-container {
@@ -105,6 +104,38 @@
             margin-left: 15px;
         }
 
+        .navbar {
+            background: rgba(10, 15, 13, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.12);
+            padding: 12px 0;
+        }
+        .navbar a {
+            color: #f8fafc;
+            text-decoration: none;
+        }
+        .navbar a:hover {
+            color: #a3e635;
+        }
+
+        .objectives-box {
+            background: rgba(255, 183, 0, 0.15);
+            border: 2px solid #ffb700;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 25px 0;
+            color: #ffd740;
+            font-weight: 600;
+            font-size: 1rem;
+            line-height: 1.8;
+            letter-spacing: 0.5px;
+        }
+
+        .objectives-box strong {
+            color: #ffeb3b;
+            font-size: 1.1rem;
+        }
+
         @media (max-width: 576px) {
             .form-container { padding: 25px; margin: 15px; }
             .hero-title { font-size: 1.5rem; }
@@ -112,80 +143,115 @@
     </style>
 </head>
 <body>
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <img src="https://www.dushibir.org/storage/setting_images/wKFhZtq3w8jQDZT9wLfeJJXeGW09yJss7WACq03k.png" alt="Logo" height="45">
+                <div class="ms-2">
+                    <span class="d-block text-white fw-bold lh-1">বাংলাদেশ ইসলামী ছাত্রশিবির</span>
+                    <small class="text-success fw-bold" style="font-size: 18px;">রূপগঞ্জ পশ্চিম থানা </small>
+                </div>
+            </a>
+            <button class="navbar-toggler text-white border-0" data-bs-toggle="collapse" data-bs-target="#mNav">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="mNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link text-white" href="/">হোম</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="/form">সমর্থক ফরম</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="/library">অনলাইন লাইব্রেরি</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="/archive">আর্কাইভ</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="/history">থানার ইতিহাস</a></li>
+                    <% if (user && user.role === 'admin') { %>
+                        <li class="nav-item"><a class="nav-link text-info fw-bold" href="/admin"><i class="fas fa-shield-halved me-1"></i>অ্যাডমিন প্যানেল</a></li>
+                        <li class="nav-item"><a class="btn btn-danger rounded-pill px-4 ms-lg-3 mt-2 mt-lg-0 fw-bold" href="/logout">লগআউট</a></li>
+                    <% } else if (user && user.role !== 'admin') { %>
+                        <li class="nav-item"><a class="nav-link text-success fw-bold" href="/profile"><i class="fas fa-user me-1"></i>প্রোফাইল</a></li>
+                        <li class="nav-item"><a class="btn btn-danger rounded-pill px-4 ms-lg-3 mt-2 mt-lg-0 fw-bold" href="/logout">লগআউট</a></li>
+                    <% } else if (!user) { %>
+                        <li class="nav-item"><a class="btn btn-warning rounded-pill px-4 ms-lg-3 mt-2 mt-lg-0 fw-bold" href="/login-page">লগইন পোর্টাল</a></li>
+                    <% } %>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
     <div class="container">
         <div class="form-container">
             <div class="form-header">
                 <a href="/"><img src="https://www.dushibir.org/storage/setting_images/wKFhZtq3w8jQDZT9wLfeJJXeGW09yJss7WACq03k.png" alt="Logo"></a>
                 <h3 class="fw-bold text-white">সমর্থক ফরম</h3>
-                <p class="text-muted small">বাংলাদেশ ইসলামী ছাত্রশিবিরের কর্মী হিসেবে নিজেকে গড়ার প্রথম ধাপ</p>
+               
             </div>
 
             <form action="/submit-form" method="POST">
-                
                 <div class="section-title"><i class="fas fa-user-circle me-2"></i> ব্যক্তিগত তথ্য</div>
-                
                 <div class="row g-3">
                     <div class="col-md-12">
-                        <label class="form-label">পুরো নাম (বাংলায়)</label>
+                        <label class="form-label">পুরো নাম</label>
                         <input type="text" name="name" class="form-control" placeholder="আপনার নাম লিখুন" required>
                     </div>
-                    
                     <div class="col-md-6">
                         <label class="form-label">মোবাইল নাম্বার</label>
-                        <input type="tel" name="phone" class="form-control" placeholder="01XXX-XXXXXX" required>
+                        <input type="tel" name="phone" class="form-control" placeholder="01XXXXXXXXX" required>
                     </div>
-                    
                     <div class="col-md-6">
                         <label class="form-label">ইমেইল (ঐচ্ছিক)</label>
                         <input type="email" name="email" class="form-control" placeholder="example@mail.com">
                     </div>
                 </div>
 
-                <div class="section-title"><i class="fas fa-university me-2"></i> শিক্ষা সংক্রান্ত তথ্য</div>
-                
+                <div class="section-title"><i class="fas fa-school me-2"></i> শিক্ষা তথ্য</div>
                 <div class="row g-3">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <label class="form-label">শিক্ষা প্রতিষ্ঠানের নাম</label>
                         <input type="text" name="institution" class="form-control" placeholder="স্কুল/কলেজ/মাদ্রাসার নাম" required>
                     </div>
-                    
                     <div class="col-md-6">
-                        <label class="form-label">শ্রেণী/বর্ষ</label>
-                        <select name="class" class="form-select">
-                            <option selected disabled>নির্বাচন করুন</option>
-                            <option>দশম শ্রেণী</option>
-                            <option>একাদশ শ্রেণী</option>
-                            <option>দ্বাদশ শ্রেণী</option>
-                            <option>অনার্স ১ম বর্ষ</option>
-                            <option>অনার্স ২য় বর্ষ</option>
-                            <option>অন্যান্য</option>
-                        </select>
+                        <label class="form-label">শ্রেণী / বর্ষ</label>
+                        <input type="text" name="class_year" class="form-control" placeholder="উদা: দশম শ্রেণি / অনার্স ১ম বর্ষ">
                     </div>
-                    
                     <div class="col-md-6">
-                        <label class="form-label">রোল/বিভাগ</label>
+                        <label class="form-label">রোল / বিভাগ</label>
                         <input type="text" name="roll" class="form-control" placeholder="উদা: বিজ্ঞান / রোল-১০">
                     </div>
                 </div>
 
-                <div class="section-title"><i class="fas fa-map-marker-alt me-2"></i> বর্তমান ঠিকানা</div>
-                
+                <div class="section-title"><i class="fas fa-layer-group me-2"></i> শাখা তথ্য</div>
                 <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">ওয়ার্ডের নাম</label>
+                        <input type="text" name="ward" class="form-control" placeholder="ওয়ার্ডের নাম">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">উপশাখার নাম</label>
+                        <input type="text" name="branch" class="form-control" placeholder="উপশাখার নাম">
+                    </div>
                     <div class="col-md-12">
-                        <textarea name="address" class="form-control" rows="2" placeholder="গ্রাম, ইউনিয়ন, উপজেলা, জেলা"></textarea>
+                        <label class="form-label">অভিভাবকের / ব্যক্তিগত ফোন নম্বর</label>
+                        <input type="tel" name="guardian_phone" class="form-control" placeholder="অভিভাবকের / ব্যক্তিগত ফোন নম্বর">
                     </div>
                 </div>
-
-                <div class="form-check mt-4">
-                    <input class="form-check-input" type="checkbox" id="terms" required>
-                    <label class="form-check-label text-muted small" for="terms">
-                        আমি সজ্ঞানে সাক্ষ্য দিচ্ছি যে, শিবিরের লক্ষ্য ও উদ্দেশ্যের সাথে আমি একমত।
-                    </label>
+                <div class="section-title"><i class="fas fa-map-marker-alt me-2"></i> ঠিকানা</div>
+                <div class="mb-3">
+                    <label class="form-label">বর্তমান ঠিকানা</label>
+                    <textarea name="address" class="form-control" rows="3" placeholder="গ্রাম, ইউনিয়ন, উপজেলা, জেলা"></textarea>
                 </div>
+                <div class="objectives-box">
+                    <div><strong><i class="fas fa-lightbulb me-2"></i>লক্ষ্য ও উদ্দেশ্যঃ</strong></div>
+                    <div class="mt-2">আল্লাহ প্রদত্ত ও রাসূল (সাঃ) প্রদত্ত বিধান অনুযায়ী মানুষের সার্বিক জীবনের পুনর্বিন্যাস সাধন করে আল্লাহর সন্তষ্টি অর্জন</div>
+                </div>
+               
+                <div class="form-check mt-4">
+                    
+                    <input class="form-check-input" type="checkbox" id="terms" required>
+                    <label class="form-check-label  small" for="terms">
+                        আমি স্বজ্ঞানে সাক্ষ্য দিচ্ছি যে, শিবিরের লক্ষ্য ও উদ্দেশ্যের সাথে আমি একমত।
+                    </label>
+                   </div>
 
                 <button type="submit" class="btn-submit">আবেদন জমা দিন <i class="fas fa-paper-plane ms-2"></i></button>
-                
+
                 <div class="text-center mt-4">
                     <a href="/" class="text-secondary text-decoration-none small"><i class="fas fa-arrow-left me-1"></i> ফিরে যান হোম পেজে</a>
                 </div>
