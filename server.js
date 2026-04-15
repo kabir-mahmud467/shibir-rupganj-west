@@ -20,7 +20,7 @@ cloudinary.config({
 });
 
 // --- ২. ডাটাবেজ মডেল (Schema) ---
-// Vercel-এর Error সমাধানের জন্য mongoose.models চেক করা হয়েছে
+
 
 const MemberSchema = new mongoose.Schema({
     name: String, father: String, mother: String, dob: String, phone: String, 
@@ -112,10 +112,13 @@ app.use((req, res, next) => {
 
 // --- Access Control হেল্পার ফাংশন ---
 const canViewAccess = (visibility, userType) => {
-    if (visibility === 'পাবলিক') return true;
+    // null/undefined visibility পুরনো ডেটার জন্য পাবলিক ধরা হবে
+    const v = visibility || 'পাবলিক';
+    if (v === 'পাবলিক') return true;
     if (!userType) return false;
-    if (visibility === 'কর্মী' && userType === 'কর্মী') return true;
-    if (visibility === 'সাথী' && userType === 'সাথী') return true;
+    if (userType === 'admin') return true; // অ্যাডমিন সব দেখতে পাবে
+    if (v === 'কর্মী' && userType === 'কর্মী') return true;
+    if (v === 'সাথী' && userType === 'সাথী') return true;
     return false;
 };
 
@@ -238,7 +241,14 @@ app.get('/notice/:id', async (req, res) => {
         if (!notice) return res.status(404).send('নোটিশ পাওয়া যায়নি');
         
         if (!canViewAccess(notice.visibility, userType)) {
-            return res.status(403).send('এই নোটিশ দেখার অনুমতি আপনার নেই।');
+            // লগইন না করলে লগইন পেজে পাঠাও
+            if (!req.session.user) {
+                return res.redirect('/login-page');
+            }
+            // লগইন করা কিন্তু রোল মিলছে না — সুন্দর বার্তা দাও
+            return res.status(403).render('access-denied', {
+                message: `এই নোটিশটি শুধুমাত্র "${notice.visibility}" সদস্যদের জন্য।`
+            });
         }
         res.render('notice', { notice });
     } catch (err) {

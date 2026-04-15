@@ -51,10 +51,21 @@
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
                 <div>
                     <h2 class="fw-bold">লাইব্রেরি সামগ্রী</h2>
-                    <p class="text-muted">নিচের আছে বই, ডকুমেন্ট ও পড়ার লিঙ্ক। ছবি বা বই পড়ুন এ ক্লিক করলে সরাসরি সেটি খুলবে।</p>
+                    <p class="">নিচে আছে বই, ডকুমেন্ট ও পড়ার লিঙ্ক। ছবি বা বই পড়ুন এ ক্লিক করলে সরাসরি সেটি খুলবে।</p>
                 </div>
+                <% if (user && user.role === 'admin') { %>
                 <a href="/admin" class="btn btn-outline-success btn-sm">অ্যাডমিন প্যানেলে যান</a>
+                <% } %>
             </div>
+            <% if (!user) { %>
+            <div style="background: linear-gradient(135deg, rgba(0,129,68,0.15), rgba(255,183,0,0.1)); border: 1px solid rgba(255,183,0,0.3); border-radius: 14px; padding: 16px 20px; margin-top: 16px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
+                <i class="fas fa-lock" style="font-size: 1.4rem; color: #ffb700; flex-shrink:0;"></i>
+                <p style="margin:0; font-size: 0.93rem; color: #e2e8f0;">
+                    কিছু বই ও ফাইল শুধুমাত্র কর্মী ও সাথীদের জন্য সংরক্ষিত।
+                    সব দেখতে <a href="/login-page" style="color:#ffb700; font-weight:700; text-decoration:none;">লগইন করুন →</a>
+                </p>
+            </div>
+            <% } %>
         </section>
 
         <section class="card-grid">

@@ -4,15 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>সকল নোটিশ | বাংলাদেশ ইসলামী ছাত্রশিবির</title>
-     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;600;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { background: #050a08; color: #f8fafc; font-family: 'Hind Siliguri', sans-serif; }
 
-        .glass-card { line-height: 1.6; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 25px; transition: 0.3s; display: block; text-decoration: none; color: white; }
-        .glass-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.1); color: white; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .glass-card {
+            line-height: 1.6;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 25px;
+            transition: 0.3s;
+            display: block;
+            text-decoration: none;
+            color: white;
+        }
+        .glass-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.1);
+            color: white;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        /* Visibility badge colours */
+        .vis-badge {
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+        }
+        .vis-public  { background: rgba(16,185,129,0.18); color: #34d399; border: 1px solid rgba(16,185,129,0.35); }
+        .vis-kormi   { background: rgba(59,130,246,0.18); color: #60a5fa; border: 1px solid rgba(59,130,246,0.35); }
+        .vis-sathi   { background: rgba(168,85,247,0.18); color: #c084fc; border: 1px solid rgba(168,85,247,0.35); }
+
+        /* Login prompt banner */
+        .login-banner {
+            background: linear-gradient(135deg, rgba(0,129,68,0.15), rgba(255,183,0,0.1));
+            border: 1px solid rgba(255,183,0,0.3);
+            border-radius: 14px;
+            padding: 18px 22px;
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .login-banner i { font-size: 1.6rem; color: #ffb700; flex-shrink: 0; }
+        .login-banner p { margin: 0; font-size: 0.95rem; color: #e2e8f0; }
+        .login-banner a { color: #ffb700; font-weight: 700; text-decoration: none; }
+        .login-banner a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -23,15 +66,37 @@
             <h2 class="fw-bold"><i class="fas fa-bullhorn text-warning me-2"></i>সকল নোটিশ</h2>
             <a href="/" class="btn btn-outline-light btn-sm rounded-pill"><i class="fas fa-arrow-left me-1"></i> হোমে ফিরুন</a>
         </div>
-        
+
+        <% if (!user) { %>
+        <div class="login-banner">
+            <i class="fas fa-lock"></i>
+            <p>
+                কিছু নোটিশ শুধুমাত্র কর্মী ও সাথীদের জন্য সংরক্ষিত।
+                সব নোটিশ দেখতে <a href="/login-page">লগইন করুন →</a>
+            </p>
+        </div>
+        <% } %>
+
         <div class="row g-4">
             <% if(notices && notices.length > 0) { %>
                 <% notices.forEach(n => { %>
                     <div class="col-12">
                         <a href="/notice/<%= n._id %>" class="glass-card" style="border-left: 5px solid #eab308;">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
                                 <h4 class="fw-bold mb-0 text-warning"><%= n.title %></h4>
-                                <span class="badge bg-secondary"><i class="far fa-calendar-alt me-1"></i><%= n.date || 'সাম্প্রতিক' %></span>
+                                <div class="d-flex align-items-center gap-2">
+                                    <%
+                                        const vis = n.visibility || 'পাবলিক';
+                                        let visClass = 'vis-public';
+                                        let visIcon = 'fa-globe';
+                                        if (vis === 'কর্মী') { visClass = 'vis-kormi'; visIcon = 'fa-user-shield'; }
+                                        else if (vis === 'সাথী') { visClass = 'vis-sathi'; visIcon = 'fa-user-friends'; }
+                                    %>
+                                    <span class="vis-badge <%= visClass %>">
+                                        <i class="fas <%= visIcon %> me-1"></i><%= vis %>
+                                    </span>
+                                    <span class="badge bg-secondary"><i class="far fa-calendar-alt me-1"></i><%= n.date || 'সাম্প্রতিক' %></span>
+                                </div>
                             </div>
                             <p class="text-light opacity-75 mb-0" style="font-size: 1.05rem;"><%= n.content.substring(0, 180) %>...</p>
                         </a>
@@ -39,7 +104,13 @@
                 <% }) %>
             <% } else { %>
                 <div class="col-12 text-center py-5">
-                    <h5 class="text-secondary">কোনো নোটিশ পাওয়া যায়নি।</h5>
+                    <% if (!user) { %>
+                        <i class="fas fa-lock fa-3x text-warning mb-3 d-block"></i>
+                        <h5 class="text-secondary">আপনার জন্য কোনো পাবলিক নোটিশ নেই।</h5>
+                        <p class="text-muted small mt-2">সদস্য হিসেবে <a href="/login-page" class="text-warning">লগইন করুন</a> আরো নোটিশ দেখতে।</p>
+                    <% } else { %>
+                        <h5 class="text-secondary">কোনো নোটিশ পাওয়া যায়নি।</h5>
+                    <% } %>
                 </div>
             <% } %>
         </div>
