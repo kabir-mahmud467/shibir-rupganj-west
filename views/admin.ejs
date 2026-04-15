@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>অ্যাডমিন কন্ট্রোল | রূপগঞ্জ পশ্চিম</title>
+     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -190,12 +192,12 @@
 
                 <div class="glass-card">
                     <h3 style="color:#7c3aed;"><i class="fas fa-images"></i> হোম পেজ স্লাইড</h3>
-                    <form action="/admin/add-slide" method="POST">
+                    <form action="/admin/add-slide" method="POST" enctype="multipart/form-data" onsubmit="const btn = document.getElementById('slideBtn'); btn.innerHTML = '<i class=\'fas fa-spinner fa-spin\'></i> আপলোড হচ্ছে... অপেক্ষা করুন'; btn.disabled = true; btn.style.opacity = '0.7';">
                         <input type="text" name="title" placeholder="স্লাইড শিরোনাম" required>
                         <input type="text" name="caption" placeholder="ছোট বর্ণনা (Caption)">
-                        <input type="url" name="imageUrl" placeholder="ছবির সরাসরি লিঙ্ক (HTTPS)" required>
-                        <input type="url" name="link" placeholder="ড্রাইভ/এম্বেড/পেইজ লিঙ্ক">
-                        <button type="submit" class="btn btn-blue">স্লাইড যোগ করুন</button>
+                        <label style="font-size: 12px; color: #94a3b8; margin-left: 5px;">স্লাইডের ছবি (Upload Image):</label>
+                        <input type="file" name="image" accept="image/*" required>
+                        <button type="submit" id="slideBtn" class="btn btn-blue">স্লাইড যোগ করুন</button>
                     </form>
                 </div>
 
@@ -352,13 +354,22 @@
                 <h3><i class="fas fa-images"></i> স্লাইড ম্যানেজার</h3>
                 <div class="table-responsive">
                     <table class="list-table">
-                        <thead><tr><th>শিরোনাম</th><th>লিঙ্ক</th><th></th></tr></thead>
+                        <thead><tr><th>ছবি</th><th>শিরোনাম</th><th></th></tr></thead>
                         <tbody>
                             <% data.slides.forEach(s => { %>
                                 <tr>
+                                    <td>
+                                        <% if(s.imageUrl) { %>
+                                            <img src="<%= s.imageUrl %>" width="60" style="border-radius: 5px;" alt="Slide Image">
+                                        <% } else { %>
+                                            <span style="color:#64748b;">No Image</span>
+                                        <% } %>
+                                    </td>
                                     <td><%= s.title %></td>
-                                    <td><a href="<%= s.link %>" target="_blank" style="color:#38bdf8;"><%= s.link ? 'লিঙ্ক দেখুন' : 'কোন লিঙ্ক নেই' %></a></td>
-                                    <td><i onclick="confirmDel('/admin/delete-slide/<%= s._id %>')" class="fas fa-trash" style="color:#ef4444; cursor:pointer;"></i></td>
+                                    <td>
+                                        <i onclick="editSlide(this)" data-id="<%= s._id %>" data-title="<%= s.title %>" data-caption="<%= s.caption %>" class="fas fa-edit" style="color:#3b82f6; cursor:pointer; margin-right:15px;" title="স্লাইড সম্পাদনা করুন"></i>
+                                        <i onclick="confirmDel('/admin/delete-slide/<%= s._id %>')" class="fas fa-trash" style="color:#ef4444; cursor:pointer;" title="স্লাইড ডিলিট করুন"></i>
+                                    </td>
                                 </tr>
                             <% }) %>
                         </tbody>
@@ -426,7 +437,42 @@
         </div>
     </div>
 
+    </div>
+
+    <!-- Edit Slide Modal -->
+    <div class="modal fade" id="editSlideModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content" style="background:#0f172a; color:#fff; border: 1px solid rgba(255,255,255,0.1);">
+                <div class="modal-header" style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                    <h5 class="modal-title">স্লাইড আপডেট করুন</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editSlideForm" method="POST" enctype="multipart/form-data" onsubmit="const btn = this.querySelector('button[type=submit]'); btn.innerHTML = '<i class=\'fas fa-spinner fa-spin\'></i> আপলোড হচ্ছে...'; btn.disabled = true;">
+                        <label style="font-size: 13px; color: #94a3b8;">স্লাইড শিরোনাম:</label>
+                        <input type="text" name="title" id="editSlideTitle" class="form-control mb-3" style="background: rgba(255,255,255,0.05); color: #fff; border: none; padding: 10px;" required>
+                        
+                        <label style="font-size: 13px; color: #94a3b8;">ছোট বর্ণনা (Caption):</label>
+                        <input type="text" name="caption" id="editSlideCaption" class="form-control mb-3" style="background: rgba(255,255,255,0.05); color: #fff; border: none; padding: 10px;">
+                        
+                        <label style="font-size: 13px; color: #f59e0b;">নতুন ছবি (শুধু যদি পরিবর্তন করতে চান):</label>
+                        <input type="file" name="image" accept="image/*" class="form-control mb-4" style="background: rgba(255,255,255,0.05); color: #fff; border: none; padding: 10px;">
+                        
+                        <button type="submit" class="btn btn-blue w-100 py-2">আপডেট সেভ করুন</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
+        function editSlide(btn) {
+            document.getElementById('editSlideForm').action = '/admin/update-slide/' + btn.getAttribute('data-id');
+            document.getElementById('editSlideTitle').value = btn.getAttribute('data-title') || '';
+            document.getElementById('editSlideCaption').value = btn.getAttribute('data-caption') || '';
+            new bootstrap.Modal(document.getElementById('editSlideModal')).show();
+        }
+
         function toggleBox(select, id) {
             document.getElementById(id).style.display = (select.value === 'অন্যান্য') ? 'block' : 'none';
         }
@@ -452,4 +498,4 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html>
+</html>`

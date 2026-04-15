@@ -143,39 +143,7 @@
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg sticky-top">
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="/">
-                <img src="https://www.dushibir.org/storage/setting_images/wKFhZtq3w8jQDZT9wLfeJJXeGW09yJss7WACq03k.png" alt="Logo" height="45">
-                <div class="ms-2">
-                    <span class="d-block text-white fw-bold lh-1">বাংলাদেশ ইসলামী ছাত্রশিবির</span>
-                    <small class="text-success fw-bold" style="font-size: 18px;">রূপগঞ্জ পশ্চিম থানা </small>
-                </div>
-            </a>
-            <button class="navbar-toggler text-white border-0" data-bs-toggle="collapse" data-bs-target="#mNav">
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="collapse navbar-collapse" id="mNav">
-                <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item"><a class="nav-link text-white" href="/">হোম</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="/form">সমর্থক ফরম</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="/library">অনলাইন লাইব্রেরি</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="/archive">আর্কাইভ</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="/history">থানার ইতিহাস</a></li>
-                    <% if (user && user.role === 'admin') { %>
-                        <li class="nav-item"><a class="nav-link text-info fw-bold" href="/admin"><i class="fas fa-shield-halved me-1"></i>অ্যাডমিন প্যানেল</a></li>
-                        <li class="nav-item"><a class="btn btn-danger rounded-pill px-4 ms-lg-3 mt-2 mt-lg-0 fw-bold" href="/logout">লগআউট</a></li>
-                    <% } else if (user && user.role !== 'admin') { %>
-                        <li class="nav-item"><a class="nav-link text-success fw-bold" href="/profile"><i class="fas fa-user me-1"></i>প্রোফাইল</a></li>
-                        <li class="nav-item"><a class="btn btn-danger rounded-pill px-4 ms-lg-3 mt-2 mt-lg-0 fw-bold" href="/logout">লগআউট</a></li>
-                    <% } else if (!user) { %>
-                        <li class="nav-item"><a class="btn btn-warning rounded-pill px-4 ms-lg-3 mt-2 mt-lg-0 fw-bold" href="/login-page">লগইন পোর্টাল</a></li>
-                    <% } %>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
+    <%- include('partials/main-nav') %>
     <div class="container">
         <div class="form-container">
             <div class="form-header">

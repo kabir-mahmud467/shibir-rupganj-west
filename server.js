@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const session = require('express-session');
@@ -10,12 +11,12 @@ const path = require('path');
 const app = express();
 
 // --- ১. কনফিগারেশন ---
-const MONGO_URI = "mongodb://kabirmahmud467_db_user:shibir@ac-l2lby6j-shard-00-00.4y2um2c.mongodb.net:27017,ac-l2lby6j-shard-00-01.4y2um2c.mongodb.net:27017,ac-l2lby6j-shard-00-02.4y2um2c.mongodb.net:27017/RupganjWestDB?ssl=true&replicaSet=atlas-90vaxd-shard-0&authSource=admin&appName=ShibirRupganjWest";
+const MONGO_URI = process.env.MONGODB_URI;
 
 cloudinary.config({
-    cloud_name: 'dz9ifigag',
-    api_key: '267649947248973',
-    api_secret: 'W5H4x6zC_UqL8u5tS9vX9_m4X0k' 
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET 
 });
 
 // --- ২. ডাটাবেজ মডেল (Schema) ---
@@ -101,8 +102,7 @@ const Application = mongoose.model('Application', new mongoose.Schema({
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
-        folder: 'rupganj_west',
-        allowed_formats: ['jpg', 'png', 'jpeg', 'pdf']
+        folder: 'rupganj_west'
     }
 });
 const upload = multer({ storage: storage });
@@ -162,6 +162,17 @@ app.get('/', async (req, res) => {
         res.render('index', { notices: filteredNotices, resources: filteredResources, slides, homeStats });
     } catch (err) { 
         res.status(500).send("Home Page Error"); 
+    }
+});
+
+app.get('/notices', async (req, res) => {
+    try {
+        const userType = req.session.user?.role;
+        const notices = await Notice.find().sort({ _id: -1 });
+        const filteredNotices = notices.filter(n => canViewAccess(n.visibility, userType));
+        res.render('notices', { notices: filteredNotices });
+    } catch (err) { 
+        res.status(500).send("Notices Page Error"); 
     }
 });
 
@@ -307,15 +318,54 @@ app.get('/admin/delete-home-stat/:id', async (req, res) => {
     }
 });
 
-app.post('/admin/add-slide', async (req, res) => {
-    if (!req.session.user || req.session.user.role !== 'admin') return res.redirect('/login-page');
-    try {
-        const { title, caption, imageUrl, link } = req.body;
-        await Slide.create({ title, caption, imageUrl, link });
-        res.redirect('/admin');
-    } catch (err) {
-        res.status(500).send('Slide Save Error: ' + err.message);
-    }
+const localUpload = multer({ dest: 'public/uploads/' });
+
+app.post('/admin/add-slide', (req, res) => {
+    localUpload.single('image')(req, res, async (err) => {
+        if (err) {
+            console.error("Upload Error:", err);
+            require('fs').writeFileSync('error_log.txt', String(err.stack || err.message || err));
+            return res.send(`<script>alert('Upload Error: ' + ${JSON.stringify(err.message || String(err))}); window.location.href='/admin';</script>`);
+        }
+        if (!req.session.user || req.session.user.role !== 'admin') return res.redirect('/login-page');
+        
+        try {
+            const { title, caption } = req.body;
+            // Since it's local, we use a relative path for the site.
+            const imageUrl = req.file ? '/uploads/' + req.file.filename : '';
+            if (!imageUrl) {
+                 return res.send(`<script>alert('কোনো ছবি পাওয়া যায়নি। দয়া করে আবার চেষ্টা করুন।'); window.history.back();</script>`);
+            }
+            await Slide.create({ title, caption, imageUrl });
+            res.redirect('/admin');
+        } catch (error) {
+            console.error("DB Error:", error);
+            res.status(500).send('Slide Save Error: ' + error.message);
+        }
+    });
+});
+
+app.post('/admin/update-slide/:id', (req, res) => {
+    upload.single('image')(req, res, async (err) => {
+        if (err) {
+            console.error("Upload Error:", err);
+            return res.send(`<script>alert('Update Error: ' + ${JSON.stringify(err.message || String(err))}); window.location.href='/admin';</script>`);
+        }
+        if (!req.session.user || req.session.user.role !== 'admin') return res.redirect('/login-page');
+        
+        try {
+            const { title, caption } = req.body;
+            let updateData = { title, caption };
+            if (req.file) {
+                updateData.imageUrl = req.file.path;
+            }
+            await Slide.findByIdAndUpdate(req.params.id, updateData);
+            res.redirect('/admin');
+        } catch (error) {
+            console.error("DB Error:", error);
+            res.status(500).send('Slide Update Error: ' + error.message);
+        }
+    });
 });
 
 app.get('/admin/delete-slide/:id', async (req, res) => {
