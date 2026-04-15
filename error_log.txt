@@ -1,0 +1,1 @@
+Invalid Signature 3db2c7ed98d0e301d2454012db201c737c782a50. String to sign - 'folder=rupganj_west&timestamp=1776223471'.

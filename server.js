@@ -20,83 +20,67 @@ cloudinary.config({
 });
 
 // --- ২. ডাটাবেজ মডেল (Schema) ---
-const Member = mongoose.model('Member', new mongoose.Schema({
-    name: String,
-    father: String,
-    mother: String,
-    dob: String,
-    phone: String,
-    guardian_phone: String,
-    facebook: String,
-    present_address: String,
-    permanent_address: String,
-    type: String,
-    edu: String,
-    inst: String,
-    ward: String,
-    branch: String,
-    responsibility: String,
-    comment: String,
-    password: { type: String, unique: true },
-    photo: String
-}));
 
-const Notice = mongoose.model('Notice', new mongoose.Schema({ 
-    title: String, 
-    content: String, 
-    visibility: String, 
+// Member Model
+const MemberSchema = new mongoose.Schema({
+    name: String, father: String, mother: String, dob: String, phone: String, 
+    guardian_phone: String, facebook: String, present_address: String, 
+    permanent_address: String, type: String, edu: String, inst: String, 
+    ward: String, branch: String, responsibility: String, comment: String, 
+    password: { type: String, unique: true }, photo: String
+});
+const Member = mongoose.models.Member || mongoose.model('Member', MemberSchema);
+
+// Notice Model
+const NoticeSchema = new mongoose.Schema({ 
+    title: String, content: String, visibility: String, 
     date: { type: String, default: () => new Date().toLocaleDateString('bn-BD') }
-}));
+});
+const Notice = mongoose.models.Notice || mongoose.model('Notice', NoticeSchema);
 
-const Resource = mongoose.model('Resource', new mongoose.Schema({
+// Resource Model
+const ResourceSchema = new mongoose.Schema({
     title: String, visibility: String, url: String, imageUrl: String
-}));
+});
+const Resource = mongoose.models.Resource || mongoose.model('Resource', ResourceSchema);
 
-const Slide = mongoose.model('Slide', new mongoose.Schema({
-    title: String,
-    caption: String,
-    imageUrl: String,
-    link: String,
+// Slide Model
+const SlideSchema = new mongoose.Schema({
+    title: String, caption: String, imageUrl: String, link: String,
     createdAt: { type: Date, default: Date.now }
-}));
+});
+const Slide = mongoose.models.Slide || mongoose.model('Slide', SlideSchema);
 
-const ArchiveItem = mongoose.model('ArchiveItem', new mongoose.Schema({
-    title: String,
-    description: String,
-    itemType: String,
-    url: String,
+// ArchiveItem Model
+const ArchiveItemSchema = new mongoose.Schema({
+    title: String, description: String, itemType: String, url: String,
     createdAt: { type: Date, default: Date.now }
-}));
+});
+const ArchiveItem = mongoose.models.ArchiveItem || mongoose.model('ArchiveItem', ArchiveItemSchema);
 
-const HistoryItem = mongoose.model('HistoryItem', new mongoose.Schema({
-    category: String,
-    title: String,
-    body: String,
-    extra: String,
+// HistoryItem Model
+const HistoryItemSchema = new mongoose.Schema({
+    category: String, title: String, body: String, extra: String,
     createdAt: { type: Date, default: Date.now }
-}));
+});
+const HistoryItem = mongoose.models.HistoryItem || mongoose.model('HistoryItem', HistoryItemSchema);
 
-const HomeStat = mongoose.model('HomeStat', new mongoose.Schema({
-    value: String,
-    label: String,
-    order: { type: Number, default: 0 },
+// HomeStat Model
+const HomeStatSchema = new mongoose.Schema({
+    value: String, label: String, order: { type: Number, default: 0 },
     createdAt: { type: Date, default: Date.now }
-}));
+});
+const HomeStat = mongoose.models.HomeStat || mongoose.model('HomeStat', HomeStatSchema);
 
-const Application = mongoose.model('Application', new mongoose.Schema({
-    name: String,
-    phone: String,
-    email: String,
-    institution: String,
-    class_year: String,
-    roll: String,
-    address: String,
-    ward: String,
-    branch: String,
-    guardian_phone: String,
-    note: String,
+// Application Model
+const ApplicationSchema = new mongoose.Schema({
+    name: String, phone: String, email: String, institution: String,
+    class_year: String, roll: String, address: String, ward: String,
+    branch: String, guardian_phone: String, note: String,
     date: { type: String, default: () => new Date().toLocaleDateString('bn-BD') }
-}));
+});
+const Application = mongoose.models.Application || mongoose.model('Application', ApplicationSchema);
+
 
 // --- ৩. ক্লাউডিনারি আপলোড সেটিংস ---
 const storage = new CloudinaryStorage({
