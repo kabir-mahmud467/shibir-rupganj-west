@@ -20,8 +20,8 @@ cloudinary.config({
 });
 
 // --- ২. ডাটাবেজ মডেল (Schema) ---
+// Vercel-এর Error সমাধানের জন্য mongoose.models চেক করা হয়েছে
 
-// Member Model
 const MemberSchema = new mongoose.Schema({
     name: String, father: String, mother: String, dob: String, phone: String, 
     guardian_phone: String, facebook: String, present_address: String, 
@@ -31,48 +31,41 @@ const MemberSchema = new mongoose.Schema({
 });
 const Member = mongoose.models.Member || mongoose.model('Member', MemberSchema);
 
-// Notice Model
 const NoticeSchema = new mongoose.Schema({ 
     title: String, content: String, visibility: String, 
     date: { type: String, default: () => new Date().toLocaleDateString('bn-BD') }
 });
 const Notice = mongoose.models.Notice || mongoose.model('Notice', NoticeSchema);
 
-// Resource Model
 const ResourceSchema = new mongoose.Schema({
     title: String, visibility: String, url: String, imageUrl: String
 });
 const Resource = mongoose.models.Resource || mongoose.model('Resource', ResourceSchema);
 
-// Slide Model
 const SlideSchema = new mongoose.Schema({
     title: String, caption: String, imageUrl: String, link: String,
     createdAt: { type: Date, default: Date.now }
 });
 const Slide = mongoose.models.Slide || mongoose.model('Slide', SlideSchema);
 
-// ArchiveItem Model
 const ArchiveItemSchema = new mongoose.Schema({
     title: String, description: String, itemType: String, url: String,
     createdAt: { type: Date, default: Date.now }
 });
 const ArchiveItem = mongoose.models.ArchiveItem || mongoose.model('ArchiveItem', ArchiveItemSchema);
 
-// HistoryItem Model
 const HistoryItemSchema = new mongoose.Schema({
     category: String, title: String, body: String, extra: String,
     createdAt: { type: Date, default: Date.now }
 });
 const HistoryItem = mongoose.models.HistoryItem || mongoose.model('HistoryItem', HistoryItemSchema);
 
-// HomeStat Model
 const HomeStatSchema = new mongoose.Schema({
     value: String, label: String, order: { type: Number, default: 0 },
     createdAt: { type: Date, default: Date.now }
 });
 const HomeStat = mongoose.models.HomeStat || mongoose.model('HomeStat', HomeStatSchema);
 
-// Application Model
 const ApplicationSchema = new mongoose.Schema({
     name: String, phone: String, email: String, institution: String,
     class_year: String, roll: String, address: String, ward: String,
@@ -86,7 +79,8 @@ const Application = mongoose.models.Application || mongoose.model('Application',
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
-        folder: 'rupganj_west'
+        folder: 'rupganj_west',
+        allowed_formats: ['jpg', 'png', 'jpeg', 'webp']
     }
 });
 const upload = multer({ storage: storage });
@@ -131,12 +125,10 @@ app.get('/', async (req, res) => {
     try {
         const userType = req.session.user?.role;
         
-        // নোটিস ফিল্টার করা
         let noticeQuery = Notice.find().sort({ _id: -1 }).limit(5);
         const notices = await noticeQuery;
         const filteredNotices = notices.filter(n => canViewAccess(n.visibility, userType));
         
-        // রিসোর্স ফিল্টার করা
         let resourceQuery = Resource.find().sort({ _id: -1 }).limit(5);
         const resources = await resourceQuery;
         const filteredResources = resources.filter(r => canViewAccess(r.visibility, userType));
@@ -199,34 +191,8 @@ app.get('/form', (req, res) => res.render('form'));
 
 app.post('/submit-form', async (req, res) => {
     try {
-        const {
-            name,
-            phone,
-            email,
-            institution,
-            class_year,
-            roll,
-            address,
-            ward,
-            branch,
-            guardian_phone,
-            note
-        } = req.body;
-
-        await Application.create({
-            name,
-            phone,
-            email,
-            institution,
-            class_year,
-            roll,
-            address,
-            ward,
-            branch,
-            guardian_phone,
-            note
-        });
-
+        const { name, phone, email, institution, class_year, roll, address, ward, branch, guardian_phone, note } = req.body;
+        await Application.create({ name, phone, email, institution, class_year, roll, address, ward, branch, guardian_phone, note });
         res.redirect('/form');
     } catch (err) {
         console.error(err);
@@ -271,11 +237,9 @@ app.get('/notice/:id', async (req, res) => {
         const notice = await Notice.findById(req.params.id);
         if (!notice) return res.status(404).send('নোটিশ পাওয়া যায়নি');
         
-        // Visibility চেক
         if (!canViewAccess(notice.visibility, userType)) {
             return res.status(403).send('এই নোটিশ দেখার অনুমতি আপনার নেই।');
         }
-        
         res.render('notice', { notice });
     } catch (err) {
         res.status(500).send('নোটিশ দেখাতে সমস্যা হয়েছে।');
@@ -302,54 +266,35 @@ app.get('/admin/delete-home-stat/:id', async (req, res) => {
     }
 });
 
-const localUpload = multer({ dest: 'public/uploads/' });
-
-app.post('/admin/add-slide', (req, res) => {
-    localUpload.single('image')(req, res, async (err) => {
-        if (err) {
-            console.error("Upload Error:", err);
-            require('fs').writeFileSync('error_log.txt', String(err.stack || err.message || err));
-            return res.send(`<script>alert('Upload Error: ' + ${JSON.stringify(err.message || String(err))}); window.location.href='/admin';</script>`);
-        }
-        if (!req.session.user || req.session.user.role !== 'admin') return res.redirect('/login-page');
-        
-        try {
-            const { title, caption } = req.body;
-            // Since it's local, we use a relative path for the site.
-            const imageUrl = req.file ? '/uploads/' + req.file.filename : '';
-            if (!imageUrl) {
-                 return res.send(`<script>alert('কোনো ছবি পাওয়া যায়নি। দয়া করে আবার চেষ্টা করুন।'); window.history.back();</script>`);
-            }
-            await Slide.create({ title, caption, imageUrl });
-            res.redirect('/admin');
-        } catch (error) {
-            console.error("DB Error:", error);
-            res.status(500).send('Slide Save Error: ' + error.message);
-        }
-    });
+// --- স্লাইড অ্যাড এবং আপডেট (Cloudinary ব্যবহার করে) ---
+app.post('/admin/add-slide', upload.single('image'), async (req, res) => {
+    if (!req.session.user || req.session.user.role !== 'admin') return res.redirect('/login-page');
+    try {
+        const { title, caption, link } = req.body;
+        const imageUrl = req.file ? req.file.path : '';
+        await Slide.create({ title, caption, link, imageUrl });
+        res.redirect('/admin');
+    } catch (error) {
+        console.error("DB Error:", error);
+        res.status(500).send('Slide Save Error: ' + error.message);
+    }
 });
 
-app.post('/admin/update-slide/:id', (req, res) => {
-    upload.single('image')(req, res, async (err) => {
-        if (err) {
-            console.error("Upload Error:", err);
-            return res.send(`<script>alert('Update Error: ' + ${JSON.stringify(err.message || String(err))}); window.location.href='/admin';</script>`);
+app.post('/admin/update-slide/:id', upload.single('image'), (req, res) => {
+    if (!req.session.user || req.session.user.role !== 'admin') return res.redirect('/login-page');
+    try {
+        const { title, caption } = req.body;
+        let updateData = { title, caption };
+        if (req.file) {
+            updateData.imageUrl = req.file.path;
         }
-        if (!req.session.user || req.session.user.role !== 'admin') return res.redirect('/login-page');
-        
-        try {
-            const { title, caption } = req.body;
-            let updateData = { title, caption };
-            if (req.file) {
-                updateData.imageUrl = req.file.path;
-            }
-            await Slide.findByIdAndUpdate(req.params.id, updateData);
+        Slide.findByIdAndUpdate(req.params.id, updateData).then(() => {
             res.redirect('/admin');
-        } catch (error) {
-            console.error("DB Error:", error);
-            res.status(500).send('Slide Update Error: ' + error.message);
-        }
-    });
+        });
+    } catch (error) {
+        console.error("DB Error:", error);
+        res.status(500).send('Slide Update Error: ' + error.message);
+    }
 });
 
 app.get('/admin/delete-slide/:id', async (req, res) => {
@@ -520,6 +465,7 @@ app.get('/admin/delete-app/:id', async (req, res) => {
         res.redirect('/admin');
     } catch (err) { res.status(500).send("Error"); }
 });
+
 // --- নতুন নোটিশ যোগ করার রুট ---
 app.post('/admin/add-notice', async (req, res) => {
     if (!req.session.user || req.session.user.role !== 'admin') return res.redirect('/login-page');
@@ -552,7 +498,7 @@ app.post('/admin/add-resource', async (req, res) => {
         res.status(500).send("Resource Save Error: " + err.message);
     }
 });
-// --- ৬. সার্ভার স্টার্ট ---
+
 // --- প্রোফাইল ম্যানেজমেন্ট ---
 app.get('/profile', async (req, res) => {
     if (!req.session.user || req.session.user.role === 'admin') return res.redirect('/login-page');
@@ -592,7 +538,7 @@ app.post('/update-profile', async (req, res) => {
     }
 });
 
-// --- MongoDB সংযোগ ---
+// --- ৬. সার্ভার স্টার্ট ও MongoDB সংযোগ ---
 mongoose.connect(MONGO_URI)
     .then(() => console.log("✅ MongoDB Connected!"))
     .catch(err => console.log("❌ DB Error:", err.message));
