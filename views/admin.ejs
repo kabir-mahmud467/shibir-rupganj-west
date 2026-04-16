@@ -10,33 +10,16 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
+        /* admin.ejs specific styles only */
         :root {
             --card-bg: rgba(30, 41, 59, 0.6);
             --border: rgba(255, 255, 255, 0.1);
             --primary-blue: #00d2ff;
         }
 
-        body { background: #020617; color: white; font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding-bottom: 50px; }
-        
-        /* নববার স্টাইল - আপনার মূল থিমের সাথে মিল রেখে */
-        .nav-container {
-            max-width: 1240px;
-            margin: 0 auto;
-            padding: 0 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .nav-brand { text-decoration: none; color: #fff; font-weight: bold; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
-        .nav-brand i { color: var(--primary-blue); }
-        .nav-links { display: flex; gap: 20px; align-items: center; }
-        .nav-link { color: #cbd5e0; text-decoration: none; font-size: 14px; transition: 0.3s; }
-        .nav-link:hover { color: #80c956 !important; }
-        .logout-btn { color: #ef4444 !important; }
-
         .container { max-width: 1240px; margin: 0 auto; padding: 15px; }
         
-        .glass-card { 
+        .admin-glass-card { 
             background: var(--card-bg); 
             backdrop-filter: blur(15px); 
             border-radius: 20px; 
@@ -85,13 +68,25 @@
         .badge-priv { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
         .badge-app { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
 
+        /* বায়তুলমাল মডাল */
+        .bm-modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:9999; padding:20px; overflow-y:auto; }
+        .bm-modal-overlay.active { display:flex; align-items:flex-start; justify-content:center; padding-top:60px; }
+        .bm-modal { background:#0f172a; border:1px solid rgba(251,191,36,0.3); border-radius:18px; padding:28px; width:100%; max-width:520px; }
+        .bm-month-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:16px 0; }
+        .bm-month-cell { display:flex; flex-direction:column; align-items:center; justify-content:center;
+            border-radius:10px; padding:12px 6px; cursor:pointer; gap:5px;
+            border:2px solid rgba(239,68,68,0.4); background:rgba(239,68,68,0.1); transition:0.2s; }
+        .bm-month-cell.paid { border-color:#10b981; background:rgba(16,185,129,0.15); }
+        .bm-month-cell .bm-icon { font-size:18px; font-weight:bold; color:#ef4444; }
+        .bm-month-cell.paid .bm-icon { color:#10b981; }
+        .bm-month-cell .bm-name { font-size:11px; font-weight:600; color:#ef4444; }
+        .bm-month-cell.paid .bm-name { color:#10b981; }
+
         @media (max-width: 600px) {
             .container { padding: 10px; }
-            .glass-card { padding: 15px; border-radius: 15px; }
+            .admin-glass-card { padding: 15px; border-radius: 15px; }
             h3 { font-size: 1rem; }
             .btn { padding: 10px; font-size: 14px; }
-            .nav-links { gap: 10px; }
-            .nav-link { font-size: 12px; }
         }
     </style>
 </head>
@@ -101,7 +96,7 @@
 
     <div class="container">
         <div class="grid">
-            <div class="glass-card">
+            <div class="admin-glass-card">
                 <h3 style="color:var(--primary-blue);"><i class="fas fa-user-plus"></i> জনশক্তি যোগ</h3>
                 <form action="/admin/add-member" method="POST" enctype="multipart/form-data">
                     <input type="text" name="name" placeholder="নাম" required>
@@ -153,7 +148,32 @@
                     </select>
 
                     <textarea name="comment" placeholder="মন্তব্য..."></textarea>
-                    <label style="font-size: 12px; color: #94a3b8; margin-left: 5px;">সদস্যের ছবি:</label>
+
+                    <div style="display: flex; align-items: center; gap: 10px; margin: 5px 0; background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.3); border-radius: 10px; padding: 10px 14px;">
+                        <i class="fas fa-coins" style="color: #fbbf24; font-size: 18px;"></i>
+                        <div style="flex: 1;">
+                            <label style="font-size: 12px; color: #fbbf24; margin: 0; font-weight: 600;">বায়তুলমাল ধার্য (মাসিক, টাকায়)</label>
+                            <input type="number" name="baitul_mal_amount" placeholder="০" min="0" step="0.5" style="margin: 4px 0 0; background: rgba(0,0,0,0.3); border-color: rgba(251,191,36,0.4); color: #fbbf24;">
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 15px; background: rgba(251,191,36,0.06); border: 1px solid rgba(251,191,36,0.25); border-radius: 12px; padding: 15px;">
+                        <h4 style="color: #fbbf24; margin-bottom: 8px; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-calendar-check"></i> বায়তুলমাল পরিশোধ (১২ মাস)
+                        </h4>
+                        <div class="bm-month-grid" style="grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 10px 0;">
+                            <% const addMemberMonths = ['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর']; %>
+                            <% for(let i = 0; i < 12; i++) { %>
+                                <div class="bm-month-cell" onclick="const cb=this.querySelector('input'); cb.checked=!cb.checked; this.classList.toggle('paid', cb.checked); this.querySelector('.bm-icon').textContent=cb.checked?'✓':'✕';">
+                                    <span class="bm-icon">✕</span>
+                                    <span class="bm-name"><%= addMemberMonths[i] %></span>
+                                    <input type="checkbox" name="month_<%= i %>" style="display:none;">
+                                </div>
+                            <% } %>
+                        </div>
+                    </div>
+
+                    <label style="font-size: 12px; color: #94a3b8; margin-left: 5px; margin-top: 10px; display: block;">সদস্যের ছবি:</label>
                     <input type="file" name="photo">
                     <input type="password" name="password" placeholder="গোপন কোড (পাসওয়ার্ড)" required>
                     <button type="submit" class="btn btn-blue">তথ্য সেভ করুন</button>
@@ -161,7 +181,7 @@
             </div>
 
             <div class="forms-column">
-                <div class="glass-card">
+                <div class="admin-glass-card">
                     <h3 style="color:#f59e0b;"><i class="fas fa-bullhorn"></i> নতুন নোটিশ</h3>
                     <form action="/admin/add-notice" method="POST">
                         <input type="text" name="title" placeholder="নোটিশের শিরোনাম" required>
@@ -175,7 +195,7 @@
                     </form>
                 </div>
                 
-                <div class="glass-card">
+                <div class="admin-glass-card">
                     <h3 style="color:#10b981;"><i class="fas fa-file-arrow-up"></i> লাইব্রেরি ফাইল</h3>
                     <form action="/admin/add-resource" method="POST">
                         <input type="text" name="title" placeholder="ফাইলের নাম বা শিরোনাম" required>
@@ -190,7 +210,7 @@
                     </form>
                 </div>
 
-                <div class="glass-card">
+                <div class="admin-glass-card">
                     <h3 style="color:#7c3aed;"><i class="fas fa-images"></i> হোম পেজ স্লাইড</h3>
                     <form action="/admin/add-slide" method="POST" enctype="multipart/form-data" onsubmit="const btn = document.getElementById('slideBtn'); btn.innerHTML = '<i class=\'fas fa-spinner fa-spin\'></i> আপলোড হচ্ছে... অপেক্ষা করুন'; btn.disabled = true; btn.style.opacity = '0.7';">
                         <input type="text" name="title" placeholder="স্লাইড শিরোনাম" required>
@@ -201,18 +221,24 @@
                     </form>
                 </div>
 
-                <div class="glass-card">
+                <div class="admin-glass-card">
                     <h3 style="color:#f97316;"><i class="fas fa-archive"></i> আর্কাইভ আইটেম</h3>
-                    <form action="/admin/add-archive" method="POST">
+                    <form action="/admin/add-archive" method="POST" enctype="multipart/form-data">
                         <input type="text" name="title" placeholder="শিরোনাম" required>
                         <input type="text" name="itemType" placeholder="প্রকার (ভিডিও, ছবি, ডকুমেন্ট)">
                         <textarea name="description" rows="3" placeholder="বর্ণনা অথবা বিস্তারিত লিখুন"></textarea>
-                        <input type="url" name="url" placeholder="Google Drive / অন্য লিঙ্ক" required>
+                        
+                        <label style="font-size: 13px; color: #94a3b8; margin-top: 10px; display: block;">ছবি আপলোড করুন (Direct Image):</label>
+                        <input type="file" name="image" accept="image/*" style="padding: 10px;">
+                        
+                        <div style="text-align: center; color: #475569; font-size: 12px; margin: 10px 0;">— অথবা —</div>
+                        
+                        <input type="url" name="url" placeholder="Google Drive / অন্য লিঙ্ক">
                         <button type="submit" class="btn btn-orange">আর্কাইভ যুক্ত করুন</button>
                     </form>
                 </div>
 
-                <div class="glass-card">
+                <div class="admin-glass-card">
                     <h3 style="color:#f59e0b;"><i class="fas fa-star"></i> হোমপেজ হাইলাইট</h3>
                     <form action="/admin/add-home-stat" method="POST">
                         <input type="text" name="value" placeholder="পরিমাণ/সংখ্যা (যেমন: ২৫০+)" required>
@@ -221,7 +247,7 @@
                     </form>
                 </div>
 
-                <div class="glass-card">
+                <div class="admin-glass-card">
                     <h3 style="color:#22c55e;"><i class="fas fa-book-open"></i> ইতিহাস / দায়িত্বশীল</h3>
                     <form action="/admin/add-history" method="POST">
                         <select name="category" required>
@@ -238,7 +264,7 @@
             </div>
         </div>
 
-        <div class="glass-card">
+        <div class="admin-glass-card">
             <h3 style="color:#3b82f6;"><i class="fas fa-hand-holding-heart"></i> নতুন সমর্থক আবেদনসমূহ</h3>
             <div class="table-responsive">
                 <table class="list-table">
@@ -273,21 +299,38 @@
             </div>
         </div>
 
-        <div class="glass-card">
+        <div class="admin-glass-card">
             <h3 style="color:#3b82f6; border:none;"><i class="fas fa-users"></i> জনশক্তি তালিকা</h3>
             <div class="table-responsive">
                 <table class="list-table">
-                    <thead><tr><th>নাম ও ফোন</th><th>মান</th><th>দায়িত্ব</th><th>ঠিকানা</th><th>অ্যাকশন</th></tr></thead>
+                    <thead><tr><th>নাম ও ফোন</th><th>মান</th><th>বায়তুলমাল</th><th>দায়িত্ব</th><th>অ্যাকশন</th></tr></thead>
                     <tbody>
                         <% data.members.forEach(m => { %>
+                            <%
+                                const bmpaid = (m.baitul_mal_payment || []).filter(p => p).length;
+                                const bmtotal = 12;
+                            %>
                             <tr>
                                 <td>
                                     <strong><%= m.name %></strong><br>
                                     <small style="color:var(--primary-blue)"><%= m.phone %></small>
                                 </td>
                                 <td><span class="badge badge-pub"><%= m.type %></span></td>
+                                <td>
+                                    <% if (m.baitul_mal_amount) { %>
+                                    <button onclick="const btn=this; openBmModal(btn.dataset.id, btn.dataset.name, btn.dataset.amount, JSON.parse(btn.dataset.payments))"
+                                        data-id="<%= m._id %>"
+                                        data-name="<%= m.name %>"
+                                        data-amount="<%= m.baitul_mal_amount || 0 %>"
+                                        data-payments='<%- JSON.stringify(m.baitul_mal_payment || Array(12).fill(false)) %>'
+                                        style="background: rgba(251,191,36,0.15); border:1px solid rgba(251,191,36,0.4); color:#fbbf24; border-radius:8px; padding:5px 10px; font-size:12px; cursor:pointer; font-weight:600;">
+                                        <i class="fas fa-coins"></i> <%= m.baitul_mal_amount %>৳ &nbsp;<span style="font-size:10px;">(<%= bmpaid %>/<%= bmtotal %>)</span>
+                                    </button>
+                                    <% } else { %>
+                                    <span style="color:#475569; font-size:12px;">—</span>
+                                    <% } %>
+                                </td>
                                 <td><%= m.responsibility %></td>
-                                <td><small><%= m.present_address %></small></td>
                                 <td>
                                     <div style="display: flex; gap: 5px;">
                                         <a href="/admin/edit-member/<%= m._id %>" class="btn btn-edit">এডিট</a>
@@ -302,7 +345,7 @@
         </div>
 
         <div class="grid">
-            <div class="glass-card">
+            <div class="admin-glass-card">
                 <h3><i class="fas fa-list-check"></i> নোটিশ লিস্ট</h3>
                 <div class="table-responsive">
                     <table class="list-table">
@@ -325,7 +368,7 @@
                 </div>
             </div>
 
-            <div class="glass-card">
+            <div class="admin-glass-card">
                 <h3><i class="fas fa-folder-open"></i> ফাইল লিস্ট</h3>
                 <div class="table-responsive">
                     <table class="list-table">
@@ -350,7 +393,7 @@
         </div>
 
         <div class="grid">
-            <div class="glass-card">
+            <div class="admin-glass-card">
                 <h3><i class="fas fa-images"></i> স্লাইড ম্যানেজার</h3>
                 <div class="table-responsive">
                     <table class="list-table">
@@ -377,7 +420,7 @@
                 </div>
             </div>
 
-            <div class="glass-card">
+            <div class="admin-glass-card">
                 <h3><i class="fas fa-archive"></i> আর্কাইভ ম্যানেজার</h3>
                 <div class="table-responsive">
                     <table class="list-table">
@@ -387,7 +430,12 @@
                                 <tr>
                                     <td><%= item.title %></td>
                                     <td><%= item.itemType || 'অন্যান্য' %></td>
-                                    <td><i onclick="confirmDel('/admin/delete-archive/<%= item._id %>')" class="fas fa-trash" style="color:#ef4444; cursor:pointer;"></i></td>
+                                    <td>
+                                        <div style="display: flex; gap: 12px; align-items: center;">
+                                            <a href="/admin/edit-archive/<%= item._id %>" style="color:#3b82f6;"><i class="fas fa-edit"></i></a>
+                                            <i onclick="confirmDel('/admin/delete-archive/<%= item._id %>')" class="fas fa-trash" style="color:#ef4444; cursor:pointer;"></i>
+                                        </div>
+                                    </td>
                                 </tr>
                             <% }) %>
                         </tbody>
@@ -396,7 +444,7 @@
             </div>
         </div>
 
-        <div class="glass-card">
+        <div class="admin-glass-card">
             <h3><i class="fas fa-star"></i> হোমপেজ হাইলাইটস</h3>
             <div class="table-responsive">
                 <table class="list-table">
@@ -418,7 +466,7 @@
             </div>
         </div>
 
-        <div class="glass-card">
+        <div class="admin-glass-card">
             <h3><i class="fas fa-book-open"></i> ইতিহাস ও শহিদ তালিকা</h3>
             <div class="table-responsive">
                 <table class="list-table">
@@ -437,6 +485,29 @@
         </div>
     </div>
 
+    <!-- বায়তুলমাল পরিশোধ মডাল -->
+    <div class="bm-modal-overlay" id="bmOverlay" onclick="closeBmModal(event)">
+        <div class="bm-modal">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <h4 style="color:#fbbf24; margin:0; font-size:1rem; display:flex; align-items:center; gap:8px;">
+                    <i class="fas fa-coins"></i> বায়তুলমাল পরিশোধ
+                </h4>
+                <button onclick="document.getElementById('bmOverlay').classList.remove('active')" style="background:none; border:none; color:#94a3b8; font-size:20px; cursor:pointer;">&times;</button>
+            </div>
+            <div id="bmMemberInfo" style="font-size:13px; color:#94a3b8; margin-bottom:4px;"></div>
+            <p id="bmAmountInfo" style="font-size:14px; color:#fbbf24; font-weight:700; margin-bottom:4px;"></p>
+
+            <form id="bmForm" method="POST">
+                <div class="bm-month-grid" id="bmGrid"></div>
+                <button type="submit" style="
+                    width:100%; padding:12px; border-radius:10px; margin-top:8px;
+                    background:linear-gradient(45deg,#fbbf24,#f59e0b); color:#0f172a;
+                    font-weight:bold; border:none; cursor:pointer; font-size:14px;
+                ">
+                    <i class="fas fa-check-circle me-1"></i> পরিশোধ সেভ করুন
+                </button>
+            </form>
+        </div>
     </div>
 
     <!-- Edit Slide Modal -->
@@ -466,6 +537,49 @@
     </div>
 
     <script>
+        const BM_MONTHS = ['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
+        let bmPayState = Array(12).fill(false);
+
+        function openBmModal(id, name, amount, payments) {
+            bmPayState = payments.slice();
+            document.getElementById('bmMemberInfo').textContent = '👤 ' + name;
+            document.getElementById('bmAmountInfo').textContent = 'মাসিক ধার্য: ' + amount + ' টাকা';
+            document.getElementById('bmForm').action = '/admin/update-baitul-mal/' + id;
+            renderBmGrid();
+            document.getElementById('bmOverlay').classList.add('active');
+        }
+
+        function renderBmGrid() {
+            const grid = document.getElementById('bmGrid');
+            grid.innerHTML = '';
+            bmPayState.forEach((paid, i) => {
+                const cell = document.createElement('div');
+                cell.className = 'bm-month-cell' + (paid ? ' paid' : '');
+                cell.innerHTML = `
+                    <span class="bm-icon">${paid ? '✓' : '✕'}</span>
+                    <span class="bm-name">${BM_MONTHS[i]}</span>
+                    <input type="checkbox" name="month_${i}" ${paid ? 'checked' : ''} style="display:none;">
+                `;
+                cell.addEventListener('click', () => toggleBmCell(i, cell));
+                grid.appendChild(cell);
+            });
+        }
+
+        function toggleBmCell(i, cell) {
+            bmPayState[i] = !bmPayState[i];
+            const paid = bmPayState[i];
+            cell.classList.toggle('paid', paid);
+            cell.querySelector('.bm-icon').textContent = paid ? '✓' : '✕';
+            const cb = cell.querySelector('input[type=checkbox]');
+            cb.checked = paid;
+        }
+
+        function closeBmModal(e) {
+            if (e.target === document.getElementById('bmOverlay')) {
+                document.getElementById('bmOverlay').classList.remove('active');
+            }
+        }
+
         function editSlide(btn) {
             document.getElementById('editSlideForm').action = '/admin/update-slide/' + btn.getAttribute('data-id');
             document.getElementById('editSlideTitle').value = btn.getAttribute('data-title') || '';

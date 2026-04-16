@@ -8,9 +8,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background: #050a08; color: #f8fafc; font-family: 'Hind Siliguri', sans-serif; }
-
-        .glass-card {
+        /* notices.ejs specific styles only */
+        .notice-glass-card {
             line-height: 1.6;
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.1);
@@ -21,7 +20,7 @@
             text-decoration: none;
             color: white;
         }
-        .glass-card:hover {
+        .notice-glass-card:hover {
             transform: translateY(-5px);
             background: rgba(255,255,255,0.1);
             color: white;
@@ -81,7 +80,7 @@
             <% if(notices && notices.length > 0) { %>
                 <% notices.forEach(n => { %>
                     <div class="col-12">
-                        <a href="/notice/<%= n._id %>" class="glass-card" style="border-left: 5px solid #eab308;">
+                        <a href="/notice/<%= n._id %>" class="notice-glass-card" style="border-left: 5px solid #eab308;">
                             <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
                                 <h4 class="fw-bold mb-0 text-warning"><%= n.title %></h4>
                                 <div class="d-flex align-items-center gap-2">

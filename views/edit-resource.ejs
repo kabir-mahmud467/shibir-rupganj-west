@@ -9,16 +9,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { 
-            background: #020617; 
-            color: white; 
-            font-family: 'Hind Siliguri', 'Segoe UI', Arial, sans-serif; 
-            min-height: 100vh; 
-            margin: 0; 
-            padding: 0;
-        }
-        
-        .card { 
+        /* edit-resource.ejs specific styles only */
+        .edit-resource-card { 
             background: rgba(30, 41, 59, 0.4); 
             backdrop-filter: blur(12px); 
             padding: 30px; 
@@ -116,7 +108,7 @@
 <body>
     <%- include('partials/main-nav') %>
     <div style="padding: 20px; display: flex; justify-content: center;">
-        <div class="card">
+        <div class="edit-resource-card">
             <h3><i class="fas fa-file-pen"></i> ফাইল তথ্য আপডেট</h3>
         
         <form action="/admin/update-resource/<%= resource.id %>" method="POST" enctype="multipart/form-data">

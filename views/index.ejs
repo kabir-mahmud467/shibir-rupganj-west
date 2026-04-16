@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="bn">
 
-<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel='icon' type='image/png' href='/assets/images/logos/favicon-bc3ee57fb3b42a04e970c3029781a118.png'>
@@ -26,51 +25,16 @@
     <link integrity="" rel="stylesheet" href="/assets/web-app-c4ace65d5ace1a1462c8c0a0dbdd5e26.css">
 
     <style>
-        :root {
-            --primary-green: #008144;
-            --dark-bg: #0a0f0d;
-            --footer-bg: #051a0f;
-            --glass-white: rgba(255, 255, 255, 0.08);
-            --glass-border: rgba(255, 255, 255, 0.15);
-            --accent-yellow: #ffb700;
-        }
-
-        body {
-            font-family: 'Hind Siliguri', sans-serif;
-            background: radial-gradient(circle at 10% 20%, #002b16, var(--dark-bg) 80%);
-            color: #ffffff;
-            font-weight: 500;
-            min-height: 100vh;
-            overflow-x: hidden;
-            opacity: 1;
-        }
-
-        .glass-card {
-            background: var(--glass-white);
-            backdrop-filter: blur(15px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            transition: 0.3s ease;
-        }
-
-        /* Navbar Style */
-        .navbar {
-            background: rgba(10, 15, 13, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--glass-border);
-            padding: 12px 0;
-        }
-
+        /* index.ejs specific styles only */
         .hero-title {
             font-size: 3.5rem;
             font-weight: 800;
             background: linear-gradient(to bottom, #ffffff 40%, #a0a0a0 100%);
-            background-clip: text;
+            -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 20px;
         }
 
-        /* বাটন গ্রিড (মোবাইলে ২ কলাম, পিসিতে ৪ কলাম) */
         .quick-btn-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -116,10 +80,6 @@
             overflow: hidden;
         }
 
-        .notice-container {
-            min-height: 260px;
-        }
-
         .hero-banner {
             position: relative;
             overflow: hidden;
@@ -149,12 +109,6 @@
             position: relative;
             z-index: 1;
             padding: 40px 30px;
-        }
-
-        .hero-area h1,
-        .hero-area p {
-            position: relative;
-            z-index: 1;
         }
 
         .hero-slide {
@@ -240,78 +194,6 @@
             50% {
                 transform: translateY(-10px);
             }
-        }
-
-        /* dushibir.org Style Footer */
-        .main-footer {
-            background: var(--footer-bg);
-            border-top: 4px solid var(--primary-green);
-            color: #fff;
-            padding: 60px 0 0px;
-            margin-top: 80px;
-        }
-
-        .footer-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 25px;
-            position: relative;
-            color: var(--accent-yellow);
-        }
-
-        .footer-links {
-            list-style: none;
-            padding: 0;
-        }
-
-        .footer-links li {
-            margin-bottom: 12px;
-        }
-
-        .footer-links a {
-            color: #cbd5e0;
-            text-decoration: none;
-            transition: 0.3s;
-            font-size: 0.95rem;
-            display: flex;
-            align-items: center;
-        }
-
-        .footer-links a:hover {
-            color: var(--accent-yellow);
-            padding-left: 8px;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 12px;
-            margin-top: 20px;
-        }
-
-        .social-icon {
-            width: 38px;
-            height: 38px;
-            background: rgba(255, 255, 255, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            color: #fff;
-            text-decoration: none;
-            transition: 0.3s;
-        }
-
-        .social-icon:hover {
-            background: var(--primary-green);
-            transform: translateY(-3px);
-        }
-
-        .copyright-area {
-            background-color: #03110a;
-            padding: 20px 0;
-            margin-top: 50px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-
         }
 
         @media (max-width: 768px) {

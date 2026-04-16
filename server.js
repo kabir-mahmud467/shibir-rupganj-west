@@ -27,7 +27,9 @@ const MemberSchema = new mongoose.Schema({
     guardian_phone: String, facebook: String, present_address: String, 
     permanent_address: String, type: String, edu: String, inst: String, 
     ward: String, branch: String, responsibility: String, comment: String, 
-    password: { type: String, unique: true }, photo: String
+    password: { type: String, unique: true }, photo: String,
+    baitul_mal_amount: { type: Number, default: 0 },
+    baitul_mal_payment: { type: [Boolean], default: () => Array(12).fill(false) }
 });
 const Member = mongoose.models.Member || mongoose.model('Member', MemberSchema);
 
@@ -316,11 +318,12 @@ app.get('/admin/delete-slide/:id', async (req, res) => {
     }
 });
 
-app.post('/admin/add-archive', async (req, res) => {
+app.post('/admin/add-archive', upload.single('image'), async (req, res) => {
     if (!req.session.user || req.session.user.role !== 'admin') return res.redirect('/login-page');
     try {
         const { title, description, itemType, url } = req.body;
-        await ArchiveItem.create({ title, description, itemType, url });
+        const imageUrl = req.file ? req.file.path : (url || '');
+        await ArchiveItem.create({ title, description, itemType, url: imageUrl });
         res.redirect('/admin');
     } catch (err) {
         res.status(500).send('Archive Save Error: ' + err.message);
@@ -360,18 +363,25 @@ app.get('/admin/delete-history/:id', async (req, res) => {
 app.post('/admin/add-member', upload.single('photo'), async (req, res) => {
     if (!req.session.user || req.session.user.role !== 'admin') return res.redirect('/login-page');
     try {
-        const { name, father, mother, dob, phone, guardian_phone, facebook, present_address, permanent_address, ward, branch, type, edu, edu_other, inst, inst_other, responsibility, comment, password } = req.body;
+        const { name, father, mother, dob, phone, guardian_phone, facebook, present_address, permanent_address, ward, branch, type, edu, edu_other, inst, inst_other, responsibility, comment, password, baitul_mal_amount } = req.body;
         
         const finalEdu = edu === 'অন্যান্য' ? edu_other : edu;
         const finalInst = inst === 'অন্যান্য' ? inst_other : inst;
         const photoUrl = req.file ? req.file.path : 'https://res.cloudinary.com/dz9ifigag/image/upload/v1/default.png';
+
+        const payments = [];
+        for (let i = 0; i < 12; i++) {
+            payments.push(req.body[`month_${i}`] === 'on');
+        }
 
         const newMember = new Member({
             name, father, mother, dob,
             phone, guardian_phone, facebook, present_address, permanent_address,
             ward, branch,
             type, edu: finalEdu, inst: finalInst,
-            responsibility, comment, password, photo: photoUrl
+            responsibility, comment, password, photo: photoUrl,
+            baitul_mal_amount: parseFloat(baitul_mal_amount) || 0,
+            baitul_mal_payment: payments
         });
 
         await newMember.save();
@@ -386,16 +396,23 @@ app.post('/admin/add-member', upload.single('photo'), async (req, res) => {
 app.post('/admin/update-member/:id', upload.single('photo'), async (req, res) => {
     if (!req.session.user || req.session.user.role !== 'admin') return res.redirect('/login-page');
     try {
-        const { name, father, mother, dob, phone, guardian_phone, facebook, present_address, permanent_address, ward, branch, type, edu, edu_other, inst, inst_other, responsibility, comment, password } = req.body;
+        const { name, father, mother, dob, phone, guardian_phone, facebook, present_address, permanent_address, ward, branch, type, edu, edu_other, inst, inst_other, responsibility, comment, password, baitul_mal_amount } = req.body;
         const finalEdu = edu === 'অন্যান্য' ? edu_other : edu;
         const finalInst = inst === 'অন্যান্য' ? inst_other : inst;
+
+        const payments = [];
+        for (let i = 0; i < 12; i++) {
+            payments.push(req.body[`month_${i}`] === 'on');
+        }
 
         let updateData = {
             name, father, mother, dob,
             phone, guardian_phone, facebook, present_address, permanent_address,
             ward, branch,
             type, edu: finalEdu, inst: finalInst,
-            responsibility, comment, password
+            responsibility, comment, password,
+            baitul_mal_amount: parseFloat(baitul_mal_amount) || 0,
+            baitul_mal_payment: payments
         };
         
         if (req.file) updateData.photo = req.file.path;
@@ -445,6 +462,43 @@ app.post('/admin/update-resource/:id', async (req, res) => {
         await Resource.findByIdAndUpdate(req.params.id, updateData);
         res.redirect('/admin');
     } catch (err) { res.send("Resource Update Error"); }
+});
+
+app.get('/admin/edit-archive/:id', async (req, res) => {
+    if (!req.session.user || req.session.user.role !== 'admin') return res.redirect('/login-page');
+    try {
+        const item = await ArchiveItem.findById(req.params.id);
+        res.render('edit-archive', { item });
+    } catch (err) { res.status(404).send("Archive item not found"); }
+});
+
+app.post('/admin/update-archive/:id', upload.single('image'), async (req, res) => {
+    if (!req.session.user || req.session.user.role !== 'admin') return res.redirect('/login-page');
+    try {
+        const { title, description, itemType, url } = req.body;
+        let updateData = { title, description, itemType };
+        if (req.file) {
+            updateData.url = req.file.path;
+        } else if (url) {
+            updateData.url = url;
+        }
+        await ArchiveItem.findByIdAndUpdate(req.params.id, updateData);
+        res.redirect('/admin');
+    } catch (err) { res.send("Archive Update Error: " + err.message); }
+});
+
+// --- বায়তুলমাল পরিশোধ আপডেট রুট ---
+app.post('/admin/update-baitul-mal/:id', async (req, res) => {
+    if (!req.session.user || req.session.user.role !== 'admin') return res.redirect('/login-page');
+    try {
+        // ১২টি মাসের চেকবক্স ডেটা গ্রহণ করা হচ্ছে
+        const payments = [];
+        for (let i = 0; i < 12; i++) {
+            payments.push(req.body[`month_${i}`] === 'on');
+        }
+        await Member.findByIdAndUpdate(req.params.id, { baitul_mal_payment: payments });
+        res.redirect('/admin/edit-member/' + req.params.id);
+    } catch (err) { res.send('বায়তুলমাল আপডেট Error: ' + err.message); }
 });
 
 // --- ডিলিট রুটস ---

@@ -8,11 +8,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
-        body { background: #07130f; color: #f8fafc; font-family: 'Hind Siliguri', sans-serif; margin: 0; }
+        /* archive.ejs specific styles only */
         .content { max-width: 1120px; margin: 28px auto; padding: 0 18px; }
         .archive-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 22px; padding: 24px; margin-bottom: 24px; }
         .embed-box { margin-top: 18px; border-radius: 18px; overflow: hidden; }
         iframe, img { width: 100%; border-radius: 18px; }
+        .archive-card p { 
+            white-space: pre-wrap; 
+            margin-bottom: 0px; 
+            color: #cbd5e1; 
+            line-height: 1.8; 
+            font-size: 1.05rem; 
+        }
         .empty-state { color: #94a3b8; }
     </style>
 </head>
@@ -25,7 +32,7 @@
                     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
                         <div>
                             <h3><%= item.title %></h3>
-                            <p class="text-muted"><%= item.description || 'এই আইটেমটি আর্কাইভে যুক্ত হয়েছে।' %></p>
+                            <p class=""><%= item.description || 'এই আইটেমটি আর্কাইভে যুক্ত হয়েছে।' %></p>
                         </div>
                         <span class="badge bg-success"><%= item.itemType || 'অন্যান্য' %></span>
                     </div>
@@ -37,7 +44,7 @@
                         <div class="embed-box mt-4">
                             <iframe src="https://www.youtube.com/embed/<%= item.url.split('v=')[1] ? item.url.split('v=')[1].split('&')[0] : item.url.split('youtu.be/')[1] %>" height="420" frameborder="0" allowfullscreen></iframe>
                         </div>
-                    <% } else if (item.url && (item.url.endsWith('.jpg') || item.url.endsWith('.jpeg') || item.url.endsWith('.png') || item.url.endsWith('.gif'))) { %>
+                    <% } else if (item.url && (item.url.includes('cloudinary') || item.url.endsWith('.jpg') || item.url.endsWith('.jpeg') || item.url.endsWith('.png') || item.url.endsWith('.gif') || item.url.endsWith('.webp'))) { %>
                         <div class="embed-box mt-4"><img src="<%= item.url %>" alt="Archive Image"></div>
                     <% } else if (item.url) { %>
                         <p class="mt-4"><a href="<%= item.url %>" target="_blank" class="btn btn-outline-light">আর্কাইভ লিঙ্কে যান</a></p>

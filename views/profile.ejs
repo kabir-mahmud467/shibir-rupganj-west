@@ -1,32 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>আমার প্রোফাইল - রূপগঞ্জ পশ্চিম থানা ছাত্রশিবির</title>
-     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;600;700&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;600;700&display=swap"
         rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background: linear-gradient(135deg, #0a1a2e 0%, #1a3a4a 50%, #0d2635 100%);
-            min-height: 100vh;
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            color: #ffffff;
-        }
-
+        /* profile.ejs specific styles only */
         .container {
             margin-top: 2rem;
         }
 
-        .glass-card {
+        .profile-glass-card {
             background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(10px);
             border-radius: 20px;
@@ -103,91 +92,187 @@
             }
 
             .glass-card {
-                padding: 20px;
+            padding: 20px;
             }
         }
+
+        /* Profile Payment Grid Styles */
+        .profile-month-box {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: rgba(239,68,68,0.1);
+            border: 2px solid rgba(239,68,68,0.35);
+            border-radius: 10px; padding: 10px 6px; gap: 5px;
+            transition: 0.2s;
+        }
+        .profile-month-box.paid {
+            background: rgba(16,185,129,0.15);
+            border-color: #10b981;
+        }
+        .profile-month-box span:first-child { font-size: 16px; font-weight: bold; color: #ef4444; }
+        .profile-month-box span:last-of-type { font-size: 10px; color: #ef4444; font-weight: 600; }
+        .profile-month-box.paid span { color: #10b981 !important; }
     </style>
 </head>
+
 <body>
     <%- include('partials/main-nav') %>
 
-    <div class="container mt-5 mb-5">
-        <div class="glass-card">
-            <div class="profile-header">
-                <% if (member && member.photo) { %>
-                    <img src="<%= member.photo %>" alt="প্রোফাইল" class="profile-photo">
-                <% } else { %>
-                    <div class="profile-photo">
-                        <i class="fas fa-user fa-3x"></i>
+        <div class="container pb-5">
+            <div class="profile-glass-card">
+                <div class="profile-header">
+                    <% if (member && member.photo) { %>
+                        <img src="<%= member.photo %>" alt="প্রোফাইল" class="profile-photo">
+                        <% } else { %>
+                            <div class="profile-photo">
+                                <i class="fas fa-user fa-3x"></i>
+                            </div>
+                            <% } %>
+                                <h2 class="text-white fw-bold">
+                                    <%= member.name %>
+                                </h2>
+                                <p class="text-success fw-bold"><i class="fas fa-circle-check me-2"></i>
+                                    <%= member.type %>
+                                </p>
+                </div>
+
+                <div class="profile-info-row">
+                    <div class="info-item">
+                        <div class="info-label"><i class="fas fa-person me-2"></i>বাবার নাম</div>
+                        <div class="info-value">
+                            <%= member.father || 'যোগ করা হয়নি' %>
+                        </div>
                     </div>
-                <% } %>
-                <h2 class="text-white fw-bold"><%= member.name %></h2>
-                <p class="text-success fw-bold"><i class="fas fa-circle-check me-2"></i><%= member.type %></p>
-            </div>
+                    <div class="info-item">
+                        <div class="info-label"><i class="fas fa-person-dress me-2"></i>মায়ের নাম</div>
+                        <div class="info-value">
+                            <%= member.mother || 'যোগ করা হয়নি' %>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="profile-info-row">
-                <div class="info-item">
-                    <div class="info-label"><i class="fas fa-person me-2"></i>বাবার নাম</div>
-                    <div class="info-value"><%= member.father || 'যোগ করা হয়নি' %></div>
+                <div class="profile-info-row">
+                    <div class="info-item">
+                        <div class="info-label"><i class="fas fa-birthday-cake me-2"></i>জন্মতারিখ</div>
+                        <div class="info-value">
+                            <%= member.dob || 'যোগ করা হয়নি' %>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label"><i class="fas fa-phone me-2"></i>ফোন নম্বর</div>
+                        <div class="info-value">
+                            <%= member.phone || 'যোগ করা হয়নি' %>
+                        </div>
+                    </div>
                 </div>
-                <div class="info-item">
-                    <div class="info-label"><i class="fas fa-person-dress me-2"></i>মায়ের নাম</div>
-                    <div class="info-value"><%= member.mother || 'যোগ করা হয়নি' %></div>
-                </div>
-            </div>
 
-            <div class="profile-info-row">
-                <div class="info-item">
-                    <div class="info-label"><i class="fas fa-birthday-cake me-2"></i>জন্মতারিখ</div>
-                    <div class="info-value"><%= member.dob || 'যোগ করা হয়নি' %></div>
+                <div class="profile-info-row">
+                    <div class="info-item">
+                        <div class="info-label"><i class="fas fa-school me-2"></i>শিক্ষা প্রতিষ্ঠান</div>
+                        <div class="info-value">
+                            <%= member.inst || 'যোগ করা হয়নি' %>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label"><i class="fas fa-book me-2"></i>শিক্ষা স্তর</div>
+                        <div class="info-value">
+                            <%= member.edu || 'যোগ করা হয়নি' %>
+                        </div>
+                    </div>
                 </div>
-                <div class="info-item">
-                    <div class="info-label"><i class="fas fa-phone me-2"></i>ফোন নম্বর</div>
-                    <div class="info-value"><%= member.phone || 'যোগ করা হয়নি' %></div>
-                </div>
-            </div>
 
-            <div class="profile-info-row">
-                <div class="info-item">
-                    <div class="info-label"><i class="fas fa-school me-2"></i>শিক্ষা প্রতিষ্ঠান</div>
-                    <div class="info-value"><%= member.inst || 'যোগ করা হয়নি' %></div>
+                <div class="profile-info-row">
+                    <div class="info-item">
+                        <div class="info-label"><i class="fas fa-map-marker-alt me-2"></i>বর্তমান ঠিকানা</div>
+                        <div class="info-value" style="font-size: 0.95rem;">
+                            <%= member.present_address || 'যোগ করা হয়নি' %>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label"><i class="fas fa-home me-2"></i>স্থায়ী ঠিকানা</div>
+                        <div class="info-value" style="font-size: 0.95rem;">
+                            <%= member.permanent_address || 'যোগ করা হয়নি' %>
+                        </div>
+                    </div>
                 </div>
-                <div class="info-item">
-                    <div class="info-label"><i class="fas fa-book me-2"></i>শিক্ষা স্তর</div>
-                    <div class="info-value"><%= member.edu || 'যোগ করা হয়নি' %></div>
-                </div>
-            </div>
 
-            <div class="profile-info-row">
-                <div class="info-item">
-                    <div class="info-label"><i class="fas fa-map-marker-alt me-2"></i>বর্তমান ঠিকানা</div>
-                    <div class="info-value" style="font-size: 0.95rem;"><%= member.present_address || 'যোগ করা হয়নি' %></div>
+                <div class="profile-info-row">
+                    <div class="info-item">
+                        <div class="info-label"><i class="fas fa-facebook me-2"></i>ফেসবুক আইডি</div>
+                        <div class="info-value">
+                            <%= member.facebook || 'যোগ করা হয়নি' %>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label"><i class="fas fa-phone me-2"></i>অভিভাবক ফোন</div>
+                        <div class="info-value">
+                            <%= member.guardian_phone || 'যোগ করা হয়নি' %>
+                        </div>
+                    </div>
                 </div>
-                <div class="info-item">
-                    <div class="info-label"><i class="fas fa-home me-2"></i>স্থায়ী ঠিকানা</div>
-                    <div class="info-value" style="font-size: 0.95rem;"><%= member.permanent_address || 'যোগ করা হয়নি' %></div>
-                </div>
-            </div>
 
-            <div class="profile-info-row">
-                <div class="info-item">
-                    <div class="info-label"><i class="fas fa-facebook me-2"></i>ফেসবুক আইডি</div>
-                    <div class="info-value"><%= member.facebook || 'যোগ করা হয়নি' %></div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <a href="/edit-profile" class="btn-edit">
+                        <i class="fas fa-edit me-2"></i> প্রোফাইল এডিট করুন
+                    </a>
                 </div>
-                <div class="info-item">
-                    <div class="info-label"><i class="fas fa-phone me-2"></i>অভিভাবক ফোন</div>
-                    <div class="info-value"><%= member.guardian_phone || 'যোগ করা হয়নি' %></div>
-                </div>
-            </div>
 
-            <div style="text-align: center; margin-top: 30px;">
-                <a href="/edit-profile" class="btn-edit">
-                    <i class="fas fa-edit me-2"></i> প্রোফাইল এডিট করুন
-                </a>
+                <!-- বায়তুলমাল সেকশন (শুধু পড়ার জন্য) -->
+                <% if (member.baitul_mal_amount || (member.baitul_mal_payment && member.baitul_mal_payment.length)) { %>
+                    <div
+                        style="margin-top: 30px; background: rgba(251,191,36,0.07); border: 1px solid rgba(251,191,36,0.22); border-radius: 15px; padding: 22px;">
+                        <h4
+                            style="color: #fbbf24; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; font-size: 1rem;">
+                            <i class="fas fa-coins"></i> বায়তুলমাল পরিশোধ বিবরণ
+                        </h4>
+                        <p style="font-size: 14px; color: #94a3b8; margin-bottom: 18px;">
+                            মাসিক ধার্য: <strong style="color: #fbbf24; font-size: 1.1rem;">
+                                <%= member.baitul_mal_amount || 0 %> টাকা
+                            </strong>
+                        </p>
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
+                            <% const
+                                profileMonths=['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
+                                %>
+                                <% for(let i=0; i < 12; i++) { %>
+                                    <% const paid=member.baitul_mal_payment && member.baitul_mal_payment[i]; %>
+                                        <div class="profile-month-box <%= paid ? 'paid' : '' %>">
+                                            <span><%= paid ? '✓' : '✕' %></span>
+                                            <span><%= profileMonths[i] %></span>
+                                        </div>
+                                        <% } %>
+                        </div>
+                        <% const paidCount=(member.baitul_mal_payment || []).filter(p=> p).length;
+                            const totalDue = paidCount * (member.baitul_mal_amount || 0);
+                            const remaining = 12 * (member.baitul_mal_amount || 0) - totalDue;
+                            %>
+                            <div style="margin-top: 15px; display: flex; gap: 12px; flex-wrap: wrap;">
+                                <div
+                                    style="flex:1; background: rgba(16,185,129,0.1); border-radius: 8px; padding: 10px; text-align: center; border: 1px solid rgba(16,185,129,0.3);">
+                                    <div style="font-size: 12px; color: #94a3b8;">পরিশোধিত মাস</div>
+                                    <div style="color: #10b981; font-weight: bold; font-size: 1.2rem;">
+                                        <%= paidCount %>/12
+                                    </div>
+                                    <div style="font-size: 11px; color: #10b981;">
+                                        <%= totalDue %> টাকা
+                                    </div>
+                                </div>
+                                <div
+                                    style="flex:1; background: rgba(239,68,68,0.1); border-radius: 8px; padding: 10px; text-align: center; border: 1px solid rgba(239,68,68,0.3);">
+                                    <div style="font-size: 12px; color: #94a3b8;">বকেয়া মাস</div>
+                                    <div style="color: #ef4444; font-weight: bold; font-size: 1.2rem;">
+                                        <%= 12 - paidCount %>/12
+                                    </div>
+                                    <div style="font-size: 11px; color: #ef4444;">
+                                        <%= remaining %> টাকা
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                    <% } %>
             </div>
         </div>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
