@@ -408,7 +408,11 @@
                                     </td>
                                     <td><span class="badge badge-pub"><%= s.profession || 'সাধারণ' %></span></td>
                                     <td>
-                                        <button onclick="openSpModal('<%= s._id %>', '<%= s.name %>', '<%= s.target_amount %>', JSON.stringify(<%= JSON.stringify(s.payments || Array(12).fill(false)) %>))"
+                                        <button onclick="const btn=this; openSpModal(btn.dataset.id, btn.dataset.name, btn.dataset.amount, JSON.parse(btn.dataset.payments))"
+                                            data-id="<%= s._id %>"
+                                            data-name="<%= s.name %>"
+                                            data-amount="<%= s.target_amount || 0 %>"
+                                            data-payments='<%- JSON.stringify(s.payments || Array(12).fill(false)) %>'
                                             style="background: rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#10b981; border-radius:8px; padding:5px 10px; font-size:12px; cursor:pointer; font-weight:600;">
                                             <i class="fas fa-hand-holding-dollar"></i> <%= s.target_amount %>৳ &nbsp;<span style="font-size:10px;">(<%= spaid %>/12)</span>
                                         </button>
@@ -651,8 +655,7 @@
             new bootstrap.Modal(document.getElementById('editSlideModal')).show();
         }
 
-        function openSpModal(id, name, amount, paymentsJson) {
-            const payments = JSON.parse(paymentsJson);
+        function openSpModal(id, name, amount, payments) {
             bmPayState = payments.slice();
             document.getElementById('bmMemberInfo').textContent = '👤 ' + name + ' (শুভাকাঙ্ক্ষী)';
             document.getElementById('bmAmountInfo').textContent = 'মাসিক ধার্য: ' + amount + ' টাকা';
