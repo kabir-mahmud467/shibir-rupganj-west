@@ -180,6 +180,49 @@
                 </form>
             </div>
 
+            <div class="admin-glass-card">
+                <h3 style="color:#10b981;"><i class="fas fa-heart"></i> শুভাকাঙ্ক্ষী যোগ</h3>
+                <form action="/admin/add-supporter" method="POST">
+                    <input type="text" name="name" placeholder="নাম" required>
+                    <input type="text" name="address" placeholder="ঠিকানা">
+                    <input type="text" name="phone" placeholder="ফোন নম্বর" required>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" name="profession" placeholder="পেশা">
+                        <input type="text" name="password" placeholder="গোপন কোড (লগইনের জন্য)" required>
+                    </div>
+                    <input type="url" name="facebook" placeholder="ফেসবুক আইডি লিঙ্ক">
+                    
+                    <label style="font-size: 12px; color: #94a3b8; margin-left: 5px;">প্রোফাইল ছবি:</label>
+                    <input type="file" name="photo" accept="image/*">
+                    
+                    <div style="display: flex; align-items: center; gap: 10px; margin: 10px 0; background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.3); border-radius: 10px; padding: 10px 14px;">
+                        <i class="fas fa-hand-holding-dollar" style="color: #10b981; font-size: 18px;"></i>
+                        <div style="flex: 1;">
+                            <label style="font-size: 12px; color: #10b981; margin: 0; font-weight: 600;"> মাসিক বায়তুলমাল ধার্য</label>
+                            <input type="number" name="target_amount" placeholder="০" min="0" style="margin: 4px 0 0; background: rgba(0,0,0,0.3); border-color: rgba(16,185,129,0.4); color: #10b981;">
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 15px; background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.25); border-radius: 12px; padding: 15px;">
+                        <h4 style="color: #10b981; margin-bottom: 8px; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-calendar-check"></i> পরিশোধের চার্ট (১২ মাস)
+                        </h4>
+                        <div class="bm-month-grid" style="grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 10px 0;">
+                            <% const addSupMonths = ['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর']; %>
+                            <% for(let i = 0; i < 12; i++) { %>
+                                <div class="bm-month-cell" style="border-color: rgba(16,185,129,0.2);" onclick="const cb=this.querySelector('input'); cb.checked=!cb.checked; this.classList.toggle('paid', cb.checked); this.querySelector('.bm-icon').textContent=cb.checked?'✓':'✕';">
+                                    <span class="bm-icon">✕</span>
+                                    <span class="bm-name"><%= addSupMonths[i] %></span>
+                                    <input type="checkbox" name="sup_month_<%= i %>" style="display:none;">
+                                </div>
+                            <% } %>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-green mt-3">শুভাকাঙ্ক্ষী সংরক্ষণ করুন</button>
+                </form>
+            </div>
+
             <div class="forms-column">
                 <div class="admin-glass-card">
                     <h3 style="color:#f59e0b;"><i class="fas fa-bullhorn"></i> নতুন নোটিশ</h3>
@@ -238,14 +281,6 @@
                     </form>
                 </div>
 
-                <div class="admin-glass-card">
-                    <h3 style="color:#f59e0b;"><i class="fas fa-star"></i> হোমপেজ হাইলাইট</h3>
-                    <form action="/admin/add-home-stat" method="POST">
-                        <input type="text" name="value" placeholder="পরিমাণ/সংখ্যা (যেমন: ২৫০+)" required>
-                        <input type="text" name="label" placeholder="বর্ণনা (যেমন: ছাত্র সমর্থক)" required>
-                        <button type="submit" class="btn btn-blue">হাইলাইট যোগ করুন</button>
-                    </form>
-                </div>
 
                 <div class="admin-glass-card">
                     <h3 style="color:#22c55e;"><i class="fas fa-book-open"></i> ইতিহাস / দায়িত্বশীল</h3>
@@ -339,6 +374,56 @@
                                 </td>
                             </tr>
                         <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="admin-glass-card">
+            <h3 style="color:#10b981; border:none;"><i class="fas fa-users-rectangle"></i> শুভাকাঙ্ক্ষী তালিকা</h3>
+            <div class="table-responsive">
+                <table class="list-table">
+                    <thead><tr><th>নাম ও ফোন</th><th>পেশা</th><th>আদায়</th><th>অ্যাকশন</th></tr></thead>
+                    <tbody>
+                        <% if(data.supporters && data.supporters.length > 0) { %>
+                            <% data.supporters.forEach(s => { %>
+                                <%
+                                    const spaid = (s.payments || []).filter(p => p).length;
+                                %>
+                                <tr>
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <% if(s.photo) { %>
+                                                <img src="<%= s.photo %>" width="35" height="35" style="border-radius: 50%; object-fit: cover; border: 1px solid #10b981;" alt="p">
+                                            <% } else { %>
+                                                <div style="width:35px; height:35px; border-radius:50%; background:rgba(16,185,129,0.1); display:flex; align-items:center; justify-content:center; color:#10b981; border: 1px solid #10b98133;">
+                                                    <i class="fas fa-user" style="font-size:12px;"></i>
+                                                </div>
+                                            <% } %>
+                                            <div>
+                                                <strong><%= s.name %></strong><br>
+                                                <small style="color:#10b981"><%= s.phone %></small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge badge-pub"><%= s.profession || 'সাধারণ' %></span></td>
+                                    <td>
+                                        <button onclick="openSpModal('<%= s._id %>', '<%= s.name %>', '<%= s.target_amount %>', JSON.stringify(<%= JSON.stringify(s.payments || Array(12).fill(false)) %>))"
+                                            style="background: rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#10b981; border-radius:8px; padding:5px 10px; font-size:12px; cursor:pointer; font-weight:600;">
+                                            <i class="fas fa-hand-holding-dollar"></i> <%= s.target_amount %>৳ &nbsp;<span style="font-size:10px;">(<%= spaid %>/12)</span>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <div style="display: flex; gap: 5px;">
+                                            <a href="/admin/edit-supporter/<%= s._id %>" class="btn btn-edit" style="background: #10b981;">এডিট</a>
+                                            <button onclick="confirmDel('/admin/delete-supporter/<%= s._id %>')" class="btn btn-red">মুছুন</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        <% } else { %>
+                            <tr><td colspan="4" style="text-align:center; color:#64748b;">কোনো শুভাকাঙ্ক্ষী নেই</td></tr>
+                        <% } %>
                     </tbody>
                 </table>
             </div>
@@ -444,27 +529,6 @@
             </div>
         </div>
 
-        <div class="admin-glass-card">
-            <h3><i class="fas fa-star"></i> হোমপেজ হাইলাইটস</h3>
-            <div class="table-responsive">
-                <table class="list-table">
-                    <thead><tr><th>মান</th><th>বর্ণনা</th><th></th></tr></thead>
-                    <tbody>
-                        <% if (data.homeStats && data.homeStats.length > 0) { %>
-                            <% data.homeStats.forEach(stat => { %>
-                                <tr>
-                                    <td><strong><%= stat.value %></strong></td>
-                                    <td><%= stat.label %></td>
-                                    <td><i onclick="confirmDel('/admin/delete-home-stat/<%= stat._id %>')" class="fas fa-trash" style="color:#ef4444; cursor:pointer;"></i></td>
-                                </tr>
-                            <% }) %>
-                        <% } else { %>
-                            <tr><td colspan="3" style="color:#94a3b8; text-align:center;">কোনো হাইলাইট যোগ করা হয়নি</td></tr>
-                        <% } %>
-                    </tbody>
-                </table>
-            </div>
-        </div>
 
         <div class="admin-glass-card">
             <h3><i class="fas fa-book-open"></i> ইতিহাস ও শহিদ তালিকা</h3>
@@ -585,6 +649,16 @@
             document.getElementById('editSlideTitle').value = btn.getAttribute('data-title') || '';
             document.getElementById('editSlideCaption').value = btn.getAttribute('data-caption') || '';
             new bootstrap.Modal(document.getElementById('editSlideModal')).show();
+        }
+
+        function openSpModal(id, name, amount, paymentsJson) {
+            const payments = JSON.parse(paymentsJson);
+            bmPayState = payments.slice();
+            document.getElementById('bmMemberInfo').textContent = '👤 ' + name + ' (শুভাকাঙ্ক্ষী)';
+            document.getElementById('bmAmountInfo').textContent = 'মাসিক ধার্য: ' + amount + ' টাকা';
+            document.getElementById('bmForm').action = '/admin/update-supporter-payment/' + id;
+            renderBmGrid();
+            document.getElementById('bmOverlay').classList.add('active');
         }
 
         function toggleBox(select, id) {

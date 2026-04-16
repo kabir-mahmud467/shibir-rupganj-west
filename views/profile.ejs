@@ -120,113 +120,117 @@
         <div class="container pb-5">
             <div class="profile-glass-card">
                 <div class="profile-header">
-                    <% if (member && member.photo) { %>
-                        <img src="<%= member.photo %>" alt="প্রোফাইল" class="profile-photo">
+                    <% if (user && user.photo) { %>
+                        <img src="<%= user.photo %>" alt="প্রোফাইল" class="profile-photo">
                         <% } else { %>
                             <div class="profile-photo">
                                 <i class="fas fa-user fa-3x"></i>
                             </div>
                             <% } %>
                                 <h2 class="text-white fw-bold">
-                                    <%= member.name %>
+                                    <%= user.name %>
                                 </h2>
                                 <p class="text-success fw-bold"><i class="fas fa-circle-check me-2"></i>
-                                    <%= member.type %>
+                                    <%= session.role %>
                                 </p>
                 </div>
 
                 <div class="profile-info-row">
                     <div class="info-item">
+                        <div class="info-label"><i class="fas fa-phone me-2"></i>ফোন নম্বর</div>
+                        <div class="info-value">
+                            <%= user.phone || 'যোগ করা হয়নি' %>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label"><i class="fas fa-facebook me-2"></i>ফেসবুক আইডি</div>
+                        <div class="info-value">
+                            <%= user.facebook || 'যোগ করা হয়নি' %>
+                        </div>
+                    </div>
+                </div>
+
+                <% if (session.type === 'member') { %>
+                <div class="profile-info-row">
+                    <div class="info-item">
                         <div class="info-label"><i class="fas fa-person me-2"></i>বাবার নাম</div>
                         <div class="info-value">
-                            <%= member.father || 'যোগ করা হয়নি' %>
+                            <%= user.father || 'যোগ করা হয়নি' %>
                         </div>
                     </div>
                     <div class="info-item">
                         <div class="info-label"><i class="fas fa-person-dress me-2"></i>মায়ের নাম</div>
                         <div class="info-value">
-                            <%= member.mother || 'যোগ করা হয়নি' %>
+                            <%= user.mother || 'যোগ করা হয়নি' %>
                         </div>
                     </div>
                 </div>
+                <% } %>
 
                 <div class="profile-info-row">
+                    <% if (session.type === 'member') { %>
                     <div class="info-item">
                         <div class="info-label"><i class="fas fa-birthday-cake me-2"></i>জন্মতারিখ</div>
                         <div class="info-value">
-                            <%= member.dob || 'যোগ করা হয়নি' %>
+                            <%= user.dob || 'যোগ করা হয়নি' %>
                         </div>
                     </div>
+                    <% } %>
                     <div class="info-item">
-                        <div class="info-label"><i class="fas fa-phone me-2"></i>ফোন নম্বর</div>
+                        <div class="info-label"><i class="fas fa-briefcase me-2"></i><%= session.type === 'supporter' ? 'পেশা' : 'দায়িত্ব' %></div>
                         <div class="info-value">
-                            <%= member.phone || 'যোগ করা হয়নি' %>
+                            <%= (session.type === 'supporter' ? user.profession : user.responsibility) || 'যোগ করা হয়নি' %>
                         </div>
                     </div>
                 </div>
 
+                <% if (session.type === 'member') { %>
                 <div class="profile-info-row">
                     <div class="info-item">
                         <div class="info-label"><i class="fas fa-school me-2"></i>শিক্ষা প্রতিষ্ঠান</div>
                         <div class="info-value">
-                            <%= member.inst || 'যোগ করা হয়নি' %>
+                            <%= user.inst || 'যোগ করা হয়নি' %>
                         </div>
                     </div>
                     <div class="info-item">
                         <div class="info-label"><i class="fas fa-book me-2"></i>শিক্ষা স্তর</div>
                         <div class="info-value">
-                            <%= member.edu || 'যোগ করা হয়নি' %>
+                            <%= user.edu || 'যোগ করা হয়নি' %>
                         </div>
                     </div>
                 </div>
+                <% } %>
 
                 <div class="profile-info-row">
-                    <div class="info-item">
-                        <div class="info-label"><i class="fas fa-map-marker-alt me-2"></i>বর্তমান ঠিকানা</div>
+                    <div class="info-item" style="grid-column: span 2;">
+                        <div class="info-label"><i class="fas fa-map-marker-alt me-2"></i>ঠিকানা</div>
                         <div class="info-value" style="font-size: 0.95rem;">
-                            <%= member.present_address || 'যোগ করা হয়নি' %>
-                        </div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label"><i class="fas fa-home me-2"></i>স্থায়ী ঠিকানা</div>
-                        <div class="info-value" style="font-size: 0.95rem;">
-                            <%= member.permanent_address || 'যোগ করা হয়নি' %>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="profile-info-row">
-                    <div class="info-item">
-                        <div class="info-label"><i class="fas fa-facebook me-2"></i>ফেসবুক আইডি</div>
-                        <div class="info-value">
-                            <%= member.facebook || 'যোগ করা হয়নি' %>
-                        </div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label"><i class="fas fa-phone me-2"></i>অভিভাবক ফোন</div>
-                        <div class="info-value">
-                            <%= member.guardian_phone || 'যোগ করা হয়নি' %>
+                            <%= user.address || user.present_address || 'যোগ করা হয়নি' %>
                         </div>
                     </div>
                 </div>
 
                 <div style="text-align: center; margin-top: 30px;">
                     <a href="/edit-profile" class="btn-edit">
-                        <i class="fas fa-edit me-2"></i> প্রোফাইল এডিট করুন
+                        <i class="fas fa-edit me-2"></i> তথ্য পরিবর্তন করুন
                     </a>
                 </div>
 
-                <!-- বায়তুলমাল সেকশন (শুধু পড়ার জন্য) -->
-                <% if (member.baitul_mal_amount || (member.baitul_mal_payment && member.baitul_mal_payment.length)) { %>
+                <!-- বায়তুলমাল / আদায় সেকশন -->
+                <% 
+                    const targetAmount = session.type === 'supporter' ? user.target_amount : user.baitul_mal_amount;
+                    const payments = session.type === 'supporter' ? user.payments : user.baitul_mal_payment;
+                    if (targetAmount || (payments && payments.length)) { 
+                %>
                     <div
                         style="margin-top: 30px; background: rgba(251,191,36,0.07); border: 1px solid rgba(251,191,36,0.22); border-radius: 15px; padding: 22px;">
                         <h4
                             style="color: #fbbf24; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; font-size: 1rem;">
-                            <i class="fas fa-coins"></i> বায়তুলমাল পরিশোধ বিবরণ
+                            <i class="fas fa-coins"></i> <%= session.type === 'supporter' ? 'আদায়ের বিবরণ' : 'বায়তুলমাল পরিশোধ বিবরণ' %>
                         </h4>
                         <p style="font-size: 14px; color: #94a3b8; margin-bottom: 18px;">
                             মাসিক ধার্য: <strong style="color: #fbbf24; font-size: 1.1rem;">
-                                <%= member.baitul_mal_amount || 0 %> টাকা
+                                <%= targetAmount || 0 %> টাকা
                             </strong>
                         </p>
                         <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
@@ -234,16 +238,16 @@
                                 profileMonths=['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
                                 %>
                                 <% for(let i=0; i < 12; i++) { %>
-                                    <% const paid=member.baitul_mal_payment && member.baitul_mal_payment[i]; %>
+                                    <% const paid=payments && payments[i]; %>
                                         <div class="profile-month-box <%= paid ? 'paid' : '' %>">
                                             <span><%= paid ? '✓' : '✕' %></span>
                                             <span><%= profileMonths[i] %></span>
                                         </div>
                                         <% } %>
                         </div>
-                        <% const paidCount=(member.baitul_mal_payment || []).filter(p=> p).length;
-                            const totalDue = paidCount * (member.baitul_mal_amount || 0);
-                            const remaining = 12 * (member.baitul_mal_amount || 0) - totalDue;
+                        <% const paidCount=(payments || []).filter(p=> p).length;
+                            const totalDue = paidCount * (targetAmount || 0);
+                            const remaining = 12 * (targetAmount || 0) - totalDue;
                             %>
                             <div style="margin-top: 15px; display: flex; gap: 12px; flex-wrap: wrap;">
                                 <div

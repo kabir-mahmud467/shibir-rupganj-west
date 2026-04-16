@@ -1,28 +1,19 @@
 <!DOCTYPE html>
 <html lang="bn">
-
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel='icon' type='image/png' href='/assets/images/logos/favicon-bc3ee57fb3b42a04e970c3029781a118.png'>
-    <meta name="web-app/config/environment"
-        content="%7B%22modulePrefix%22%3A%22web-app%22%2C%22environment%22%3A%22production%22%2C%22rootURL%22%3A%22%2F%22%2C%22locationType%22%3A%22history%22%2C%22HOST_NAME%22%3A%22https%3A%2F%2Fshibir.org.bd%22%2C%22ASSET_HOST_NAME%22%3A%22%22%2C%22STATIC_HOST_NAME%22%3A%22https%3A%2F%2Fstatic.shibir.org.bd%22%2C%22STORAGE_ENDPOINT%22%3A%22https%3A%2F%2Fstatic.shibir.org.bd%22%2C%22fastboot%22%3A%7B%22hostWhitelist%22%3A%5B%22shibir.org.bd%22%5D%7D%2C%22torii%22%3A%7B%22disableRedirectInitializer%22%3Atrue%2C%22providers%22%3A%7B%22google-oauth2%22%3A%7B%22apiKey%22%3A%22357175325708-2hf7f8b9o6vip9icg82ctrrcdsvgkekp.apps.googleusercontent.com%22%2C%22redirectUri%22%3A%22https%3A%2F%2Fshibir.org.bd%2Ftorii%2Fredirect.html%22%2C%22accessType%22%3A%22online%22%7D%7D%7D%2C%22ember-simple-auth-token%22%3A%7B%22serverTokenEndpoint%22%3A%22https%3A%2F%2Fshibir.org.bd%2Fapi%2Ftokens%22%2C%22tokenPropertyName%22%3A%22data.attributes.token%22%2C%22refreshAccessTokens%22%3Afalse%7D%2C%22ember-cli-notifications%22%3A%7B%22autoClear%22%3Atrue%2C%22clearDuration%22%3A8000%7D%2C%22sentry%22%3A%7B%22dsn%22%3A%22https%3A%2F%2F6dc603474b2f63895f2c78cd0bb07ec1%40o4510396783525888.ingest.us.sentry.io%2F4510396836085760%22%7D%2C%22metricsAdapters%22%3A%5B%7B%22name%22%3A%22GoogleAnalyticsFour%22%2C%22environments%22%3A%5B%22production%22%5D%2C%22config%22%3A%7B%22id%22%3A%22G-YW0Y29ZMQ3%22%2C%22options%22%3A%7B%22anonymize_ip%22%3Atrue%2C%22debug_mode%22%3Afalse%7D%7D%7D%5D%2C%22EmberENV%22%3A%7B%22EXTEND_PROTOTYPES%22%3Afalse%2C%22FEATURES%22%3A%7B%7D%2C%22_APPLICATION_TEMPLATE_WRAPPER%22%3Afalse%2C%22_DEFAULT_ASYNC_OBSERVERS%22%3Atrue%2C%22_JQUERY_INTEGRATION%22%3Afalse%2C%22_NO_IMPLICIT_ROUTE_MODEL%22%3Atrue%2C%22_TEMPLATE_ONLY_GLIMMER_COMPONENTS%22%3Atrue%7D%2C%22APP%22%3A%7B%22name%22%3A%22web-app%22%2C%22version%22%3A%220.0.0%22%7D%2C%22ember-cli-content-security-policy%22%3A%7B%22policy%22%3A%22default-src%20'none'%3B%20connect-src%20'self'%20https%3A%2F%2F*.sentry.io%20https%3A%2F%2Fwww.google-analytics.com%20https%3A%2F%2Fstatic.shibir.org.bd%3B%20script-src%20'self'%20%20'sha256-FVxBp4tegY7PWw%2BSQZFhL8BekbgG5NOIqs2cmK90Zxw%3D'%20'sha256-b0gAK8T2UdLrph0BHQyGXh9Nj6hTlyB5ELz7PSbD9Vk%3D'%20'sha256-D%2F30UEhipw7y%2BZFmMrColcRrYqicAhR3qnvOsbjEko4%3D'%20'sha256-LanMyLLadI45wTnq5Tl0JTN1WTfuxUJYoFj1aDjfo10%3D'%20https%3A%2F%2Fwww.google-analytics.com%20https%3A%2F%2Fwww.googletagmanager.com%20https%3A%2F%2Fstatic.cloudflareinsights.com%20https%3A%2F%2Fwww.youtube.com%3B%20style-src%20'self'%20'unsafe-inline'%20%3B%20img-src%20'self'%20data%3A%20%20https%3A%2F%2Fstatic.shibir.org.bd%20https%3A%2F%2Fimg.youtube.com%20https%3A%2F%2Fi.ytimg.com%20https%3A%2F%2Fpicsum.photos%20https%3A%2F%2Ffastly.picsum.photos%3B%20frame-src%20https%3A%2F%2Fwww.youtube.com%20https%3A%2F%2Fwww.google.com%2Fmaps%2F%20https%3A%2F%2Fstatic.shibir.org.bd%3B%20font-src%20'self'%20data%3A%20%3B%20manifest-src%20'self'%20%3B%22%2C%22reportOnly%22%3Afalse%7D%2C%22ember-cli-mirage%22%3A%7B%22usingProxy%22%3Afalse%2C%22useDefaultPassthroughs%22%3Atrue%7D%7D" />
     <title>হোম | বাংলাদেশ ইসলামী ছাত্রশিবির - রূপগঞ্জ পশ্চিম</title>
-    <!-- EMBER_CLI_FASTBOOT_TITLE --><!-- EMBER_CLI_FASTBOOT_HEAD -->
-
-    <script type="text/javascript">if (window.performance?.mark) {
-            window.performance.mark('@sentry/ember:initial-load-start');
-        }
-    </script>
+    <link rel="icon" type="image/png" href="https://www.dushibir.org/storage/setting_images/wKFhZtq3w8jQDZT9wLfeJJXeGW09yJss7WACq03k.png">
+    <!-- Scripts and Meta tags -->
 
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://unpkg.com/three@0.152.2/build/three.min.js"></script>
 
-    <link integrity="" rel="stylesheet" href="/assets/vendor-81bff02037735fc40f0752bf43c9a71e.css">
-    <link rel="stylesheet" href="/assets/chunk.524.7e2a06c6e147426c02c8.css"
-        integrity="sha256-E6u3ZCwV49oXDIQ+WjIyVsOdsMx0SoZqpptfD2m0tBw= sha512-4euzA2u6HVSt2AiQOrElqbIDmXDfVV15aq7zkloT6TMAB+gwkPEdKFm2nYIdF0mAxQ9FBMIV7e0mRUwKrrXmWw==" />
-    <link integrity="" rel="stylesheet" href="/assets/web-app-c4ace65d5ace1a1462c8c0a0dbdd5e26.css">
+    <!-- User defined styles -->
 
     <style>
         /* index.ejs specific styles only */
@@ -31,6 +22,7 @@
             font-weight: 800;
             background: linear-gradient(to bottom, #ffffff 40%, #a0a0a0 100%);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 20px;
         }
@@ -49,29 +41,38 @@
         }
 
         .q-btn {
-            background: var(--glass-white);
-            border: 1px solid var(--glass-border);
-            padding: 25px 10px;
-            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px 15px;
+            border-radius: 20px;
             text-align: center;
             color: #ffffff !important;
             text-decoration: none;
-            transition: 0.3s;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            position: relative;
+            overflow: hidden;
         }
 
         .q-btn:hover {
-            background: rgba(0, 129, 68, 0.3);
+            background: rgba(16, 185, 129, 0.15);
             border-color: var(--accent-yellow);
-            transform: translateY(-5px);
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
         }
 
-        .q-btn i {
-            font-size: 1.8rem;
-            margin-bottom: 12px;
+        .q-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+            transition: 0.5s;
         }
 
         /* নোটিশ বোর্ড এনিমেশন */
@@ -201,12 +202,66 @@
                 font-size: 2.2rem;
             }
         }
+
+        /* Modern Mesh Gradient Background */
+        body {
+            background-color: #050a0e;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(0, 129, 68, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(245, 158, 11, 0.05) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        .btn-hover {
+            transition: all 0.3s ease;
+        }
+
+        .btn-hover:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.08) !important;
+            border-color: rgba(255, 255, 255, 0.3) !important;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .section-tag {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50px;
+            color: var(--accent-yellow);
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .vision-stat-card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+        }
     </style>
 </head>
 
 <body>
 
-    <!-- EMBER_CLI_FASTBOOT_BODY -->
+
 
     <%- include('partials/main-nav') %>
 
@@ -268,130 +323,468 @@
         <div class="container mt-5">
             <div class="quick-btn-grid mb-5">
                 <a href="/form" class="q-btn">
-                    <i class="fas fa-user-plus text-success"></i>
-                    <span>সমর্থক ফরম</span>
+                    <i class="fas fa-file-signature text-success fs-2 mb-3"></i>
+                    <span class="fw-bold">সমর্থক ফরম</span>
                 </a>
                 <a href="/library" class="q-btn">
-                    <i class="fas fa-book text-info"></i>
-                    <span>অনলাইন লাইব্রেরী</span>
+                    <i class="fas fa-book-reader text-info fs-2 mb-3"></i>
+                    <span class="fw-bold">অনলাইন লাইব্রেরী</span>
                 </a>
                 <a href="/archive" class="q-btn">
-                    <i class="fas fa-bullhorn text-danger"></i>
-                    <span>আর্কাইভ</span>
+                    <i class="fas fa-camera-retro text-danger fs-3 mb-3"></i>
+                    <span class="fw-bold">আর্কাইভ</span>
                 </a>
                 <a href="/history" class="q-btn">
-                    <i class="fas fa-history text-warning"></i>
-                    <span>ইতিহাস</span>
+                    <i class="fas fa-monument text-warning fs-3 mb-3"></i>
+                    <span class="fw-bold">ইতিহাস</span>
                 </a>
             </div>
 
-            <div class="row g-4 mb-5">
-                <div class="col-lg-12">
-                    <div class="glass-card p-5" style="border-left: 4px solid var(--accent-yellow);">
-                        <h4 class="fw-bold mb-4 text-white"><i class="fas fa-newspaper text-success me-2"></i> সর্বশেষ আপডেট
-                        </h4>
-                        <div class="row g-3">
+            <div class="row g-4 mb-5 position-relative overflow-hidden" style="border-radius: 24px;">
+                <canvas id="noticeCanvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.3;"></canvas>
+                <div class="col-lg-12 position-relative" style="z-index: 1;">
+                    <div class="glass-card p-5" style="border-top: 4px solid var(--accent-yellow);">
+                        <div class="d-flex justify-content-between align-items-center mb-5">
+                            <div>
+                                <span class="section-tag mb-2">Live Updates</span>
+                                <h3 class="text-white fw-bold m-0"><i class="fas fa-bolt text-warning me-2"></i> সর্বশেষ নোটিশ ও সংবাদ</h3>
+                            </div>
+                            <a href="/notices" class="btn btn-warning rounded-pill px-4 fw-bold shadow-sm">সকল নোটিশ <i class="fas fa-arrow-right ms-1"></i></a>
+                        </div>
+                        <div class="row g-4">
                             <% if(notices && notices.length> 0) { %>
                                 <% notices.slice(0, 4).forEach((n, idx)=> { %>
-                                    <div class="col-md-6 col-12 <%= idx >= 2 ? 'd-none d-md-block' : '' %>">
-                                        <div class="glass-card p-4 h-100">
-                                            <div class="d-flex justify-content-between mb-2">
-                                                <span class="badge bg-success">সংবাদ</span>
-                                                <small class="text-light opacity-75 fw-bold">
-                                                    <%= n.date || 'সাম্প্রতিক' %>
-                                                </small>
+                                    <div class="col-md-6">
+                                        <div class="glass-card p-0 overflow-hidden h-100 btn-hover" style="border: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.01);">
+                                            <div class="p-4">
+                                                <div class="d-flex align-items-center gap-3 mb-3">
+                                                    <div class="bg-warning text-dark fw-bold rounded px-3 py-1 small">
+                                                        <%= n.date ? n.date.split(' ')[0] : 'NEW' %>
+                                                    </div>
+                                                    <span class="text-light opacity-75 small">/ প্রকাশিত সংবাদ</span>
+                                                </div>
+                                                <h5 class="text-white fw-bold mb-3" style="line-height: 1.5;">
+                                                    <%= n.title %>
+                                                </h5>
+                                                <p class="text-light opacity-75 small mb-4">
+                                                    <%= n.content.substring(0, 110) %>...
+                                                </p>
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <a href="/notice/<%= n._id %>" class="btn btn-link text-warning p-0 text-decoration-none fw-bold small">
+                                                        বিস্তারিত পড়ুন <i class="fas fa-chevron-right ms-1" style="font-size: 0.7rem;"></i>
+                                                    </a>
+                                                    <div class="text-light opacity-75 small"><i class="far fa-clock me-1"></i> সাম্প্রতিক সংবাদ</div>
+                                                </div>
                                             </div>
-                                            <h6 class="text-white fw-bold">
-                                                <%= n.title %>
-                                            </h6>
-                                            <p class="text-light small" style="color: #e0e0e0;">
-                                                <%= n.content.substring(0, 90) %>...
-                                            </p>
-                                            <a href="/notice/<%= n._id %>"
-                                                class="text-warning small text-decoration-none fw-bold">বিস্তারিত পড়ুন →</a>
+                                            <div style="height: 4px; background: linear-gradient(to right, transparent, var(--accent-yellow), transparent); opacity: 0.3;"></div>
                                         </div>
                                     </div>
                                     <% }) %>
                                         <% } else { %>
-                                            <div class="col-12">
-                                                <p class="text-light opacity-75">আপাতত কোনো সংবাদ নেই।</p>
+                                            <div class="col-12 py-5 text-center">
+                                                <i class="fas fa-folder-open display-4 text-muted mb-3"></i>
+                                                <p class="text-light opacity-75">বর্তমানে কোনো নোটিশ নেই।</p>
                                             </div>
                                             <% } %>
                         </div>
-                        <div class="text-center mt-5">
-                            <a href="/notices" class="btn btn-outline-warning rounded-pill px-4 py-2 fw-bold" style="border-width: 2px;">সকল নোটিশ দেখুন <i class="fas fa-arrow-right ms-2"></i></a>
-                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="glass-card p-4 mb-5 text-center" style="border-left: 5px solid var(--accent-yellow);">
-                <div id="quoteCarousel" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <h5 class="fw-bold text-white">"বাতিল যখন সুসংগঠিত হয়, তখন হকপন্থীদের পরাজয়ের প্রধান কারণ
-                                হয় তাদের অসংগঠিত থাকা।"</h5>
-                            <p class="text-warning mb-0 mt-2">— সায়্যেদ আবুল আ’লা মওদূদী (র)</p>
-                        </div>
-                        <div class="carousel-item">
-                            <h5 class="fw-bold text-white">"যদি ইসলামকে বিজয়ী করতে চান, তবে আগে নিজেদের চরিত্রে ইসলামের
-                                প্রতিফলন ঘটান।"</h5>
-                            <p class="text-warning mb-0 mt-2">— শহীদ আব্দুল মালেক (র)</p>
-                        </div>
+            <!-- New Stats Section -->
+          <!--  <div class="row g-4 mb-5">
+                <div class="col-md-3">
+                    <div class="vision-stat-card">
+                        <h4 class="text-success fw-bold">২৫০+</h4>
+                        <p class="text-light opacity-85 small mb-0">সক্রিয় জনশক্তি</p>
                     </div>
                 </div>
-            </div>
+                <div class="col-md-3">
+                    <div class="vision-stat-card">
+                        <h4 class="text-info fw-bold">৫০+</h4>
+                        <p class="text-light opacity-85 small mb-0">লাইব্রেরি বই</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="vision-stat-card">
+                        <h4 class="text-warning fw-bold">১৫+</h4>
+                        <p class="text-light opacity-85 small mb-0">সামাজিক প্রকল্প</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="vision-stat-card">
+                        <h4 class="text-danger fw-bold">১০০%</h4>
+                        <p class="text-light opacity-85 small mb-0">নৈতিক অঙ্গীকার</p>
+                    </div>
+                </div>
+            </div>-->
 
-            <!--<div class="text-center mb-5">
-            <h1 class="hero-title">সত্য ও সুন্দরের পথে কাফেলা</h1>-->
-            <div class="text-center mb-5 mt-5">
-                <img src="https://www.dushibir.org/storage/setting_images/wKFhZtq3w8jQDZT9wLfeJJXeGW09yJss7WACq03k.png"
-                    alt="Logo" height="50" class="mb-3">
-                <h2 class="text-white fw-bold mb-2"><i class="fas fa-tasks me-2" style="color: #00b366;"></i>আমাদের
-                    কর্মসূচি সমূহ</h2>
-                <p class="text-light opacity-75">রূপগঞ্জ পশ্চিম শাখার মূল কর্মসূচি ক্ষেত্র</p>
-            </div>
-
-            <div class="floating-labels">
-                <div class="float-chip">দাওয়াত </div>
-                <div class="float-chip">সংগঠন </div>
-                <div class="float-chip">প্রশিক্ষণ </div>
-                <div class="float-chip">ইসলামী শিক্ষা আন্দোলন ও ছাত্র সমস্যার সমাধান </div>
-                <div class="float-chip">ইসলামী সমাজ বিনির্মাণ </div>
-            </div>
-
-            <div class="glass-card p-4 mt-4 text-start" style="border-left: 4px solid #84cc16;">
-                <h5 class="text-white fw-bold">আমরা এখন পর্যন্ত যা করেছি</h5>
-                <div class="row g-3 mt-3">
-                    <% if (homeStats && homeStats.length> 0) { %>
-                        <% homeStats.forEach(stat=> { %>
-                            <div class="col-md-3">
-                                <div class="float-chip" style="animation:none;"><strong>
-                                        <%= stat.value %>
-                                    </strong><br><small>
-                                        <%= stat.label %>
-                                    </small></div>
+            <!-- সংগঠনের লক্ষ্য ও উদ্দেশ্য (Official Content) -->
+            <div class="row g-4 mb-5">
+                <div class="col-lg-12">
+                    <div class="glass-card p-5 text-center" style="border-top: 4px solid #10b981; background: linear-gradient(to bottom, rgba(16, 185, 129, 0.05), transparent);">
+                        <span class="section-tag">Target & Mission</span>
+                        <h2 class="text-white fw-bold mb-4">আমাদের লক্ষ্য ও উদ্দেশ্য</h2>
+                        <div class="row justify-content-center">
+                            <div class="col-lg-9">
+                                <p class="text-light fs-5 lh-base mb-4" style="font-weight: 300; opacity: 0.95;">
+                                    "আল্লাহ প্রদত্ত ও রাসূল (সা.) প্রদর্শিত বিধান অনুযায়ী মানুষের সার্বিক জীবনের পুনর্বিন্যাস সাধন করে আল্লাহর সন্তোষ অর্জন।"
+                                </p>
+                                <hr class="w-25 mx-auto border-secondary opacity-25">
+                                <p class="text-light opacity-60 small mt-3">বাংলাদেশ ইসলামী ছাত্রশিবির সংবিধান: ধারা ২</p>
                             </div>
-                            <% }) %>
-                                <% } else { %>
-                                    <div class="col-md-3">
-                                        <div class="float-chip" style="animation:none;">২৫০+ ছাত্র সমর্থক</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- সংগঠনের পটভূমি ও রূপগঞ্জ পশ্চিম শাখার ইতিহাস -->
+            <div class="row g-4 mb-5">
+                <div class="col-lg-12">
+                    <div class="glass-card p-5" style="border-left: 4px solid #10b981;">
+                        <span class="section-tag">History & Context</span>
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <h2 class="text-white fw-bold mb-4">আমাদের পটভূমি ও রূপগঞ্জ পশ্চিম শাখা</h2>
+                                <p class="text-light opacity-75 lh-lg">
+                                    বাংলাদেশ ইসলামী ছাত্রশিবির ১৯৭৭ সালের ৬ই ফেব্রুয়ারি ঢাকা বিশ্ববিদ্যালয়ের কেন্দ্রীয় মসজিদে প্রতিষ্ঠার মাধ্যমে তার যাত্রা শুরু করে। এক সুদীর্ঘ ও কণ্টকাকীর্ণ পথ পাড়ি দিয়ে আজ ছাত্রশিবির দেশের ছাত্রসমাজের হৃদস্পন্দনে পরিণত হয়েছে। 
+                                    <br><br>
+                                    রূপগঞ্জ পশ্চিম থানা শাখা নারায়ণগঞ্জের এক ঐতিহ্যবাহী ও সক্রিয় শাখা। এই এলাকার ছাত্রদের মাঝে ইসলামী শিক্ষা ও নৈতিক মূল্যবোধ ছড়িয়ে দিতে এই শাখা নিরলসভাবে কাজ করে যাচ্ছে। প্রতিষ্ঠালগ্ন থেকেই এই শাখা সাম্য, মানবিক মর্যাদা ও সামাজিক ন্যায়বিচার প্রতিষ্ঠায় অগ্রণী ভূমিকা পালন করছে।
+                                </p>
+                                <a href="/history" class="btn btn-outline-success mt-3 rounded-pill px-4">বিস্তারিত ইতিহাস পড়ুন</a>
+                            </div>
+                            <div class="col-lg-4 d-none d-lg-block">
+                                <div class="p-4 glass-card text-center h-100 d-flex flex-column justify-content-center" style="border: 1px dashed rgba(255,255,255,0.1);">
+                                    <div class="display-4 fw-bold text-success mb-2">১৯৭৭</div>
+                                    <p class="text-light small text-uppercase letter-spacing-1">প্রতিষ্ঠা সাল</p>
+                                    <hr class="w-25 mx-auto border-secondary">
+                                    <div class="display-4 fw-bold text-success mb-2">নারায়ণগঞ্জ</div>
+                                    <p class="text-light small text-uppercase letter-spacing-1">আমাদের গৌরব</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="position-relative overflow-hidden py-5 my-5" style="border-radius: 24px; background: rgba(0, 129, 68, 0.05); border: 1px solid rgba(255,255,255,0.05);">
+                <canvas id="programCanvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.4;"></canvas>
+                <div class="position-relative" style="z-index: 1;">
+                    <div class="text-center mb-5 px-3">
+                        <span class="section-tag">Working Plan</span>
+                        <h2 class="text-white fw-bold mb-2">৫ দফা কর্মসূচি</h2>
+                        <p class="text-light opacity-75">আমাদের লক্ষ্য অর্জনে এক সুনির্দিষ্ট ও বিজ্ঞানসম্মত কর্মপন্থা</p>
+                    </div>
+
+                    <div class="floating-labels px-3">
+                        <a href="/program/dawah" class="float-chip text-decoration-none">
+                            <i class="fas fa-bullhorn mb-2 d-block fs-4" style="color: #00b366;"></i>
+                            ১. দাওয়াত 
+                        </a>
+                        <a href="/program/organization" class="float-chip text-decoration-none">
+                            <i class="fas fa-users-cog mb-2 d-block fs-4" style="color: #34d399;"></i>
+                            ২. সংগঠন 
+                        </a>
+                        <a href="/program/training" class="float-chip text-decoration-none">
+                            <i class="fas fa-book-reader mb-2 d-block fs-4" style="color: #60a5fa;"></i>
+                            ৩. প্রশিক্ষণ 
+                        </a>
+                        <a href="/program/education" class="float-chip text-decoration-none">
+                            <i class="fas fa-graduation-cap mb-2 d-block fs-4" style="color: #c084fc;"></i>
+                            ৪. শিক্ষা আন্দোলন 
+                        </a>
+                        <a href="/program/society" class="float-chip text-decoration-none">
+                            <i class="fas fa-mosque mb-2 d-block fs-4" style="color: #f43f5e;"></i>
+                            ৫. সমাজ বিনির্মাণ 
+                        </a>
+                    </div>
+                    <div class="text-center mt-5">
+                        <a href="/program" class="btn btn-outline-light rounded-pill px-5">বিস্তারিত কর্মপদ্ধতি দেখুন</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card mt-5 overflow-hidden position-relative" style="border-left: 4px solid #3b82f6; min-height: 480px; background: rgba(10, 20, 40, 0.45);">
+                <canvas id="expectationsCanvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.5;"></canvas>
+                <div class="p-5 position-relative" style="z-index: 1;">
+                    <div class="row align-items-center">
+                        <div class="col-lg-7">
+                            <span class="section-tag">Expectations</span>
+                            <h2 class="text-white fw-bold mb-4"><i class="fas fa-eye me-3" style="color: #3b82f6;"></i>আমাদের প্রত্যাশা</h2>
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <div class="expectation-item glass-card p-4 h-100" style="background: rgba(255,255,255,0.03);">
+                                        <h5 class="text-info fw-bold mb-3"><i class="fas fa-user-shield me-2"></i>একনিষ্ঠ কর্মী বাহিনী</h5>
+                                        <p class="text-light opacity-75 small mb-0">চরিত্রবান, দক্ষ ও দেশপ্রেমিক জনশক্তি তৈরি করা যারা আগামীর চ্যালেঞ্জ মোকাবিলায় প্রস্তুত থাকবে।</p>
                                     </div>
-                                    <div class="col-md-3">
-                                        <div class="float-chip" style="animation:none;">১২টি শিক্ষা কর্মসূচি</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="expectation-item glass-card p-4 h-100" style="background: rgba(255,255,255,0.03);">
+                                        <h5 class="text-info fw-bold mb-3"><i class="fas fa-balance-scale me-2"></i>আদর্শিক সমাজ</h5>
+                                        <p class="text-light opacity-75 small mb-0">সমাজে ন্যায়বিচার, সাম্য ও নৈতিক মূল্যবোধ প্রতিষ্ঠায় অগ্রণী ভূমিকা পালন করা।</p>
                                     </div>
-                                    <div class="col-md-3">
-                                        <div class="float-chip" style="animation:none;">৫০০+ লাইব্রেরি লিংক</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="expectation-item glass-card p-4 h-100" style="background: rgba(255,255,255,0.03);">
+                                        <h5 class="text-info fw-bold mb-3"><i class="fas fa-microchip me-2"></i>আধুনিক শিক্ষা</h5>
+                                        <p class="text-light opacity-75 small mb-0">বিজ্ঞান ও প্রযুক্তিনির্ভর আধুনিক শিক্ষার সাথে দ্বীনি জ্ঞানের সমন্বয় ঘটানো।</p>
                                     </div>
-                                    <div class="col-md-3">
-                                        <div class="float-chip" style="animation:none;">নিয়োজিত শাখা সেবা</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="expectation-item glass-card p-4 h-100" style="background: rgba(255,255,255,0.03);">
+                                        <h5 class="text-info fw-bold mb-3"><i class="fas fa-flag-checkered me-2"></i>সোনার বাংলাদেশ</h5>
+                                        <p class="text-light opacity-75 small mb-0">একটি সুখী ও সমৃদ্ধ বাংলাদেশ গড়ার লক্ষ্যে সর্বোচ্চ ত্যাগ রাখা।</p>
                                     </div>
-                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-5 d-none d-lg-flex justify-content-center align-items-center">
+                            <div class="vision-orb-container text-center">
+                                <div class="glass-card rounded-circle p-5 d-inline-block shadow-lg" style="background: radial-gradient(circle, rgba(59, 130, 246, 0.2), transparent); border: 2px solid rgba(59, 130, 246, 0.3);">
+                                    <h4 class="text-white fw-bold mb-0">ভিশন</h4>
+                                    <div class="display-5 fw-bold text-info">২০২৬</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- নতুন সেকশন: সংগঠনের মটো ও স্লোগান -->
+            <div class="row g-4 my-5 py-5 text-center" style="background: linear-gradient(to right, transparent, rgba(255,255,255,0.02), transparent);">
+                <div class="col-md-6 mx-auto">
+                    <h1 class="text-muted opacity-25 mb-0"><i class="fas fa-quote-left"></i></h1>
+                    <h2 class="text-white fw-bold mb-4" style="letter-spacing: 1px;">"সত্য ও সুন্দরের পথে কাফেলা"</h2>
+                    <p class="text-success fw-bold fs-5">— আমাদের পাথেয় —</p>
+                </div>
+            </div>
+
+            <!-- নতুন সেকশন: বিভাগীয় কার্যক্রম -->
+            <div class="text-center mt-5 mb-5">
+                <span class="section-tag">Departments</span>
+                <h2 class="text-white fw-bold mb-2">বিভাগীয় কার্যক্রম</h2>
+                <p class="text-light opacity-75">শৃঙ্খলার সাথে আমাদের লক্ষ্য বাস্তবায়ন</p>
+            </div>
+
+            <div class="row g-4 mb-5">
+                <% const depts = [
+                    { name: 'তথ্য ও প্রযুক্তি', icon: 'fa-microchip', color: '#3b82f6', desc: 'আধুনিক প্রযুক্তির সাথে তাল মিলিয়ে ডিজিটাল কার্যক্রম পরিচালনা।' },
+                    { name: 'প্রকাশনা', icon: 'fa-book-open', color: '#f59e0b', desc: 'ইসলামী সাহিত্য ও চিন্তা প্রসারে নিয়মিত প্রকাশনা কার্যক্রম।' },
+                    { name: 'সমাজসেবা', icon: 'fa-hand-holding-heart', color: '#10b981', desc: 'অসহায় মানুষের পাশে দাঁড়াতে ও সমাজ উন্নয়নে বিশেষ প্রকল্প।' },
+                    { name: 'সাংস্কৃতিক', icon: 'fa-music', color: '#f43f5e', desc: 'সুস্থ সংস্কৃতি ও প্রতিভা বিকাশে বিশেষ আয়োজন।' }
+                ]; %>
+                <% depts.forEach((dept, idx) => { %>
+                    <div class="col-md-3">
+                        <div class="glass-card p-4 text-center h-100 btn-hover dynamic-dept-card" data-color="<%= dept.color %>">
+                            <i class="fas <%= dept.icon %> fs-1 mb-3 dynamic-dept-icon" data-color="<%= dept.color %>"></i>
+                            <h5 class="text-white fw-bold"><%= dept.name %></h5>
+                            <p class="text-light opacity-85 small mb-0"><%= dept.desc %></p>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+            <script>
+                document.querySelectorAll('.dynamic-dept-card').forEach(el => {
+                    el.style.borderBottom = `3px solid ${el.dataset.color}`;
+                });
+                document.querySelectorAll('.dynamic-dept-icon').forEach(el => {
+                    el.style.color = el.dataset.color;
+                });
+            </script>
+            </div>
+
+            <!-- নতুন সেকশন: সমর্থক হওয়ার ধাপসমূহ -->
+            <div class="row g-4 mb-5">
+                <div class="col-lg-12">
+                    <div class="glass-card p-5">
+                        <h2 class="text-white fw-bold text-center mb-5">আমাদের শুভাকাঙ্ক্ষী বা সমর্থক হওয়ার প্রক্রিয়া</h2>
+                        <div class="row text-center">
+                            <div class="col-md-4">
+                                <div class="p-4">
+                                    <div class="display-6 fw-bold text-success mb-3">০১</div>
+                                    <h5 class="text-white">ফরম পূরণ</h5>
+                                    <p class="text-light opacity-75 small">প্রথমে আমাদের অনলাইন সমর্থক ফরমটি নির্ভুলভাবে পূরণ করুন।</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="p-4 border-start border-end border-secondary border-opacity-25">
+                                    <div class="display-6 fw-bold text-success mb-3">০২</div>
+                                    <h5 class="text-white">পরিচিতি</h5>
+                                    <p class="text-light opacity-75 small">আমাদের দায়িত্বশীলরা আপনার সাথে যোগাযোগ করবেন এবং পরিচিত হবেন।</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="p-4">
+                                    <div class="display-6 fw-bold text-success mb-3">০৩</div>
+                                    <h5 class="text-white">অংশগ্রহণ</h5>
+                                    <p class="text-light opacity-75 small">আপনার যোগ্যতা অনুযায়ী বিভিন্ন গঠনমূলক কাজে অংশগ্রহণের সুযোগ পাবেন।</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- নতুন সেকশন: কেন আমাদের সাথে যুক্ত হবেন? -->
+            <div class="glass-card p-5 mb-5" style="background: linear-gradient(135deg, rgba(0, 129, 68, 0.1), rgba(59, 130, 246, 0.1));">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <h2 class="text-white fw-bold mb-4">কেন আমাদের সাথে যুক্ত হবেন?</h2>
+                        <ul class="list-unstyled">
+                            <li class="mb-3 text-light"><i class="fas fa-check-circle text-success me-2"></i> নেতৃত্বের গুণাবলী অর্জনের সুযোগ।</li>
+                            <li class="mb-3 text-light"><i class="fas fa-check-circle text-success me-2"></i> দ্বীনের সঠিক জ্ঞানার্জন ও প্রচারের পথ।</li>
+                            <li class="mb-3 text-light"><i class="fas fa-check-circle text-success me-2"></i> দেশ ও জাতির সেবায় নিজেকে নিয়োজিত করা।</li>
+                            <li class="mb-3 text-light"><i class="fas fa-check-circle text-success me-2"></i> উন্নত চরিত্র ও নৈতিক মানদণ্ড অর্জন।</li>
+                        </ul>
+                        <a href="/form" class="btn btn-success rounded-pill px-5 mt-3 py-3 fw-bold">এখনই সমর্থক ফরম পূরণ করুন</a>
+                    </div>
+                    <div class="col-lg-6 d-none d-lg-block">
+                        <div class="p-5 glass-card text-center" style="border: 2px dashed rgba(255,255,255,0.2);">
+                            <h3 class="text-warning mb-4">"তোমরাই সর্বোত্তম জাতি"</h3>
+                            <p class="text-white opacity-90 italic fs-5">যাদেরকে মানুষের কল্যাণের জন্য বের করা হয়েছে।</p>
+                            <p class="text-light opacity-85 small">— আল কুরআন —</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- নতুন সেকশন: সংগঠনের বৈশিষ্ট্য -->
+            <div class="row g-4 mb-5">
+                <div class="col-md-4">
+                    <div class="glass-card p-4 h-100 btn-hover">
+                        <div class="feature-icon bg-success bg-opacity-25 text-success">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h5 class="text-white fw-bold">নিখাদ দেশপ্রেম</h5>
+                        <p class="text-light opacity-75 small">দেশের স্বাধীনতা ও সার্বভৌমত্ব রক্ষায় আমরা সর্বদা সচেতন ও আপোষহীন।</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="glass-card p-4 h-100 btn-hover">
+                        <div class="feature-icon bg-info bg-opacity-25 text-info">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h5 class="text-white fw-bold">একাডেমিক উৎকর্ষ</h5>
+                        <p class="text-light opacity-75 small">ছাত্রদের পড়াশোনায় মনোযোগী হতে এবং মেধার সঠিক বিকাশ ঘটাতে কাজ করি।</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="glass-card p-4 h-100 btn-hover">
+                        <div class="feature-icon bg-warning bg-opacity-25 text-warning">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h5 class="text-white fw-bold">ভ্রাতৃত্ববোধ</h5>
+                        <p class="text-light opacity-75 small">সংগঠনের সদস্যদের মাঝে একটি মযবুত ও সুন্দর ভ্রাতৃত্বের বন্ধন তৈরি করা।</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- New Section: Special Services -->
+            <div class="text-center mt-5 mb-5 px-3">
+                <span class="section-tag">Social Welfare</span>
+                <h2 class="text-white fw-bold mb-2">বিশেষ জনকল্যাণমূলক কার্যক্রম</h2>
+                <p class="text-light opacity-75">ছাত্রশিবির শুধুমাত্র একটি ছাত্র সংগঠন নয়, বরং একটি আদর্শিক মানুষ তৈরির কারখানা</p>
+            </div>
+
+            <div class="row g-4 mb-5">
+                <div class="col-md-4">
+                    <div class="glass-card p-4 h-100 btn-hover">
+                        <div class="text-danger mb-3 display-6"><i class="fas fa-tint"></i></div>
+                        <h5 class="text-white fw-bold">স্বেচ্ছায় রক্তদান</h5>
+                        <p class="text-light opacity-75 small">জরুরি প্রয়োজনে মুমূর্ষু রোগীদের জন্য নিয়মিত রক্তদান কর্মসূচি ও ব্লাড ব্যাংক পরিচালনা।</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="glass-card p-4 h-100 btn-hover">
+                        <div class="text-info mb-3 display-6"><i class="fas fa-hand-holding-usd"></i></div>
+                        <h5 class="text-white fw-bold">শিক্ষা সহায়তা প্রকল্প</h5>
+                        <p class="text-light opacity-75 small">অসচ্ছল ও মেধাবী ছাত্রদের পড়াশোনার দায়িত্ব গ্রহণ এবং শিক্ষা উপকরণ বিতরণ।</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="glass-card p-4 h-100 btn-hover">
+                        <div class="text-success mb-3 display-6"><i class="fas fa-tree"></i></div>
+                        <h5 class="text-white fw-bold">পরিবেশ রক্ষা ও বৃক্ষরোপণ</h5>
+                        <p class="text-light opacity-75 small">পরিবেশের ভারসাম্য রক্ষায় প্রতি বছর নির্দিষ্ট সংখ্যক বৃক্ষরোপণ ও সচেতনতা বৃদ্ধি।</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- New Section: Invitation Card Style -->
+            <div class="row mb-5">
+                <div class="col-lg-12">
+                    <div class="glass-card overflow-hidden" style="background: linear-gradient(135deg, rgba(0,0,0,0.8), rgba(16, 185, 129, 0.2));">
+                        <div class="row align-items-center">
+                            <div class="col-md-7 p-5">
+                                <h1 class="text-white fw-bold display-5 mb-4">আপনার প্রতি আমাদের আহ্বান</h1>
+                                <p class="text-light opacity-75 fs-5 mb-4">এসো আমরা সবাই মিলে একটি উন্নত ও নৈতিক সমাজ গঠন করি। যেখানে থাকবে না কোনো জুলুম বা অবিচার।</p>
+                                <div class="btn-group gap-2">
+                                    <a href="/form" class="btn btn-success p-3 rounded-pill fw-bold">যোগ দিন আমাদের সাথে</a>
+                                    <a href="/library" class="btn btn-outline-light p-3 rounded-pill fw-bold">জানুন আমাদের লক্ষ্য</a>
+                                </div>
+                            </div>
+                            <div class="col-md-5 d-none d-md-block">
+                                <div class="p-5">
+                                    <img src="https://www.dushibir.org/storage/setting_images/wKFhZtq3w8jQDZT9wLfeJJXeGW09yJss7WACq03k.png" class="img-fluid opacity-75" style="filter: brightness(2) drop-shadow(0 0 20px rgba(16,185,129,0.5));" alt="Invitation">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- নতুন সেকশন: সাধারণ জিজ্ঞাসা (FAQ) -->
+            <div class="glass-card p-5 mb-5 shadow-lg">
+                <h2 class="text-white fw-bold text-center mb-5">সাধারণ জিজ্ঞাসা (FAQ)</h2>
+                <div class="accordion accordion-flush" id="faqAccordion">
+                    <div class="accordion-item bg-transparent border-bottom border-light border-opacity-10">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed bg-transparent text-white py-4 fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                বাংলাদেশ ইসলামী ছাত্রশিবির কী ধরনের সংগঠন?
+                            </button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-light opacity-75">
+                                এটি একটি আদর্শিক ছাত্র সংগঠন যারা ছাত্রদের নৈতিক মান উন্নয়ন এবং দেশপ্রেমিক নাগরিক হিসেবে গড়ে তুলতে কাজ করে।
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item bg-transparent border-bottom border-light border-opacity-10">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed bg-transparent text-white py-4 fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                আমাদের সাথে যুক্ত হওয়ার প্রক্রিয়া কী?
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-light opacity-75">
+                                আপনি আমাদের ওয়েবসাইটের "সমর্থক ফরম" পূরণ করে খুব সহজেই আমাদের সাথে প্রাথমিক যোগাযোগ শুরু করতে পারেন। পরবর্তীতে সংগঠনের নিয়ম অনুযায়ী আপনি সামনের স্তরে উন্নীত হতে পারবেন।
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item bg-transparent">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed bg-transparent text-white py-4 fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                রূপগঞ্জ পশ্চিম থানা শাখার আওতাভুক্ত এলাকায় আপনারা কী কী কাজ করেন?
+                            </button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-light opacity-75">
+                                আমরা রূপগঞ্জ পশ্চিম এলাকায় ছাত্রদের মাঝে দাওয়াত, শিক্ষা সহায়তা প্রকল্প, রক্তদান এবং আর্তমানবতার সেবায় বিশেষ কার্যক্রম পরিচালনা করি।
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mb-5 p-5 glass-card" style="background: radial-gradient(circle at center, rgba(0, 129, 68, 0.2), transparent); border: 2px solid rgba(0, 129, 68, 0.3);">
+                <h2 class="text-white fw-bold mb-3">আমাদের সাথে পথচলা শুরু করুন</h2>
+                <p class="text-light opacity-75 mb-4 px-lg-5">একটি সুন্দর, নৈতিক ও সমৃদ্ধ প্রজন্ম গড়ার মিছিলে আপনিও হোন আমাদের একজন গর্বিত সাথী। আপনার মেধা ও যোগ্যতাকে কাজে লাগিয়ে দেশ ও জাতির সেবা করুন।</p>
+                <div class="d-flex gap-3 justify-content-center">
+                    <a href="/form" class="btn btn-success px-5 py-3 fw-bold rounded-pill">সমর্থক আবেদন</a>
+                    <a href="/about" class="btn btn-outline-light px-5 py-3 rounded-pill">আরো বিস্তারিত জানুন</a>
                 </div>
             </div>
         </div>
-        </div>
-
 
         </div>
 
@@ -402,7 +795,7 @@
                         <img src="https://www.dushibir.org/storage/setting_images/wKFhZtq3w8jQDZT9wLfeJJXeGW09yJss7WACq03k.png"
                             alt="Logo" height="60">
                         <h5 class="fw-bold text-white mt-3">বাংলাদেশ ইসলামী ছাত্রশিবির</h5>
-                        <p class="text-secondary small lh-lg">রূপগঞ্জ পশ্চিম শাখা একটি আদর্শিক ছাত্র সংগঠন, যা ছাত্রদের
+                        <p class="text-light opacity-85 small lh-lg">রূপগঞ্জ পশ্চিম শাখা একটি আদর্শিক ছাত্র সংগঠন, যা ছাত্রদের
                             মাঝে নৈতিকতা, দেশপ্রেম ও দ্বীনি শিক্ষার আলো ছড়িয়ে দিতে কাজ করে।</p>
                         <div class="social-links">
                             <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
@@ -414,10 +807,10 @@
                     <div class="col-lg-2 col-md-6">
                         <h6 class="footer-title">প্রয়োজনীয় লিংক</h6>
                         <ul class="footer-links">
-                            <li><a href="/about">পরিচিতি</a></li>
-                            <li><a href="/syllabus">সিলেবাস</a></li>
-                            <li><a href="/news">শাখা সংবাদ</a></li>
-                            <li><a href="/login-page">অনলাইন পোর্টাল</a></li>
+                            <li><a href="/about">সমর্থক ফর্ম</a></li>
+                            <li><a href="/syllabus">অনলাইন লাইব্রেরি </a></li>
+                            <li><a href="/news">আর্কাইভ </a></li>
+                            <li><a href="/login-page">থানার ইতিহাস </a></li>
                         </ul>
                     </div>
                     <div class="col-lg-3 col-md-6">
@@ -431,7 +824,7 @@
                     </div>
                     <div class="col-lg-3">
                         <div class="p-3 glass-card" style="border-radius: 15px;">
-                            <small class="text-warning d-block mb-1">নতুন সদস্য হতে চান?</small>
+                            <small class="text-warning d-block mb-1">নতুন সমর্থক হতে চান?</small>
                             <a href="/form" class="text-white text-decoration-none fw-bold">সমর্থক ফরম পূরণ করুন →</a>
                         </div>
                     </div>
@@ -448,9 +841,10 @@
             </div>
         </footer>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js"></script>
+
         <script>
-            (function () {
+            document.addEventListener('DOMContentLoaded', function() {
+                (function () {
                 const canvas = document.getElementById('threeCanvas');
                 if (!canvas) return;
 
@@ -601,6 +995,141 @@
                 animate();
             })();
 
+            (function () {
+                const canvas = document.getElementById('expectationsCanvas');
+                if (!canvas) return;
+
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+                camera.position.z = 40;
+
+                const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+
+                const group = new THREE.Group();
+                scene.add(group);
+
+                const nodeCount = 40;
+                const nodes = [];
+                const geo = new THREE.SphereGeometry(0.3, 12, 12);
+                const mat = new THREE.MeshBasicMaterial({ color: 0x3b82f6 });
+
+                for (let i = 0; i < nodeCount; i++) {
+                    const node = new THREE.Mesh(geo, mat);
+                    node.position.set((Math.random() - 0.5) * 60, (Math.random() - 0.5) * 40, (Math.random() - 0.5) * 20);
+                    node.velocity = new THREE.Vector3((Math.random() - 0.5) * 0.05, (Math.random() - 0.5) * 0.05, (Math.random() - 0.5) * 0.05);
+                    group.add(node);
+                    nodes.push(node);
+                }
+
+                function animate() {
+                    requestAnimationFrame(animate);
+                    nodes.forEach(node => {
+                        node.position.add(node.velocity);
+                        if (Math.abs(node.position.x) > 35) node.velocity.x *= -1;
+                        if (Math.abs(node.position.y) > 25) node.velocity.y *= -1;
+                        if (Math.abs(node.position.z) > 15) node.velocity.z *= -1;
+                    });
+                    group.rotation.y += 0.001;
+                    group.rotation.x += 0.0005;
+                    renderer.render(scene, camera);
+                }
+
+                const onResize = () => {
+                    const parent = canvas.parentElement;
+                    renderer.setSize(parent.clientWidth, parent.clientHeight);
+                    camera.aspect = parent.clientWidth / parent.clientHeight;
+                    camera.updateProjectionMatrix();
+                };
+                window.addEventListener('resize', onResize);
+                animate();
+            })();
+
+            (function () {
+                const canvas = document.getElementById('noticeCanvas');
+                if (!canvas) return;
+
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+                camera.position.z = 50;
+
+                const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+                renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+
+                const count = 80;
+                const lines = [];
+                const mat = new THREE.LineBasicMaterial({ color: 0xf59e0b, transparent: true, opacity: 0.2 });
+
+                for(let i=0; i<count; i++) {
+                    const geo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, Math.random() * 8, 0)]);
+                    const line = new THREE.Line(geo, mat);
+                    line.position.set((Math.random()-0.5)*150, (Math.random()-0.5)*100, (Math.random()-0.5)*50);
+                    scene.add(line);
+                    lines.push({ mesh: line, speed: Math.random() * 0.15 + 0.05 });
+                }
+
+                function animate() {
+                    requestAnimationFrame(animate);
+                    lines.forEach(l => {
+                        l.mesh.position.y -= l.speed;
+                        if(l.mesh.position.y < -60) l.mesh.position.y = 60;
+                    });
+                    renderer.render(scene, camera);
+                }
+                animate();
+
+                window.addEventListener('resize', () => {
+                    const p = canvas.parentElement;
+                    renderer.setSize(p.clientWidth, p.clientHeight);
+                    camera.aspect = p.clientWidth / p.clientHeight;
+                    camera.updateProjectionMatrix();
+                });
+            })();
+
+            (function () {
+                const canvas = document.getElementById('programCanvas');
+                if (!canvas) return;
+
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+                camera.position.z = 60;
+
+                const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+                renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+
+                const group = new THREE.Group();
+                scene.add(group);
+
+                const count = 5;
+                const orbs = [];
+                for(let i=0; i<count; i++) {
+                    const geo = new THREE.IcosahedronGeometry(4, 0);
+                    const mat = new THREE.MeshBasicMaterial({ color: 0x00b366, wireframe: true, transparent: true, opacity: 0.3 });
+                    const orb = new THREE.Mesh(geo, mat);
+                    const angle = (i / count) * Math.PI * 2;
+                    orb.position.set(Math.cos(angle)*25, Math.sin(angle)*25, 0);
+                    group.add(orb);
+                    orbs.push(orb);
+                }
+
+                function animate() {
+                    requestAnimationFrame(animate);
+                    group.rotation.z += 0.005;
+                    orbs.forEach(o => o.rotation.y += 0.01);
+                    renderer.render(scene, camera);
+                }
+                animate();
+
+                window.addEventListener('resize', () => {
+                    const p = canvas.parentElement;
+                    renderer.setSize(p.clientWidth, p.clientHeight);
+                    camera.aspect = p.clientWidth / p.clientHeight;
+                    camera.updateProjectionMatrix();
+                });
+            })();
+        });
+
             // Initialize Bootstrap Carousel manually to force auto-sliding
             const heroCarouselElement = document.querySelector('#mainHeroCarousel');
             if (heroCarouselElement && typeof bootstrap !== 'undefined') {
@@ -611,53 +1140,7 @@
                 });
             }
         </script>
-        <script src="/assets/vendor-de6deaf9281634bc2d7283a85278a951.js"
-            integrity="sha256-hNSMljmST0QsOoNZVg2s5TpCfEN6YZjrmb/L4v5Cr30= sha512-nOLKY+FgnW4aJSCkXLqKQ2iO5SqzzO0qEPvfrYAi5Vayy7G3fcW852Os8DgJzovF5RnIBLvN2yHSjHVs5KPZnA=="></script>
-        <script src="/assets/chunk.885.d41fe5e5aa1ba952934a.js"
-            integrity="sha256-KO5aXiW7uEY+m5KwbjYjAZJJtclmtlFm7LVz5LY1AE8= sha512-8/qw4hBfPS26lUFqZZ7KGzaJorBP6bQ5qrEcEWf2UDiOa48ZRT9Iby6tIhDsRKz+6tm5hetC9H0uiC9p55WUPg=="></script>
-        <script src="/assets/chunk.524.7e2a06c6e147426c02c8.js"
-            integrity="sha256-elkty7renXHVahwQln7l2B7cWWf7j3CoouQ0wlD3kwg= sha512-nm5DeMUkEeJdhC+QV0amQdxy2u3ruym7PinQXssn7MFLI8mtUm929cz55r1vWBNvmDbdPDPTqv3k202kAfdFWA=="></script>
-        <script src="/assets/web-app-404be3367a22b4cabfe060c410f1f936.js"
-            integrity="sha256-DDqp03Q82qZPCozfHa+DxuzKWo6xvtBs9ThfFwXc268= sha512-gqK1m05VxOgPXUbERTLtonBSZc0duRgjXY69BxAouErU43/sOySEMjyy3zuK01bZ/bYZzu/GOIPtbjhTVp26gQ=="></script>
 
-        <script type="text/javascript">if (window.performance?.mark) {
-                window.performance.mark('@sentry/ember:initial-load-end');
-            }
-        </script>
-        <script>(function () {
-                'use strict';
-
-                let SUCCESS_HANDLERS = [];
-                let ERROR_HANDLERS = [];
-                if ('serviceWorker' in navigator) {
-                    navigator.serviceWorker.register('/sw.js', {
-                        scope: '/'
-                    }).then(function (reg) {
-                        let current = Promise.resolve();
-                        for (let i = 0, len = SUCCESS_HANDLERS.length; i < len; i++) {
-                            current = current.then(function () {
-                                return SUCCESS_HANDLERS[i](reg);
-                            });
-                        }
-                        return current.then(function () {
-                            console.log('Service Worker registration succeeded. Scope is ' + reg.scope);
-                        });
-                    }).catch(function (error) {
-                        let current = Promise.resolve();
-                        for (let i = 0, len = ERROR_HANDLERS.length; i < len; i++) {
-                            current = current.then(function () {
-                                return ERROR_HANDLERS[i](error);
-                            });
-                        }
-                        return current.then(function () {
-                            console.log('Service Worker registration failed with ' + error);
-                        });
-                    });
-                }
-
-            }());
-        </script>
-        <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'9eafb3362b407d0d',t:'MTc3NTk3MDM2OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
