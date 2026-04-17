@@ -82,6 +82,8 @@ self.addEventListener("fetch", (event) => {
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
+  if (event.action === "dismiss") return;
+
   const targetUrl =
     (event.notification &&
       event.notification.data &&
@@ -91,7 +93,11 @@ self.addEventListener("notificationclick", (event) => {
   event.waitUntil(
     clients.matchAll({ type: "window", includeUncontrolled: true }).then((windowClients) => {
       for (const client of windowClients) {
-        if ("focus" in client) return client.focus().then(() => client.navigate(targetUrl));
+        if ("focus" in client) {
+          const samePath = client.url && client.url.includes(targetUrl);
+          if (samePath) return client.focus();
+          return client.focus().then(() => client.navigate(targetUrl));
+        }
       }
       if (clients.openWindow) return clients.openWindow(targetUrl);
       return undefined;

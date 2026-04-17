@@ -19,6 +19,10 @@
     let deferredInstallPrompt = null;
     const NOTICE_POLL_INTERVAL_MS = 60000;
     const NOTICE_LAST_SEEN_KEY = "rw_last_seen_notice_id";
+    const NOTICE_PERMISSION_ASKED_KEY = "rw_notice_permission_asked";
+    const NOTICE_SOUND_ENABLED_KEY = "rw_notice_sound_enabled";
+    let noticeAudioContext = null;
+    let noticeAudioUnlocked = false;
 
     const isStandalone = function () {
       return (
@@ -75,7 +79,14 @@
         icon: "/icons/icon-192.png",
         badge: "/icons/icon-192.png",
         tag: tag || "rw-notice",
-        data: { url: url || "/" }
+        data: { url: url || "/" },
+        renotify: true,
+        vibrate: [130, 60, 130],
+        requireInteraction: false,
+        actions: [
+          { action: "open_notice", title: "নোটিশ দেখুন" },
+          { action: "dismiss", title: "বন্ধ করুন" }
+        ]
       };
 
       try {
@@ -92,6 +103,69 @@
       } catch (error) {
         // no-op
       }
+    };
+
+    const shouldPlayNoticeSound = function () {
+      const saved = localStorage.getItem(NOTICE_SOUND_ENABLED_KEY);
+      return saved !== "off";
+    };
+
+    const unlockNoticeAudio = function (triggerEvent) {
+      if (triggerEvent && !triggerEvent.isTrusted) return;
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextClass) return;
+      if (!noticeAudioContext) {
+        noticeAudioContext = new AudioContextClass();
+      }
+      if (noticeAudioContext.state === "suspended") {
+        noticeAudioContext.resume().catch(function () {
+          // no-op
+        });
+      }
+      noticeAudioUnlocked = noticeAudioContext.state === "running";
+    };
+
+    const playNoticeSound = function () {
+      if (!shouldPlayNoticeSound()) return;
+      if (!noticeAudioUnlocked || !noticeAudioContext) return;
+      const now = noticeAudioContext.currentTime;
+      const notes = [698.46, 783.99, 932.33];
+
+      notes.forEach(function (frequency, index) {
+        const osc = noticeAudioContext.createOscillator();
+        const gain = noticeAudioContext.createGain();
+        osc.type = "sine";
+        osc.frequency.value = frequency;
+
+        const start = now + index * 0.12;
+        const end = start + 0.18;
+        gain.gain.setValueAtTime(0.0001, start);
+        gain.gain.exponentialRampToValueAtTime(0.09, start + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.0001, end);
+
+        osc.connect(gain);
+        gain.connect(noticeAudioContext.destination);
+        osc.start(start);
+        osc.stop(end);
+      });
+    };
+
+    const requestNotificationPermissionIfNeeded = function () {
+      if (!("Notification" in window)) return;
+      if (Notification.permission !== "default") return;
+      if (localStorage.getItem(NOTICE_PERMISSION_ASKED_KEY) === "yes") return;
+      localStorage.setItem(NOTICE_PERMISSION_ASKED_KEY, "yes");
+      Notification.requestPermission().then(function (permission) {
+        if (permission === "granted") {
+          showInAppNotice(
+            "নোটিফিকেশন চালু হয়েছে",
+            "নতুন নোটিশ এখন মোবাইল নোটিফিকেশন বারেও দেখাবে।",
+            "/notices"
+          );
+        }
+      }).catch(function () {
+        // no-op
+      });
     };
 
     const showInAppNotice = function (title, body, url) {
@@ -171,6 +245,85 @@
       }, 15000);
     };
 
+    const ensureInstallPromptStyles = function () {
+      if (document.getElementById("rw-install-prompt-styles")) return;
+      const style = document.createElement("style");
+      style.id = "rw-install-prompt-styles";
+      style.textContent = `
+        #rw-install-prompt-host{
+          position:fixed;inset:0;pointer-events:none;z-index:10020;
+          display:flex;align-items:flex-end;justify-content:center;padding:20px 14px;
+        }
+        .rw-install-prompt-card{
+          width:min(420px,100%);pointer-events:auto;position:relative;
+          border-radius:16px;border:1px solid rgba(255,255,255,.22);
+          box-shadow:0 18px 50px rgba(0,0,0,.28);padding:16px 44px 16px 16px;
+          color:#ffffff;font-family:"Hind Siliguri",sans-serif;line-height:1.45;
+          transform:translateY(16px) scale(.97);opacity:0;
+          transition:transform .28s ease, opacity .28s ease;
+          backdrop-filter: blur(7px);
+        }
+        .rw-install-prompt-card.show{transform:translateY(0) scale(1);opacity:1}
+        .rw-install-prompt-card.rw-tone-success{background:linear-gradient(135deg,#075b33,#0b8e4f)}
+        .rw-install-prompt-card.rw-tone-info{background:linear-gradient(135deg,#1b4965,#2f6f8f)}
+        .rw-install-prompt-card.rw-tone-warning{background:linear-gradient(135deg,#7a4c00,#ad6d06)}
+        .rw-install-prompt-title{font-size:1rem;font-weight:700;margin:0 0 4px}
+        .rw-install-prompt-body{font-size:.92rem;opacity:.92;margin:0}
+        .rw-install-prompt-close{
+          position:absolute;top:10px;right:10px;background:rgba(255,255,255,.14);
+          border:1px solid rgba(255,255,255,.25);color:#fff;width:28px;height:28px;
+          border-radius:999px;cursor:pointer;font-size:16px;line-height:1;
+        }
+        .rw-install-prompt-close:hover{background:rgba(255,255,255,.22)}
+      `;
+      document.head.appendChild(style);
+    };
+
+    const showInstallPromptBox = function (title, body, tone) {
+      ensureInstallPromptStyles();
+      let host = document.getElementById("rw-install-prompt-host");
+      if (!host) {
+        host = document.createElement("div");
+        host.id = "rw-install-prompt-host";
+        document.body.appendChild(host);
+      }
+
+      const card = document.createElement("div");
+      card.className = "rw-install-prompt-card rw-tone-" + (tone || "info");
+
+      const heading = document.createElement("p");
+      heading.className = "rw-install-prompt-title";
+      heading.textContent = title;
+
+      const message = document.createElement("p");
+      message.className = "rw-install-prompt-body";
+      message.textContent = body;
+
+      const closeButton = document.createElement("button");
+      closeButton.type = "button";
+      closeButton.className = "rw-install-prompt-close";
+      closeButton.textContent = "×";
+
+      const dismiss = function () {
+        card.classList.remove("show");
+        window.setTimeout(function () {
+          if (card.parentNode) card.parentNode.removeChild(card);
+        }, 280);
+      };
+
+      closeButton.addEventListener("click", dismiss);
+
+      card.appendChild(heading);
+      card.appendChild(message);
+      card.appendChild(closeButton);
+      host.appendChild(card);
+
+      window.requestAnimationFrame(function () {
+        card.classList.add("show");
+      });
+
+      window.setTimeout(dismiss, 3800);
+    };
     const buildNoticeBody = function (notice) {
       if (!notice) return "";
       const text = notice.content || "";
@@ -201,17 +354,18 @@
         if (savedNoticeId === latestNotice.id) return;
 
         localStorage.setItem(NOTICE_LAST_SEEN_KEY, latestNotice.id);
+        showInAppNotice(
+          "নতুন নোটিশ এসেছে",
+          buildNoticeBody(latestNotice),
+          latestNotice.url
+        );
+        playNoticeSound();
+
         if ("Notification" in window && Notification.permission === "granted") {
           await notifyIfGranted(
             "নতুন নোটিশ এসেছে",
             buildNoticeBody(latestNotice),
             "rw-notice-" + latestNotice.id,
-            latestNotice.url
-          );
-        } else {
-          showInAppNotice(
-            "নতুন নোটিশ এসেছে",
-            buildNoticeBody(latestNotice),
             latestNotice.url
           );
         }
@@ -239,6 +393,7 @@
       document.querySelectorAll(".pwa-install-trigger").forEach(function (trigger) {
         setInstallHint(trigger, "অ্যাপ ইনস্টল করুন");
       });
+      showInstallPromptBox("অ্যাপ প্রস্তুত", "অ্যাপ ইনস্টল করার জন্য প্রস্তুত।", "info");
       notifyInstallStatus("অ্যাপ প্রস্তুত", "অ্যাপ ইনস্টল করার জন্য প্রস্তুত।");
     });
 
@@ -248,7 +403,7 @@
         setInstallHint(trigger, "অ্যাপ সফলভাবে ইনস্টল হয়েছে");
         setInstallTriggerVisibility(trigger, false);
       });
-      alert("অ্যাপ সফলভাবে ইনস্টল হয়েছে।");
+      showInstallPromptBox("ইনস্টল সম্পন্ন", "আপনার ডিভাইসে অ্যাপটি ইন্সটল করা আছে", "success");
       notifyInstallStatus("ইনস্টল সম্পন্ন", "অ্যাপ সফলভাবে ইনস্টল হয়েছে।");
       window.setTimeout(function () {
         window.location.href = "/";
@@ -257,6 +412,17 @@
 
     document.addEventListener("DOMContentLoaded", function () {
       const installTriggers = document.querySelectorAll(".pwa-install-trigger");
+      const setupNoticeInteraction = function (event) {
+        if (event && !event.isTrusted) return;
+        unlockNoticeAudio(event);
+        requestNotificationPermissionIfNeeded();
+        document.removeEventListener("click", setupNoticeInteraction);
+        document.removeEventListener("touchstart", setupNoticeInteraction);
+        document.removeEventListener("keydown", setupNoticeInteraction);
+      };
+      document.addEventListener("click", setupNoticeInteraction, { once: true });
+      document.addEventListener("touchstart", setupNoticeInteraction, { once: true });
+      document.addEventListener("keydown", setupNoticeInteraction, { once: true });
 
       checkForNewNotice();
       window.setInterval(checkForNewNotice, NOTICE_POLL_INTERVAL_MS);
@@ -278,26 +444,27 @@
           }
 
           if (!deferredInstallPrompt) {
-            setInstallHint(trigger, "অ্যাপ ইনস্টল করুন");
-            alert("এই ডিভাইসে ইনস্টল প্রম্পট পাওয়া যাচ্ছে না।");
-            await notifyInstallStatus("ইনস্টল পাওয়া যাচ্ছে না", "এই ব্রাউজারে ইনস্টল প্রম্পট পাওয়া যাচ্ছে না।");
+            setInstallHint(trigger, "আপনার ডিভাইসে অ্যাপটি ইন্সটল করা আছে");
+            showInstallPromptBox("ইনস্টল স্ট্যাটাস", "আপনার ডিভাইসে অ্যাপটি ইন্সটল করা আছে", "success");
+            await notifyInstallStatus("ইনস্টল সম্পন্ন", "আপনার ডিভাইসে অ্যাপটি ইন্সটল করা আছে");
             return;
           }
 
           setInstallHint(trigger, "অ্যাপ ইনস্টল হচ্ছে...");
-          alert("অ্যাপ ইনস্টল হচ্ছে, কিছুক্ষণ অপেক্ষা করুন।");
+          showInstallPromptBox("ইনস্টল চলছে", "অ্যাপ ইন্সটল হচ্ছে, কিছুক্ষণ অপেক্ষা করুন।", "info");
           deferredInstallPrompt.prompt();
           const choiceResult = await deferredInstallPrompt.userChoice;
           const outcome = choiceResult && choiceResult.outcome ? choiceResult.outcome : "dismissed";
 
           if (outcome === "accepted") {
             setInstallHint(trigger, "ইনস্টল অনুরোধ গৃহীত হয়েছে");
+            showInstallPromptBox("ইনস্টল শুরু হয়েছে", "আপনার ইনস্টল অনুরোধ গৃহীত হয়েছে।", "success");
             await notifyInstallStatus("ইনস্টল শুরু হয়েছে", "আপনার ইনস্টল অনুরোধ গৃহীত হয়েছে।");
             deferredInstallPrompt = null;
           } else {
             setInstallHint(trigger, "অ্যাপ ইনস্টল করুন");
             await notifyInstallStatus("ইনস্টল বাতিল", "আপনি অ্যাপ ইনস্টল বাতিল করেছেন।");
-            alert("ইনস্টল বাতিল হয়েছে। আবার চেষ্টা করতে পেজ রিফ্রেশ হচ্ছে।");
+            showInstallPromptBox("ইনস্টল বাতিল", "ইন্সটল বাতিল হয়েছে। আবার চেষ্টা করতে পেজ রিফ্রেশ হচ্ছে।", "warning");
             window.setTimeout(function () {
               window.location.reload();
             }, 400);
@@ -308,3 +475,6 @@
     });
   })();
 </script>
+
+
+

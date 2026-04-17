@@ -12,7 +12,6 @@
             rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-        <script src="https://unpkg.com/three@0.152.2/build/three.min.js"></script>
 
         <!-- User defined styles -->
 
@@ -932,7 +931,8 @@
         </footer>
 
 
-        <script>
+        <script type="module">
+            import * as THREE from "https://unpkg.com/three@0.152.2/build/three.module.js";
             document.addEventListener('DOMContentLoaded', function () {
                 (function () {
                     const canvas = document.getElementById('threeCanvas');
@@ -1219,17 +1219,16 @@
                     });
                 })();
 
+                // Initialize Bootstrap Carousel manually to force auto-sliding
+                const heroCarouselElement = document.querySelector('#mainHeroCarousel');
+                if (heroCarouselElement && window.bootstrap) {
+                    new window.bootstrap.Carousel(heroCarouselElement, {
+                        interval: 5000,
+                        ride: 'carousel',
+                        pause: 'hover'
+                    });
+                }
             });
-
-            // Initialize Bootstrap Carousel manually to force auto-sliding
-            const heroCarouselElement = document.querySelector('#mainHeroCarousel');
-            if (heroCarouselElement && typeof bootstrap !== 'undefined') {
-                new bootstrap.Carousel(heroCarouselElement, {
-                    interval: 5000,
-                    ride: 'carousel',
-                    pause: 'hover'
-                });
-            }
         </script>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
