@@ -17,6 +17,9 @@
   (function () {
     let swRegistration = null;
     let deferredInstallPrompt = null;
+    const NOTICE_POLL_INTERVAL_MS = 60000;
+    const NOTICE_LAST_SEEN_KEY = "rw_last_seen_notice_id";
+    const AUTO_INSTALL_PROMPTED_KEY = "rw_auto_install_prompted_v1";
 
     const isStandalone = function () {
       return (
@@ -32,17 +35,24 @@
       if (hintElement) hintElement.textContent = message;
     };
 
+    const hasAutoInstallPrompted = function () {
+      try {
+        return localStorage.getItem(AUTO_INSTALL_PROMPTED_KEY) === "1";
+      } catch (error) {
+        return true;
+      }
+    };
+
+    const markAutoInstallPrompted = function () {
+      try {
+        localStorage.setItem(AUTO_INSTALL_PROMPTED_KEY, "1");
+      } catch (error) {
+        // ignore storage errors
+      }
+    };
+
     const notifyInstallStatus = async function (title, body) {
       if (!("Notification" in window)) return;
-
-      if (Notification.permission === "default") {
-        try {
-          await Notification.requestPermission();
-        } catch (error) {
-          return;
-        }
-      }
-
       if (Notification.permission !== "granted") return;
 
       const options = {
@@ -68,6 +78,160 @@
       }
     };
 
+    const notifyIfGranted = async function (title, body, tag, url) {
+      if (!("Notification" in window)) return;
+      if (Notification.permission !== "granted") return;
+
+      const options = {
+        body: body,
+        icon: "/icons/icon-192.png",
+        badge: "/icons/icon-192.png",
+        tag: tag || "rw-notice",
+        data: { url: url || "/" }
+      };
+
+      try {
+        if (swRegistration) {
+          await swRegistration.showNotification(title, options);
+          return;
+        }
+      } catch (error) {
+        // fall through to page notification
+      }
+
+      try {
+        new Notification(title, options);
+      } catch (error) {
+        // no-op
+      }
+    };
+
+    const showInAppNotice = function (title, body, url) {
+      let host = document.getElementById("rw-in-app-notice-host");
+      if (!host) {
+        host = document.createElement("div");
+        host.id = "rw-in-app-notice-host";
+        host.style.position = "fixed";
+        host.style.right = "16px";
+        host.style.bottom = "16px";
+        host.style.zIndex = "9999";
+        host.style.display = "flex";
+        host.style.flexDirection = "column";
+        host.style.gap = "10px";
+        host.style.maxWidth = "320px";
+        document.body.appendChild(host);
+      }
+
+      const card = document.createElement("div");
+      card.style.background = "rgba(7, 53, 33, 0.95)";
+      card.style.color = "#ffffff";
+      card.style.border = "1px solid rgba(255,255,255,0.2)";
+      card.style.borderRadius = "12px";
+      card.style.padding = "12px 14px";
+      card.style.boxShadow = "0 10px 25px rgba(0,0,0,0.35)";
+      card.style.fontFamily = "Hind Siliguri, sans-serif";
+
+      const heading = document.createElement("div");
+      heading.textContent = title;
+      heading.style.fontWeight = "700";
+      heading.style.marginBottom = "6px";
+
+      const message = document.createElement("div");
+      message.textContent = body || "New notice available.";
+      message.style.fontSize = "0.92rem";
+      message.style.opacity = "0.9";
+      message.style.marginBottom = "10px";
+
+      const actions = document.createElement("div");
+      actions.style.display = "flex";
+      actions.style.gap = "8px";
+
+      const openBtn = document.createElement("a");
+      openBtn.href = url || "/notices";
+      openBtn.textContent = "Open";
+      openBtn.style.textDecoration = "none";
+      openBtn.style.fontSize = "0.85rem";
+      openBtn.style.fontWeight = "700";
+      openBtn.style.background = "#ffd54a";
+      openBtn.style.color = "#1f2937";
+      openBtn.style.padding = "6px 10px";
+      openBtn.style.borderRadius = "8px";
+
+      const closeBtn = document.createElement("button");
+      closeBtn.type = "button";
+      closeBtn.textContent = "Dismiss";
+      closeBtn.style.fontSize = "0.85rem";
+      closeBtn.style.padding = "6px 10px";
+      closeBtn.style.borderRadius = "8px";
+      closeBtn.style.border = "1px solid rgba(255,255,255,0.35)";
+      closeBtn.style.background = "transparent";
+      closeBtn.style.color = "#ffffff";
+      closeBtn.style.cursor = "pointer";
+      closeBtn.addEventListener("click", function () {
+        if (card.parentNode) card.parentNode.removeChild(card);
+      });
+
+      actions.appendChild(openBtn);
+      actions.appendChild(closeBtn);
+      card.appendChild(heading);
+      card.appendChild(message);
+      card.appendChild(actions);
+      host.appendChild(card);
+
+      window.setTimeout(function () {
+        if (card.parentNode) card.parentNode.removeChild(card);
+      }, 15000);
+    };
+
+    const buildNoticeBody = function (notice) {
+      if (!notice) return "";
+      const text = notice.content || "";
+      if (text.length <= 90) return text;
+      return text.slice(0, 90) + "...";
+    };
+
+    const checkForNewNotice = async function () {
+      try {
+        const response = await fetch("/api/notices/latest", {
+          method: "GET",
+          credentials: "same-origin",
+          cache: "no-store"
+        });
+        if (!response.ok) return;
+
+        const payload = await response.json();
+        if (!payload || !payload.ok || !payload.notice) return;
+
+        const latestNotice = payload.notice;
+        const savedNoticeId = localStorage.getItem(NOTICE_LAST_SEEN_KEY);
+
+        if (!savedNoticeId) {
+          localStorage.setItem(NOTICE_LAST_SEEN_KEY, latestNotice.id);
+          return;
+        }
+
+        if (savedNoticeId === latestNotice.id) return;
+
+        localStorage.setItem(NOTICE_LAST_SEEN_KEY, latestNotice.id);
+        if ("Notification" in window && Notification.permission === "granted") {
+          await notifyIfGranted(
+            "নতুন নোটিশ এসেছে",
+            buildNoticeBody(latestNotice),
+            "rw-notice-" + latestNotice.id,
+            latestNotice.url
+          );
+        } else {
+          showInAppNotice(
+            "নতুন নোটিশ এসেছে",
+            buildNoticeBody(latestNotice),
+            latestNotice.url
+          );
+        }
+      } catch (error) {
+        // silent fail for polling
+      }
+    };
+
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", function () {
         navigator.serviceWorker
@@ -81,13 +245,37 @@
       });
     }
 
-    window.addEventListener("beforeinstallprompt", function (event) {
+    window.addEventListener("beforeinstallprompt", async function (event) {
       event.preventDefault();
       deferredInstallPrompt = event;
       document.querySelectorAll(".pwa-install-trigger").forEach(function (trigger) {
         setInstallHint(trigger, "Tap again to install now");
       });
       notifyInstallStatus("App Ready", "The app is ready to install.");
+
+      if (isStandalone() || hasAutoInstallPrompted()) return;
+
+      markAutoInstallPrompted();
+      alert("Install hocche, kichukkhon wait korun.");
+      deferredInstallPrompt.prompt();
+      const firstVisitChoice = await deferredInstallPrompt.userChoice;
+      const firstVisitOutcome =
+        firstVisitChoice && firstVisitChoice.outcome ? firstVisitChoice.outcome : "dismissed";
+
+      if (firstVisitOutcome === "accepted") {
+        document.querySelectorAll(".pwa-install-trigger").forEach(function (trigger) {
+          setInstallHint(trigger, "Install request accepted");
+        });
+      } else {
+        document.querySelectorAll(".pwa-install-trigger").forEach(function (trigger) {
+          setInstallHint(trigger, "Install canceled");
+        });
+        window.setTimeout(function () {
+          window.location.reload();
+        }, 400);
+      }
+
+      deferredInstallPrompt = null;
     });
 
     window.addEventListener("appinstalled", function () {
@@ -95,33 +283,44 @@
       document.querySelectorAll(".pwa-install-trigger").forEach(function (trigger) {
         setInstallHint(trigger, "App installed successfully");
       });
+      alert("App install complete.");
       notifyInstallStatus("Installed", "App installed successfully.");
+      window.setTimeout(function () {
+        window.location.href = "/";
+      }, 700);
     });
 
     document.addEventListener("DOMContentLoaded", function () {
       const installTriggers = document.querySelectorAll(".pwa-install-trigger");
+
+      checkForNewNotice();
+      window.setInterval(checkForNewNotice, NOTICE_POLL_INTERVAL_MS);
+
       if (!installTriggers.length) return;
 
       installTriggers.forEach(function (trigger) {
         if (isStandalone()) {
-          setInstallHint(trigger, "App already installed");
+          setInstallHint(trigger, "অ্যাপ আগে থেকেই ইনস্টল করা আছে");
         }
 
         trigger.addEventListener("click", async function (event) {
           event.preventDefault();
 
           if (isStandalone()) {
-            setInstallHint(trigger, "App already installed");
+            setInstallHint(trigger, "অ্যাপ আগে থেকেই ইনস্টল করা আছে");
+            alert("অ্যাপ আগে থেকেই ইনস্টল করা আছে।");
             await notifyInstallStatus("Already Installed", "This app is already installed.");
             return;
           }
 
           if (!deferredInstallPrompt) {
             setInstallHint(trigger, "Install prompt unavailable on this device");
+            alert("Ei device e install prompt available na.");
             await notifyInstallStatus("Install Unavailable", "This browser did not provide install prompt.");
             return;
           }
 
+          alert("Install hocche, kichukkhon wait korun.");
           deferredInstallPrompt.prompt();
           const choiceResult = await deferredInstallPrompt.userChoice;
           const outcome = choiceResult && choiceResult.outcome ? choiceResult.outcome : "dismissed";
@@ -129,12 +328,16 @@
           if (outcome === "accepted") {
             setInstallHint(trigger, "Install request accepted");
             await notifyInstallStatus("Install Started", "Your install request has been accepted.");
+            deferredInstallPrompt = null;
           } else {
             setInstallHint(trigger, "Install canceled");
             await notifyInstallStatus("Install Canceled", "You canceled app installation.");
+            alert("Install cancel hoyeche. Prompt abar dekhate page auto refresh hocche.");
+            window.setTimeout(function () {
+              window.location.reload();
+            }, 400);
+            return;
           }
-
-          deferredInstallPrompt = null;
         });
       });
     });

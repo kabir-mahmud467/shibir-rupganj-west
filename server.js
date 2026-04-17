@@ -231,6 +231,33 @@ app.get('/notices', async (req, res) => {
     } catch (err) { res.status(500).send("Notices Page Error"); }
 });
 
+app.get('/api/notices/latest', async (req, res) => {
+    try {
+        const userType = req.session.user?.role;
+        const recentNotices = await Notice.find().sort({ _id: -1 }).limit(30);
+        const latestVisibleNotice = recentNotices.find(n => canViewAccess(n.visibility, userType));
+
+        res.set('Cache-Control', 'no-store');
+
+        if (!latestVisibleNotice) {
+            return res.json({ ok: true, notice: null });
+        }
+
+        return res.json({
+            ok: true,
+            notice: {
+                id: String(latestVisibleNotice._id),
+                title: latestVisibleNotice.title || 'নতুন নোটিশ',
+                content: latestVisibleNotice.content || '',
+                date: latestVisibleNotice.date || '',
+                url: `/notice/${latestVisibleNotice._id}`
+            }
+        });
+    } catch (err) {
+        return res.status(500).json({ ok: false, message: 'Latest notice fetch failed' });
+    }
+});
+
 app.get('/login-page', (req, res) => res.render('login-page', { error: null }));
 
 app.post('/login', async (req, res) => {
