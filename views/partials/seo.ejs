@@ -1,4 +1,11 @@
 <link rel="icon" type="image/png" href="https://www.dushibir.org/storage/setting_images/wKFhZtq3w8jQDZT9wLfeJJXeGW09yJss7WACq03k.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<meta name="theme-color" content="#086f3f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Rupganj West">
 <meta name="description" content="বাংলাদেশ ইসলামী ছাত্রশিবির রূপগঞ্জ পশ্চিম থানা শাখার অফিসিয়াল ওয়েবসাইট। আমাদের লক্ষ্য, আদর্শ ও সকল কর্মসূচি সম্পর্কে জানুন।">
 <meta name="keywords" content="rupganj west shibir, rupganj west, রূপগঞ্জ পশ্চিম, বাংলাদেশ ইসলামী ছাত্রশিবির, ছাত্রশিবির রূপগঞ্জ পশ্চিম, রূপগঞ্জ পশ্চিম থানা, Rupganj West Thana, Shibir Rupganj West">
 <meta property="og:title" content="বাংলাদেশ ইসলামী ছাত্রশিবির - রূপগঞ্জ পশ্চিম থানা">
@@ -6,3 +13,130 @@
 <meta property="og:image" content="https://www.dushibir.org/storage/setting_images/wKFhZtq3w8jQDZT9wLfeJJXeGW09yJss7WACq03k.png">
 <meta property="og:type" content="website">
 <meta name="author" content="বাংলাদেশ ইসলামী ছাত্রশিবির - রূপগঞ্জ পশ্চিম">
+<script>
+  (function () {
+    let swRegistration = null;
+    let deferredInstallPrompt = null;
+
+    const isStandalone = function () {
+      return (
+        window.matchMedia("(display-mode: standalone)").matches ||
+        window.navigator.standalone === true
+      );
+    };
+
+    const setInstallHint = function (trigger, message) {
+      const targetSelector = trigger && trigger.dataset ? trigger.dataset.installHintTarget : "";
+      if (!targetSelector) return;
+      const hintElement = document.querySelector(targetSelector);
+      if (hintElement) hintElement.textContent = message;
+    };
+
+    const notifyInstallStatus = async function (title, body) {
+      if (!("Notification" in window)) return;
+
+      if (Notification.permission === "default") {
+        try {
+          await Notification.requestPermission();
+        } catch (error) {
+          return;
+        }
+      }
+
+      if (Notification.permission !== "granted") return;
+
+      const options = {
+        body: body,
+        icon: "/icons/icon-192.png",
+        badge: "/icons/icon-192.png",
+        tag: "rw-pwa-install"
+      };
+
+      try {
+        if (swRegistration) {
+          await swRegistration.showNotification(title, options);
+          return;
+        }
+      } catch (error) {
+        // fall through to page notification
+      }
+
+      try {
+        new Notification(title, options);
+      } catch (error) {
+        // no-op
+      }
+    };
+
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker
+          .register("/sw.js")
+          .then(function (registration) {
+            swRegistration = registration;
+          })
+          .catch(function (error) {
+            console.error("Service worker registration failed:", error);
+          });
+      });
+    }
+
+    window.addEventListener("beforeinstallprompt", function (event) {
+      event.preventDefault();
+      deferredInstallPrompt = event;
+      document.querySelectorAll(".pwa-install-trigger").forEach(function (trigger) {
+        setInstallHint(trigger, "Tap again to install now");
+      });
+      notifyInstallStatus("App Ready", "The app is ready to install.");
+    });
+
+    window.addEventListener("appinstalled", function () {
+      deferredInstallPrompt = null;
+      document.querySelectorAll(".pwa-install-trigger").forEach(function (trigger) {
+        setInstallHint(trigger, "App installed successfully");
+      });
+      notifyInstallStatus("Installed", "App installed successfully.");
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const installTriggers = document.querySelectorAll(".pwa-install-trigger");
+      if (!installTriggers.length) return;
+
+      installTriggers.forEach(function (trigger) {
+        if (isStandalone()) {
+          setInstallHint(trigger, "App already installed");
+        }
+
+        trigger.addEventListener("click", async function (event) {
+          event.preventDefault();
+
+          if (isStandalone()) {
+            setInstallHint(trigger, "App already installed");
+            await notifyInstallStatus("Already Installed", "This app is already installed.");
+            return;
+          }
+
+          if (!deferredInstallPrompt) {
+            setInstallHint(trigger, "Install prompt unavailable on this device");
+            await notifyInstallStatus("Install Unavailable", "This browser did not provide install prompt.");
+            return;
+          }
+
+          deferredInstallPrompt.prompt();
+          const choiceResult = await deferredInstallPrompt.userChoice;
+          const outcome = choiceResult && choiceResult.outcome ? choiceResult.outcome : "dismissed";
+
+          if (outcome === "accepted") {
+            setInstallHint(trigger, "Install request accepted");
+            await notifyInstallStatus("Install Started", "Your install request has been accepted.");
+          } else {
+            setInstallHint(trigger, "Install canceled");
+            await notifyInstallStatus("Install Canceled", "You canceled app installation.");
+          }
+
+          deferredInstallPrompt = null;
+        });
+      });
+    });
+  })();
+</script>

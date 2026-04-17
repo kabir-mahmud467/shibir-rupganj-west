@@ -339,9 +339,14 @@
                     <i class="fas fa-monument text-warning fs-3 mb-3"></i>
                     <span class="fw-bold">ইতিহাস</span>
                 </a>
-                <a href="https://apk.e-droid.net/apk/app4000996-ym7odp.apk?v=2" class="q-btn" target="_blank">
+                <a href="#"
+                    id="installAppBtn"
+                    class="q-btn pwa-install-trigger"
+                    data-install-hint-target="#installAppHint"
+                    aria-label="Install app">
                     <i class="fab fa-android text-primary fs-2 mb-3"></i>
                     <span class="fw-bold">অ্যাপ ডাউনলোড</span>
+                    <small id="installAppHint" class="text-light opacity-75 mt-2">Tap to install app</small>
                 </a>
             </div>
 
@@ -1213,6 +1218,7 @@
                         camera.updateProjectionMatrix();
                     });
                 })();
+
             });
 
             // Initialize Bootstrap Carousel manually to force auto-sliding

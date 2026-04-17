@@ -16,24 +16,24 @@ const MONGO_URI = process.env.MONGODB_URI;
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET 
+    api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
 // --- ২. ডাটাবেজ মডেল (Schema) ---
 
 const MemberSchema = new mongoose.Schema({
-    name: String, father: String, mother: String, dob: String, phone: String, 
-    guardian_phone: String, facebook: String, present_address: String, 
-    permanent_address: String, type: String, edu: String, inst: String, 
-    ward: String, branch: String, responsibility: String, comment: String, 
+    name: String, father: String, mother: String, dob: String, phone: String,
+    guardian_phone: String, facebook: String, present_address: String,
+    permanent_address: String, type: String, edu: String, inst: String,
+    ward: String, branch: String, responsibility: String, comment: String,
     password: { type: String, unique: true }, photo: String,
     baitul_mal_amount: { type: Number, default: 0 },
     baitul_mal_payment: { type: [Boolean], default: () => Array(12).fill(false) }
 });
 const Member = mongoose.models.Member || mongoose.model('Member', MemberSchema);
 
-const NoticeSchema = new mongoose.Schema({ 
-    title: String, content: String, visibility: String, 
+const NoticeSchema = new mongoose.Schema({
+    title: String, content: String, visibility: String,
     date: { type: String, default: () => new Date().toLocaleDateString('bn-BD') }
 });
 const Notice = mongoose.models.Notice || mongoose.model('Notice', NoticeSchema);
@@ -109,9 +109,9 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: MONGO_URI }),
-    cookie: { 
-        maxAge: 1000 * 60 * 60 * 24 * 7, 
-        secure: false 
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+        secure: false
     }
 }));
 
@@ -235,7 +235,7 @@ app.get('/login-page', (req, res) => res.render('login-page', { error: null }));
 
 app.post('/login', async (req, res) => {
     const { password } = req.body;
-    if (password === "admin") { 
+    if (password === "admin") {
         req.session.user = { role: 'admin', name: 'অ্যাডমিন' };
         return req.session.save(() => res.redirect('/admin'));
     }
