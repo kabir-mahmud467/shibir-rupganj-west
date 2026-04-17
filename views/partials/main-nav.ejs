@@ -31,7 +31,44 @@
             background: rgba(10, 15, 13, 0.95); 
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--glass-border);
-            padding: 12px 0;
+            padding: 10px 0;
+        }
+
+        @media (min-width: 992px) {
+            .navbar-nav .nav-link {
+                padding-left: 12px !important;
+                padding-right: 12px !important;
+                font-size: 0.92rem;
+                white-space: nowrap;
+            }
+            .navbar-brand img { height: 40px !important; }
+            .navbar-brand span { font-size: 0.9rem !important; }
+            .navbar-brand small { font-size: 15px !important; }
+        }
+
+        .nav-link {
+            position: relative;
+            transition: 0.3s;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--accent-yellow);
+            transition: 0.3s;
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover::after {
+            width: 80%;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-yellow) !important;
         }
 
         .hero-title {
@@ -52,7 +89,7 @@
         }
 
         @media (min-width: 768px) {
-            .quick-btn-grid { grid-template-columns: repeat(4, 1fr); }
+            .quick-btn-grid { grid-template-columns: repeat(5, 1fr); }
         }
 
         .q-btn {
@@ -242,14 +279,19 @@
                     <li class="nav-item"><a class="nav-link text-white" href="/library">অনলাইন লাইব্রেরি</a></li>
                     <li class="nav-item"><a class="nav-link text-white" href="/archive">আর্কাইভ</a></li>
                     <li class="nav-item"><a class="nav-link text-white" href="/history">থানার ইতিহাস</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link text-warning fw-bold" href="https://apk.e-droid.net/apk/app4000996-ym7odp.apk?v=2" target="_blank">
+                            <i class="fab fa-android me-1"></i> অ্যাপ ডাউনলোড
+                        </a>
+                    </li>
                     <% if (user && user.role === 'admin') { %>
                         <li class="nav-item"><a class="nav-link text-info fw-bold" href="/admin"><i class="fas fa-shield-halved me-1"></i>অ্যাডমিন প্যানেল</a></li>
-                        <li class="nav-item"><a class="btn btn-danger rounded-pill px-4 ms-lg-3 mt-2 mt-lg-0 fw-bold" href="/logout">লগআউট</a></li>
+                        <li class="nav-item"><a class="btn btn-danger rounded-pill px-3 ms-lg-2 mt-2 mt-lg-0 fw-bold" href="/logout">লগআউট</a></li>
                     <% } else if (user && user.role !== 'admin') { %>
                         <li class="nav-item"><a class="nav-link text-success fw-bold" href="/profile"><i class="fas fa-user me-1"></i>প্রোফাইল</a></li>
-                        <li class="nav-item"><a class="btn btn-danger rounded-pill px-4 ms-lg-3 mt-2 mt-lg-0 fw-bold" href="/logout">লগআউট</a></li>
+                        <li class="nav-item"><a class="btn btn-danger rounded-pill px-3 ms-lg-2 mt-2 mt-lg-0 fw-bold" href="/logout">লগআউট</a></li>
                     <% } else if (!user) { %>
-                        <li class="nav-item"><a class="btn btn-warning rounded-pill px-4 ms-lg-3 mt-2 mt-lg-0 fw-bold" href="/login-page">লগইন পোর্টাল</a></li>
+                        <li class="nav-item"><a class="btn btn-warning rounded-pill px-3 ms-lg-2 mt-2 mt-lg-0 fw-bold" href="/login-page">লগইন পোর্টাল</a></li>
                     <% } %>
                 </ul>
             </div>
