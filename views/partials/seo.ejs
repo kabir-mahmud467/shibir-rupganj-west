@@ -19,7 +19,6 @@
     let deferredInstallPrompt = null;
     const NOTICE_POLL_INTERVAL_MS = 60000;
     const NOTICE_LAST_SEEN_KEY = "rw_last_seen_notice_id";
-    const AUTO_INSTALL_PROMPTED_KEY = "rw_auto_install_prompted_v1";
 
     const isStandalone = function () {
       return (
@@ -35,20 +34,9 @@
       if (hintElement) hintElement.textContent = message;
     };
 
-    const hasAutoInstallPrompted = function () {
-      try {
-        return localStorage.getItem(AUTO_INSTALL_PROMPTED_KEY) === "1";
-      } catch (error) {
-        return true;
-      }
-    };
-
-    const markAutoInstallPrompted = function () {
-      try {
-        localStorage.setItem(AUTO_INSTALL_PROMPTED_KEY, "1");
-      } catch (error) {
-        // ignore storage errors
-      }
+    const setInstallTriggerVisibility = function (trigger, visible) {
+      if (!trigger) return;
+      trigger.style.display = visible ? "" : "none";
     };
 
     const notifyInstallStatus = async function (title, body) {
@@ -245,46 +233,23 @@
       });
     }
 
-    window.addEventListener("beforeinstallprompt", async function (event) {
+    window.addEventListener("beforeinstallprompt", function (event) {
       event.preventDefault();
       deferredInstallPrompt = event;
       document.querySelectorAll(".pwa-install-trigger").forEach(function (trigger) {
-        setInstallHint(trigger, "Tap again to install now");
+        setInstallHint(trigger, "অ্যাপ ইনস্টল করুন");
       });
-      notifyInstallStatus("App Ready", "The app is ready to install.");
-
-      if (isStandalone() || hasAutoInstallPrompted()) return;
-
-      markAutoInstallPrompted();
-      alert("Install hocche, kichukkhon wait korun.");
-      deferredInstallPrompt.prompt();
-      const firstVisitChoice = await deferredInstallPrompt.userChoice;
-      const firstVisitOutcome =
-        firstVisitChoice && firstVisitChoice.outcome ? firstVisitChoice.outcome : "dismissed";
-
-      if (firstVisitOutcome === "accepted") {
-        document.querySelectorAll(".pwa-install-trigger").forEach(function (trigger) {
-          setInstallHint(trigger, "Install request accepted");
-        });
-      } else {
-        document.querySelectorAll(".pwa-install-trigger").forEach(function (trigger) {
-          setInstallHint(trigger, "Install canceled");
-        });
-        window.setTimeout(function () {
-          window.location.reload();
-        }, 400);
-      }
-
-      deferredInstallPrompt = null;
+      notifyInstallStatus("অ্যাপ প্রস্তুত", "অ্যাপ ইনস্টল করার জন্য প্রস্তুত।");
     });
 
     window.addEventListener("appinstalled", function () {
       deferredInstallPrompt = null;
       document.querySelectorAll(".pwa-install-trigger").forEach(function (trigger) {
-        setInstallHint(trigger, "App installed successfully");
+        setInstallHint(trigger, "অ্যাপ সফলভাবে ইনস্টল হয়েছে");
+        setInstallTriggerVisibility(trigger, false);
       });
-      alert("App install complete.");
-      notifyInstallStatus("Installed", "App installed successfully.");
+      alert("অ্যাপ সফলভাবে ইনস্টল হয়েছে।");
+      notifyInstallStatus("ইনস্টল সম্পন্ন", "অ্যাপ সফলভাবে ইনস্টল হয়েছে।");
       window.setTimeout(function () {
         window.location.href = "/";
       }, 700);
@@ -300,39 +265,39 @@
 
       installTriggers.forEach(function (trigger) {
         if (isStandalone()) {
-          setInstallHint(trigger, "অ্যাপ আগে থেকেই ইনস্টল করা আছে");
+          setInstallTriggerVisibility(trigger, false);
+          return;
         }
 
         trigger.addEventListener("click", async function (event) {
           event.preventDefault();
 
           if (isStandalone()) {
-            setInstallHint(trigger, "অ্যাপ আগে থেকেই ইনস্টল করা আছে");
-            alert("অ্যাপ আগে থেকেই ইনস্টল করা আছে।");
-            await notifyInstallStatus("Already Installed", "This app is already installed.");
+            setInstallTriggerVisibility(trigger, false);
             return;
           }
 
           if (!deferredInstallPrompt) {
-            setInstallHint(trigger, "Install prompt unavailable on this device");
-            alert("Ei device e install prompt available na.");
-            await notifyInstallStatus("Install Unavailable", "This browser did not provide install prompt.");
+            setInstallHint(trigger, "অ্যাপ ইনস্টল করুন");
+            alert("এই ডিভাইসে ইনস্টল প্রম্পট পাওয়া যাচ্ছে না।");
+            await notifyInstallStatus("ইনস্টল পাওয়া যাচ্ছে না", "এই ব্রাউজারে ইনস্টল প্রম্পট পাওয়া যাচ্ছে না।");
             return;
           }
 
-          alert("Install hocche, kichukkhon wait korun.");
+          setInstallHint(trigger, "অ্যাপ ইনস্টল হচ্ছে...");
+          alert("অ্যাপ ইনস্টল হচ্ছে, কিছুক্ষণ অপেক্ষা করুন।");
           deferredInstallPrompt.prompt();
           const choiceResult = await deferredInstallPrompt.userChoice;
           const outcome = choiceResult && choiceResult.outcome ? choiceResult.outcome : "dismissed";
 
           if (outcome === "accepted") {
-            setInstallHint(trigger, "Install request accepted");
-            await notifyInstallStatus("Install Started", "Your install request has been accepted.");
+            setInstallHint(trigger, "ইনস্টল অনুরোধ গৃহীত হয়েছে");
+            await notifyInstallStatus("ইনস্টল শুরু হয়েছে", "আপনার ইনস্টল অনুরোধ গৃহীত হয়েছে।");
             deferredInstallPrompt = null;
           } else {
-            setInstallHint(trigger, "Install canceled");
-            await notifyInstallStatus("Install Canceled", "You canceled app installation.");
-            alert("Install cancel hoyeche. Prompt abar dekhate page auto refresh hocche.");
+            setInstallHint(trigger, "অ্যাপ ইনস্টল করুন");
+            await notifyInstallStatus("ইনস্টল বাতিল", "আপনি অ্যাপ ইনস্টল বাতিল করেছেন।");
+            alert("ইনস্টল বাতিল হয়েছে। আবার চেষ্টা করতে পেজ রিফ্রেশ হচ্ছে।");
             window.setTimeout(function () {
               window.location.reload();
             }, 400);
