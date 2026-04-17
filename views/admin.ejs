@@ -286,16 +286,22 @@
 
                 <div class="admin-glass-card">
                     <h3 style="color:#22c55e;"><i class="fas fa-book-open"></i> ইতিহাস / দায়িত্বশীল</h3>
-                    <form action="/admin/add-history" method="POST">
-                        <select name="category" required>
+                    <form action="/admin/add-history" method="POST" enctype="multipart/form-data">
+                        <select name="category" id="historyCategory" onchange="toggleOfficialsFields(this.value)" required>
                             <option value="history">থানার ইতিহাস</option>
-                            <option value="officials">প্রাক্তন দায়িত্বশীল</option>
-                            <option value="martyrs">শহিদদের তালিকা</option>
+                            <option value="officials">প্রাক্তন দায়িত্বশীল</option>
+                            <option value="martyrs">শহীদ তালিকা</option>
                         </select>
-                        <input type="text" name="title" placeholder="শিরোনাম বা নাম" required>
-                        <textarea name="body" rows="3" placeholder="বিবরণ / দায়িত্ব / ইতিহাস"></textarea>
-                        <input type="text" name="extra" placeholder="অতিরিক্ত তথ্য (যদি থাকে)">
-                        <button type="submit" class="btn btn-green">এন্ট্রি সংরক্ষণ করুন</button>
+                        <input type="text" name="title" placeholder="শিরোনাম / নাম" required>
+                        <div id="officialFields" style="display:none;">
+                            <input type="text" name="role" placeholder="পদবি / দায়িত্ব (যেমন: সাবেক থানা সভাপতি)">
+                            <input type="text" name="tenure" placeholder="দায়িত্ব পালনকাল (যেমন: ২০১৬ - ২০১৮)">
+                            <label style="font-size: 12px; color: #94a3b8; margin-left: 5px; margin-top: 8px; display: block;">প্রোফাইল ছবি:</label>
+                            <input type="file" name="photo" accept="image/*">
+                        </div>
+                        <textarea name="body" rows="3" placeholder="বিস্তারিত / পরিচিতি / বিবরণ"></textarea>
+                        <input type="text" name="extra" placeholder="অতিরিক্ত তথ্য (ঐচ্ছিক)">
+                        <button type="submit" class="btn btn-green">তথ্য যুক্ত করুন</button>
                     </form>
                 </div>
             </div>
@@ -488,7 +494,7 @@
                 <h3><i class="fas fa-images"></i> স্লাইড ম্যানেজার</h3>
                 <div class="table-responsive">
                     <table class="list-table">
-                        <thead><tr><th>ছবি</th><th>শিরোনাম</th><th></th></tr></thead>
+                    <thead><tr><th>ছবি</th><th>শিরোনাম</th><th>অ্যাকশন</th></tr></thead>
                         <tbody>
                             <% data.slides.forEach(s => { %>
                                 <tr>
@@ -515,7 +521,7 @@
                 <h3><i class="fas fa-archive"></i> আর্কাইভ ম্যানেজার</h3>
                 <div class="table-responsive">
                     <table class="list-table">
-                        <thead><tr><th>শিরোনাম</th><th>প্রকার</th><th></th></tr></thead>
+                    <thead><tr><th>শিরোনাম</th><th>প্রকার</th><th>অ্যাকশন</th></tr></thead>
                         <tbody>
                             <% data.archives.forEach(item => { %>
                                 <tr>
@@ -540,13 +546,23 @@
             <h3><i class="fas fa-book-open"></i> ইতিহাস ও শহিদ তালিকা</h3>
             <div class="table-responsive">
                 <table class="list-table">
-                    <thead><tr><th>ক্যাটেগরি</th><th>শিরোনাম</th><th></th></tr></thead>
+                    <thead><tr><th>ক্যাটেগরি</th><th>শিরোনাম</th><th>অ্যাকশন</th></tr></thead>
                     <tbody>
                         <% data.historyItems.forEach(item => { %>
                             <tr>
-                                <td><%= item.category %></td>
-                                <td><%= item.title %></td>
-                                <td><i onclick="confirmDel('/admin/delete-history/<%= item._id %>')" class="fas fa-trash" style="color:#ef4444; cursor:pointer;"></i></td>
+                                <td><%= item.category === 'history' ? 'থানার ইতিহাস' : (item.category === 'officials' ? 'প্রাক্তন দায়িত্বশীল' : 'শহীদ তালিকা') %></td>
+                                <td>
+                                    <strong><%= item.title %></strong>
+                                    <% if (item.category === 'officials' && item.tenure) { %>
+                                        <br><small style="color:#94a3b8;"><%= item.tenure %></small>
+                                    <% } %>
+                                </td>
+                                <td>
+                                    <div style="display: flex; gap: 12px; align-items: center;">
+                                        <a href="/admin/edit-history/<%= item._id %>" style="color:#3b82f6;"><i class="fas fa-edit"></i></a>
+                                        <i onclick="confirmDel('/admin/delete-history/<%= item._id %>')" class="fas fa-trash" style="color:#ef4444; cursor:pointer;"></i>
+                                    </div>
+                                </td>
                             </tr>
                         <% }) %>
                     </tbody>
@@ -670,6 +686,14 @@
             document.getElementById(id).style.display = (select.value === 'অন্যান্য') ? 'block' : 'none';
         }
 
+        function toggleOfficialsFields(category) {
+            const wrap = document.getElementById('officialFields');
+            if (!wrap) return;
+            wrap.style.display = category === 'officials' ? 'block' : 'none';
+        }
+
+        toggleOfficialsFields(document.getElementById('historyCategory')?.value);
+
         function confirmDel(url) {
             Swal.fire({
                 title: 'আপনি কি নিশ্চিত?',
@@ -691,4 +715,5 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html>`
+</html>
+

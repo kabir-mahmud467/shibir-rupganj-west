@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <%- include('partials/seo') %>
+    <title>ইতিহাস এডিট | রূপগঞ্জ পশ্চিম</title>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .edit-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(15px);
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 680px;
+            margin: 40px auto;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+        h3 {
+            text-align: center;
+            color: #38bdf8;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        label { display: block; margin-top: 15px; color: #94a3b8; font-size: 14px; }
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 10px;
+            background: #0f172a;
+            color: white;
+            border: 1px solid #334155;
+            box-sizing: border-box;
+            outline: none;
+        }
+        .btn-update {
+            background: linear-gradient(45deg, #38bdf8, #2563eb);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #94a3b8;
+            text-decoration: none;
+        }
+        .preview-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 16px;
+            object-fit: cover;
+            border: 1px solid rgba(255,255,255,0.15);
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+    <%- include('partials/main-nav') %>
+    <div class="edit-card">
+        <h3><i class="fas fa-user-pen"></i> ইতিহাস / প্রাক্তন দায়িত্বশীল এডিট</h3>
+
+        <form action="/admin/update-history/<%= item._id %>" method="POST" enctype="multipart/form-data">
+            <label>ক্যাটাগরি</label>
+            <select name="category" required>
+                <option value="history" <%= item.category === 'history' ? 'selected' : '' %>>থানার ইতিহাস</option>
+                <option value="officials" <%= item.category === 'officials' ? 'selected' : '' %>>প্রাক্তন দায়িত্বশীল</option>
+                <option value="martyrs" <%= item.category === 'martyrs' ? 'selected' : '' %>>শহীদদের তালিকা</option>
+            </select>
+
+            <label>নাম / শিরোনাম</label>
+            <input type="text" name="title" value="<%= item.title || '' %>" required>
+
+            <label>পদবি</label>
+            <input type="text" name="role" value="<%= item.role || '' %>" placeholder="যেমন: থানা সভাপতি">
+
+            <label>দায়িত্ব পালনকাল</label>
+            <input type="text" name="tenure" value="<%= item.tenure || '' %>" placeholder="যেমন: ২০১৬ - ২০১৮">
+
+            <label>বিস্তারিত তথ্য</label>
+            <textarea name="body" rows="5" placeholder="বিস্তারিত তথ্য লিখুন"><%= item.body || '' %></textarea>
+
+            <label>অতিরিক্ত তথ্য</label>
+            <input type="text" name="extra" value="<%= item.extra || '' %>" placeholder="ঐচ্ছিক অতিরিক্ত তথ্য">
+
+            <label>বর্তমান ছবি</label>
+            <input type="hidden" name="existingImageUrl" value="<%= item.imageUrl || '' %>">
+            <% if (item.imageUrl) { %>
+                <img src="<%= item.imageUrl %>" alt="<%= item.title %>" class="preview-image">
+            <% } else { %>
+                <div style="color:#64748b; margin-top:8px;">কোনো ছবি নেই</div>
+            <% } %>
+
+            <label>নতুন ছবি আপলোড</label>
+            <input type="file" name="photo" accept="image/*">
+
+            <button type="submit" class="btn-update">আপডেট নিশ্চিত করুন</button>
+            <a href="/admin" class="back-link"><i class="fas fa-arrow-left"></i> পরিবর্তন ছাড়া ফিরে যান</a>
+        </form>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

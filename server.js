@@ -56,7 +56,13 @@ const ArchiveItemSchema = new mongoose.Schema({
 const ArchiveItem = mongoose.models.ArchiveItem || mongoose.model('ArchiveItem', ArchiveItemSchema);
 
 const HistoryItemSchema = new mongoose.Schema({
-    category: String, title: String, body: String, extra: String,
+    category: String,
+    title: String,
+    body: String,
+    extra: String,
+    role: String,
+    tenure: String,
+    imageUrl: String,
     createdAt: { type: Date, default: Date.now }
 });
 const HistoryItem = mongoose.models.HistoryItem || mongoose.model('HistoryItem', HistoryItemSchema);
@@ -387,13 +393,41 @@ app.get('/admin/delete-archive/:id', async (req, res) => {
     catch (err) { res.status(500).send('Error'); }
 });
 
-app.post('/admin/add-history', async (req, res) => {
+app.post('/admin/add-history', upload.single('photo'), async (req, res) => {
     if (!req.session.user || req.session.user.role !== 'admin') return res.redirect('/login-page');
     try {
-        const { category, title, body, extra } = req.body;
-        await HistoryItem.create({ category, title, body, extra });
+        const { category, title, body, extra, role, tenure } = req.body;
+        const imageUrl = req.file ? req.file.path : '';
+        await HistoryItem.create({ category, title, body, extra, role, tenure, imageUrl });
         res.redirect('/admin');
     } catch (err) { res.status(500).send('History Save Error: ' + err.message); }
+});
+
+app.get('/admin/edit-history/:id', async (req, res) => {
+    if (!req.session.user || req.session.user.role !== 'admin') return res.redirect('/login-page');
+    try {
+        const item = await HistoryItem.findById(req.params.id);
+        if (!item) return res.status(404).send('History item not found');
+        res.render('edit-history', { item });
+    } catch (err) { res.status(404).send('History item not found'); }
+});
+
+app.post('/admin/update-history/:id', upload.single('photo'), async (req, res) => {
+    if (!req.session.user || req.session.user.role !== 'admin') return res.redirect('/login-page');
+    try {
+        const { category, title, body, extra, role, tenure, existingImageUrl } = req.body;
+        const updateData = {
+            category,
+            title,
+            body,
+            extra,
+            role,
+            tenure,
+            imageUrl: req.file ? req.file.path : (existingImageUrl || '')
+        };
+        await HistoryItem.findByIdAndUpdate(req.params.id, updateData);
+        res.redirect('/admin');
+    } catch (err) { res.status(500).send('History Update Error: ' + err.message); }
 });
 
 app.get('/admin/delete-history/:id', async (req, res) => {

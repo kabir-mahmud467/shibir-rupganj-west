@@ -9,13 +9,61 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
-        /* history.ejs specific styles only */
         .content { max-width: 1120px; margin: 28px auto; padding: 0 18px; }
         .tab-button { border-radius: 999px; border: 1px solid rgba(255,255,255,0.12); padding: 10px 18px; color: #f8fafc; background: transparent; cursor: pointer; }
         .tab-button:hover { background: rgba(255,255,255,0.08); }
         .tab-button.active { background: #1f2937; border-color: #84cc16; color: #c7f9cc; }
         .history-item { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.14); border-radius: 18px; padding: 22px; margin-bottom: 18px; }
         .history-item h4 { margin-bottom: 10px; }
+        .official-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 28px; }
+        .official-card {
+            text-align: center;
+            background: linear-gradient(180deg, rgba(15,23,42,0.92), rgba(30,41,59,0.9));
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 28px;
+            padding: 28px 22px 24px;
+            box-shadow: 0 20px 40px rgba(2,6,23,0.3);
+        }
+        .official-avatar-wrap {
+            width: 148px;
+            height: 148px;
+            margin: 0 auto 16px;
+            border-radius: 50%;
+            padding: 6px;
+            background: linear-gradient(135deg, #38bdf8, #facc15);
+            box-shadow: 0 14px 28px rgba(14,165,233,0.24);
+        }
+        .official-photo,
+        .official-photo-placeholder {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            object-fit: cover;
+            background: #0f172a;
+            color: #bae6fd;
+            font-size: 2.8rem;
+        }
+        .official-name { margin: 0 0 8px; font-size: 1.3rem; }
+        .official-role {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 999px;
+            background: rgba(56,189,248,0.14);
+            color: #7dd3fc;
+            font-size: 0.92rem;
+            margin-bottom: 10px;
+        }
+        .official-tenure {
+            margin-bottom: 14px;
+            color: #facc15;
+            font-weight: 700;
+            font-size: 0.98rem;
+        }
+        .official-bio { color: #e2e8f0; margin-bottom: 0; }
+        .official-extra { margin-top: 12px; color: #cbd5e1; font-size: 0.95rem; }
         .empty-state { color: #94a3b8; }
         .section-intro { display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between; align-items: center; margin-bottom: 30px; }
         .section-intro h1 { margin: 0; font-size: 2rem; }
@@ -27,14 +75,14 @@
     <main class="content">
         <div class="section-intro">
             <div>
-                <h1>তিনটি ক্যাটাগরি </h1>
-                <p>আপনার জন্য সংরক্ষিত ইতিহাস, কার্যক্রম ও শহীদ স্মৃতিচারণ।</p>
+                <h1>ইতিহাস ও স্মৃতিচারণ</h1>
+                <p>থানার ইতিহাস, প্রাক্তন দায়িত্বশীলদের পরিচিতি এবং শহীদদের স্মৃতি এখানে সংরক্ষিত রয়েছে।</p>
             </div>
         </div>
 
         <div class="d-flex flex-wrap gap-3 my-4">
             <button class="tab-button active" data-tab="history">থানার ইতিহাস</button>
-            <button class="tab-button" data-tab="officials">প্রাক্তন দায়িত্বশীল</button>
+            <button class="tab-button" data-tab="officials">প্রাক্তন দায়িত্বশীল</button>
             <button class="tab-button" data-tab="martyrs">শহীদদের তালিকা</button>
         </div>
 
@@ -43,26 +91,47 @@
                 <% histories.forEach(item => { %>
                     <div class="history-item">
                         <h4><%= item.title %></h4>
-                        <p><%= item.body %></p>
+                        <% if (item.body) { %><p><%= item.body %></p><% } %>
                         <% if (item.extra) { %><small class="text-muted"><%= item.extra %></small><% } %>
                     </div>
                 <% }) %>
             <% } else { %>
-                <p class="empty-state">এখনও কোন ইতিহাস লিখা হয়নি।</p>
+                <p class="empty-state">এখনও কোনো ইতিহাস লেখা হয়নি।</p>
             <% } %>
         </section>
 
         <section id="officials" class="tab-panel" style="display:none;">
             <% if (officials && officials.length > 0) { %>
-                <% officials.forEach(item => { %>
-                    <div class="history-item">
-                        <h4><%= item.title %></h4>
-                        <p><%= item.body %></p>
-                        <% if (item.extra) { %><small class="text-muted"><%= item.extra %></small><% } %>
-                    </div>
-                <% }) %>
+                <div class="official-grid">
+                    <% officials.forEach(item => { %>
+                        <article class="official-card">
+                            <div class="official-avatar-wrap">
+                                <% if (item.imageUrl) { %>
+                                    <img src="<%= item.imageUrl %>" alt="<%= item.title %>" class="official-photo">
+                                <% } else { %>
+                                    <div class="official-photo-placeholder">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                <% } %>
+                            </div>
+                            <% if (item.tenure) { %>
+                                <div class="official-tenure">দায়িত্বকাল: <%= item.tenure %></div>
+                            <% } %>
+                            <h4 class="official-name"><%= item.title %></h4>
+                            <% if (item.role) { %>
+                                <div class="official-role"><%= item.role %></div>
+                            <% } %>
+                            <% if (item.body) { %>
+                                <p class="official-bio"><%= item.body %></p>
+                            <% } %>
+                            <% if (item.extra) { %>
+                                <div class="official-extra"><%= item.extra %></div>
+                            <% } %>
+                        </article>
+                    <% }) %>
+                </div>
             <% } else { %>
-                <p class="empty-state">এখনো কোন দায়িত্বশীল তথ্য যোগ করা হয়নি।</p>
+                <p class="empty-state">এখনও কোনো প্রাক্তন দায়িত্বশীলের তথ্য যোগ করা হয়নি।</p>
             <% } %>
         </section>
 
@@ -71,22 +140,24 @@
                 <% martyrs.forEach(item => { %>
                     <div class="history-item">
                         <h4><%= item.title %></h4>
-                        <p><%= item.body %></p>
+                        <% if (item.body) { %><p><%= item.body %></p><% } %>
                         <% if (item.extra) { %><small class="text-muted"><%= item.extra %></small><% } %>
                     </div>
                 <% }) %>
             <% } else { %>
-                <p class="empty-state">এখনো কোন শহীদ তালিকা প্রকাশিত হয়নি।</p>
+                <p class="empty-state">এখনও কোনো শহীদ তালিকা প্রকাশিত হয়নি।</p>
             <% } %>
         </section>
     </main>
     <script>
         const tabs = document.querySelectorAll('.tab-button');
         const panels = document.querySelectorAll('.tab-panel');
-        tabs.forEach(button => {
+        tabs.forEach((button) => {
             button.addEventListener('click', () => {
-                tabs.forEach(btn => btn.classList.remove('active'));
-                panels.forEach(panel => panel.style.display = 'none');
+                tabs.forEach((btn) => btn.classList.remove('active'));
+                panels.forEach((panel) => {
+                    panel.style.display = 'none';
+                });
                 button.classList.add('active');
                 document.getElementById(button.dataset.tab).style.display = 'block';
             });
