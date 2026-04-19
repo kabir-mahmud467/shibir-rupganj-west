@@ -551,23 +551,32 @@ app.post('/login', async (req, res) => {
         });
     });
 
-    const adminStored = process.env.ADMIN_PASSWORD_HASH || process.env.ADMIN_PASSWORD;
-    const allowDevAdminFallback = !IS_PROD && !adminStored;
+   // ১. এনভায়রনমেন্ট ভেরিয়েবল থেকে সরাসরি পাসওয়ার্ড রিড করা
+const adminStored = process.env.ADMIN_PASSWORD; 
+const allowDevAdminFallback = !IS_PROD && !adminStored;
 
-    if (phoneRaw.toLowerCase() === 'admin') {
-        if (IS_PROD && !adminStored) {
-            return res.render('login-page', { error: 'ADMIN_PASSWORD সেট করা নেই (Server Environment Variables)।' });
-        }
-        const ok = adminStored ? verifyPassword(password, adminStored) : (allowDevAdminFallback && safeTimingEqual(password, 'admin'));
-        if (!ok) return res.render('login-page', { error: 'ভুল অ্যাডমিন পাসওয়ার্ড!' });
-        try {
-            const url = await loginAndRedirect({ role: 'admin', name: 'অ্যাডমিন' }, '/admin');
-            return res.redirect(url);
-        } catch (e) {
-            console.error(e);
-            return res.status(500).render('login-page', { error: 'লগইনে সমস্যা হয়েছে।' });
-        }
+if (phoneRaw.toLowerCase() === 'admin') {
+    
+    if (IS_PROD && !adminStored) {
+        return res.render('login-page', { error: 'ADMIN_PASSWORD সেট করা নেই (Server Environment Variables)।' });
     }
+
+    const ok = adminStored 
+        ? safeTimingEqual(password, adminStored) 
+        : (allowDevAdminFallback && safeTimingEqual(password, 'admin'));
+
+    if (!ok) {
+        return res.render('login-page', { error: 'ভুল অ্যাডমিন পাসওয়ার্ড!' });
+    }
+
+    try {
+        const url = await loginAndRedirect({ role: 'admin', name: 'অ্যাডমিন' }, '/admin');
+        return res.redirect(url);
+    } catch (e) {
+        console.error(e);
+        return res.status(500).render('login-page', { error: 'লগইনে সমস্যা হয়েছে।' });
+    }
+}
 
     if (!phoneRaw) return res.render('login-page', { error: 'ফোন নম্বর দিন।' });
 
