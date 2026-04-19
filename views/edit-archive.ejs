@@ -75,6 +75,7 @@
         <h3><i class="fas fa-edit"></i> আর্কাইভ এডিট করুন</h3>
         
         <form action="/admin/update-archive/<%= item.id %>" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <label>শিরোনাম:</label>
             <input type="text" name="title" value="<%= item.title %>" placeholder="শিরোনাম লিখুন..." required>
             

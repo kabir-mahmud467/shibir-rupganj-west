@@ -47,12 +47,17 @@
         <div class="login-card">
             <i class="fas fa-shield-halved" style="font-size: 48px; color: #00d2ff; margin-bottom: 20px;"></i>
             <h2>স্বাগতম</h2>
-            <p>সিস্টেমে প্রবেশ করতে আপনার গোপন কোডটি দিন</p>
+            <p>সিস্টেমে প্রবেশ করতে আপনার ফোন নম্বর এবং পাসওয়ার্ড দিন</p>
             
-            <form action="/login" method="POST">
+            <form action="/login" method="POST" autocomplete="off">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <div class="input-group">
+                    <i class="fas fa-phone"></i>
+                    <input type="text" name="phone" inputmode="tel" autocomplete="off" placeholder="ফোন নম্বর লিখুন " required>
+                </div>
                 <div class="input-group">
                     <i class="fas fa-lock"></i>
-                    <input type="password" name="password" placeholder="আপনার পাসওয়ার্ড লিখুন" required>
+                    <input type="password" name="password" autocomplete="off" placeholder="আপনার পাসওয়ার্ড লিখুন" required>
                 </div>
                 <button type="submit" class="btn-login">লগইন করুন</button>
             </form>

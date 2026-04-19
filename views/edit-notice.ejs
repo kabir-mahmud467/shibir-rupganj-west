@@ -74,6 +74,7 @@
         <h3><i class="fas fa-edit"></i> নোটিশ এডিট করুন</h3>
         
         <form action="/admin/update-notice/<%= notice.id %>" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <label>নোটিশের শিরোনাম:</label>
             <input type="text" name="title" value="<%= notice.title %>" placeholder="শিরোনাম লিখুন..." required>
             

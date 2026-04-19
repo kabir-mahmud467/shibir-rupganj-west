@@ -101,6 +101,7 @@
             <div class="admin-glass-card">
                 <h3 style="color:var(--primary-blue);"><i class="fas fa-user-plus"></i> জনশক্তি যোগ</h3>
                 <form action="/admin/add-member" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                     <input type="text" name="name" placeholder="নাম" required>
                     <div style="display: flex; gap: 10px;">
                         <input type="text" name="father" placeholder="পিতার নাম">
@@ -185,12 +186,13 @@
             <div class="admin-glass-card">
                 <h3 style="color:#10b981;"><i class="fas fa-heart"></i> শুভাকাঙ্ক্ষী যোগ</h3>
                 <form action="/admin/add-supporter" method="POST">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                     <input type="text" name="name" placeholder="নাম" required>
                     <input type="text" name="address" placeholder="ঠিকানা">
                     <input type="text" name="phone" placeholder="ফোন নম্বর" required>
                     <div style="display: flex; gap: 10px;">
                         <input type="text" name="profession" placeholder="পেশা">
-                        <input type="text" name="password" placeholder="গোপন কোড (লগইনের জন্য)" required>
+                        <input type="password" name="password" placeholder="গোপন কোড (লগইনের জন্য)" required>
                     </div>
                     <input type="url" name="facebook" placeholder="ফেসবুক আইডি লিঙ্ক">
                     
@@ -229,6 +231,7 @@
                 <div class="admin-glass-card">
                     <h3 style="color:#f59e0b;"><i class="fas fa-bullhorn"></i> নতুন নোটিশ</h3>
                     <form action="/admin/add-notice" method="POST">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                         <input type="text" name="title" placeholder="নোটিশের শিরোনাম" required>
                         <textarea name="content" placeholder="নোটিশের বিস্তারিত লিখুন..." rows="4"></textarea>
                         <select name="visibility">
@@ -243,6 +246,7 @@
                 <div class="admin-glass-card">
                     <h3 style="color:#10b981;"><i class="fas fa-file-arrow-up"></i> লাইব্রেরি ফাইল</h3>
                     <form action="/admin/add-resource" method="POST">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                         <input type="text" name="title" placeholder="ফাইলের নাম বা শিরোনাম" required>
                         <select name="visibility">
                             <option value="পাবলিক">পাবলিক</option>
@@ -258,6 +262,7 @@
                 <div class="admin-glass-card">
                     <h3 style="color:#7c3aed;"><i class="fas fa-images"></i> হোম পেজ স্লাইড</h3>
                     <form action="/admin/add-slide" method="POST" enctype="multipart/form-data" onsubmit="const btn = document.getElementById('slideBtn'); btn.innerHTML = '<i class=\'fas fa-spinner fa-spin\'></i> আপলোড হচ্ছে... অপেক্ষা করুন'; btn.disabled = true; btn.style.opacity = '0.7';">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                         <input type="text" name="title" placeholder="স্লাইড শিরোনাম" required>
                         <input type="text" name="caption" placeholder="ছোট বর্ণনা (Caption)">
                         <label style="font-size: 12px; color: #94a3b8; margin-left: 5px;">স্লাইডের ছবি (Upload Image):</label>
@@ -269,6 +274,7 @@
                 <div class="admin-glass-card">
                     <h3 style="color:#f97316;"><i class="fas fa-archive"></i> আর্কাইভ আইটেম</h3>
                     <form action="/admin/add-archive" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                         <input type="text" name="title" placeholder="শিরোনাম" required>
                         <input type="text" name="itemType" placeholder="প্রকার (ভিডিও, ছবি, ডকুমেন্ট)">
                         <textarea name="description" rows="3" placeholder="বর্ণনা অথবা বিস্তারিত লিখুন"></textarea>
@@ -287,6 +293,7 @@
                 <div class="admin-glass-card">
                     <h3 style="color:#22c55e;"><i class="fas fa-book-open"></i> ইতিহাস / দায়িত্বশীল</h3>
                     <form action="/admin/add-history" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                         <select name="category" id="historyCategory" onchange="toggleOfficialsFields(this.value)" required>
                             <option value="history">থানার ইতিহাস</option>
                             <option value="officials">প্রাক্তন দায়িত্বশীল</option>
@@ -584,6 +591,7 @@
             <p id="bmAmountInfo" style="font-size:14px; color:#fbbf24; font-weight:700; margin-bottom:4px;"></p>
 
             <form id="bmForm" method="POST">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <div class="bm-month-grid" id="bmGrid"></div>
                 <button type="submit" style="
                     width:100%; padding:12px; border-radius:10px; margin-top:8px;
@@ -606,6 +614,7 @@
                 </div>
                 <div class="modal-body">
                     <form id="editSlideForm" method="POST" enctype="multipart/form-data" onsubmit="const btn = this.querySelector('button[type=submit]'); btn.innerHTML = '<i class=\'fas fa-spinner fa-spin\'></i> আপলোড হচ্ছে...'; btn.disabled = true;">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                         <label style="font-size: 13px; color: #94a3b8;">স্লাইড শিরোনাম:</label>
                         <input type="text" name="title" id="editSlideTitle" class="form-control mb-3" style="background: rgba(255,255,255,0.05); color: #fff; border: none; padding: 10px;" required>
                         
@@ -622,6 +631,9 @@
         </div>
     </div>
 
+    <form id="deleteForm" method="POST" style="display:none;">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    </form>
     <script>
         const BM_MONTHS = ['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
         let bmPayState = Array(12).fill(false);
@@ -708,7 +720,9 @@
                 color: '#fff'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = url;
+                    const form = document.getElementById('deleteForm');
+                    form.action = url;
+                    form.submit();
                 }
             })
         }

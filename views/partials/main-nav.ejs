@@ -287,10 +287,20 @@
                     </li>
                     <% if (user && user.role === 'admin') { %>
                         <li class="nav-item"><a class="nav-link text-info fw-bold" href="/admin"><i class="fas fa-shield-halved me-1"></i>অ্যাডমিন প্যানেল</a></li>
-                        <li class="nav-item"><a class="btn btn-danger rounded-pill px-3 ms-lg-2 mt-2 mt-lg-0 fw-bold" href="/logout">লগআউট</a></li>
+                        <li class="nav-item">
+                            <form action="/logout" method="POST" style="display:inline;">
+                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                <button type="submit" class="btn btn-danger rounded-pill px-3 ms-lg-2 mt-2 mt-lg-0 fw-bold">লগআউট</button>
+                            </form>
+                        </li>
                     <% } else if (user && user.role !== 'admin') { %>
                         <li class="nav-item"><a class="nav-link text-success fw-bold" href="/profile"><i class="fas fa-user me-1"></i>প্রোফাইল</a></li>
-                        <li class="nav-item"><a class="btn btn-danger rounded-pill px-3 ms-lg-2 mt-2 mt-lg-0 fw-bold" href="/logout">লগআউট</a></li>
+                        <li class="nav-item">
+                            <form action="/logout" method="POST" style="display:inline;">
+                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                <button type="submit" class="btn btn-danger rounded-pill px-3 ms-lg-2 mt-2 mt-lg-0 fw-bold">লগআউট</button>
+                            </form>
+                        </li>
                     <% } else if (!user) { %>
                         <li class="nav-item"><a class="btn btn-warning rounded-pill px-3 ms-lg-2 mt-2 mt-lg-0 fw-bold" href="/login-page">লগইন পোর্টাল</a></li>
                     <% } %>

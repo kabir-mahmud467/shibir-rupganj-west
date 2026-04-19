@@ -112,6 +112,7 @@
 
     const unlockNoticeAudio = function (triggerEvent) {
       if (triggerEvent && !triggerEvent.isTrusted) return;
+      if (navigator.userActivation && !navigator.userActivation.isActive) return;
       const AudioContextClass = window.AudioContext || window.webkitAudioContext;
       if (!AudioContextClass) return;
       if (!noticeAudioContext) {
@@ -416,13 +417,9 @@
         if (event && !event.isTrusted) return;
         unlockNoticeAudio(event);
         requestNotificationPermissionIfNeeded();
-        document.removeEventListener("click", setupNoticeInteraction);
-        document.removeEventListener("touchstart", setupNoticeInteraction);
-        document.removeEventListener("keydown", setupNoticeInteraction);
       };
-      document.addEventListener("click", setupNoticeInteraction, { once: true });
-      document.addEventListener("touchstart", setupNoticeInteraction, { once: true });
-      document.addEventListener("keydown", setupNoticeInteraction, { once: true });
+      document.addEventListener("pointerdown", setupNoticeInteraction, { once: true, passive: true, capture: true });
+      document.addEventListener("keydown", setupNoticeInteraction, { once: true, capture: true });
 
       checkForNewNotice();
       window.setInterval(checkForNewNotice, NOTICE_POLL_INTERVAL_MS);
@@ -472,6 +469,102 @@
           }
         });
       });
+    });
+  })();
+</script>
+
+<style>
+  .pw-toggle-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: 0;
+    padding: 6px;
+    line-height: 1;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.75);
+  }
+  .pw-toggle-btn:hover { color: rgba(255, 255, 255, 0.95); }
+  .pw-toggle-btn:focus { outline: 2px solid rgba(0, 210, 255, 0.35); outline-offset: 2px; border-radius: 8px; }
+</style>
+
+<script>
+  (function () {
+    const disableAutofill = function () {
+      document.querySelectorAll("form").forEach(function (form) {
+        form.setAttribute("autocomplete", "off");
+      });
+
+      const skipTypes = new Set(["hidden", "submit", "button", "reset", "file", "image", "checkbox", "radio", "range", "color"]);
+      document.querySelectorAll("input, textarea").forEach(function (el) {
+        if (el.tagName === "INPUT") {
+          const type = String(el.getAttribute("type") || "text").toLowerCase();
+          if (skipTypes.has(type)) return;
+        }
+
+        el.setAttribute("autocomplete", "off");
+        el.setAttribute("autocapitalize", "off");
+        el.setAttribute("autocorrect", "off");
+        el.setAttribute("spellcheck", "false");
+      });
+    };
+
+    const addPasswordToggles = function () {
+      document.querySelectorAll('input[type="password"]').forEach(function (input) {
+        if (input.dataset && input.dataset.pwToggleApplied === "1") return;
+        let container = input.parentElement;
+        if (!container) return;
+
+        const siblingsControlCount = container.querySelectorAll("input, textarea, select").length;
+        if (siblingsControlCount > 1) {
+          const wrap = document.createElement("div");
+          wrap.style.position = "relative";
+          wrap.style.flex = input.style.flex || "1";
+          wrap.style.minWidth = "0";
+          container.insertBefore(wrap, input);
+          wrap.appendChild(input);
+          input.style.width = "100%";
+          container = wrap;
+        }
+
+        try {
+          const style = window.getComputedStyle(container);
+          if (style && style.position === "static") {
+            container.style.position = "relative";
+          }
+        } catch (e) {
+          // no-op
+        }
+
+        if (container.querySelector(".pw-toggle-btn")) return;
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "pw-toggle-btn";
+        btn.setAttribute("aria-label", "পাসওয়ার্ড দেখান/লুকান");
+        btn.setAttribute("aria-pressed", "false");
+        btn.textContent = "👁";
+
+        btn.addEventListener("click", function () {
+          const isPassword = input.getAttribute("type") === "password";
+          input.setAttribute("type", isPassword ? "text" : "password");
+          btn.setAttribute("aria-pressed", isPassword ? "true" : "false");
+          btn.textContent = isPassword ? "🙈" : "👁";
+        });
+
+        const currentPaddingRight = parseFloat((window.getComputedStyle(input).paddingRight || "0").replace("px", "")) || 0;
+        if (currentPaddingRight < 42) input.style.paddingRight = "42px";
+
+        container.appendChild(btn);
+        if (input.dataset) input.dataset.pwToggleApplied = "1";
+      });
+    };
+
+    document.addEventListener("DOMContentLoaded", function () {
+      disableAutofill();
+      addPasswordToggles();
     });
   })();
 </script>

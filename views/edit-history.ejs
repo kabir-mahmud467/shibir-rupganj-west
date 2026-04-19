@@ -74,6 +74,7 @@
         <h3><i class="fas fa-user-pen"></i> ইতিহাস / প্রাক্তন দায়িত্বশীল এডিট</h3>
 
         <form action="/admin/update-history/<%= item._id %>" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <label>ক্যাটাগরি</label>
             <select name="category" required>
                 <option value="history" <%= item.category === 'history' ? 'selected' : '' %>>থানার ইতিহাস</option>

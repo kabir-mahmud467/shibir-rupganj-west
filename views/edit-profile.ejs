@@ -34,6 +34,7 @@
             <h2 class="text-white fw-bold mb-4"><i class="fas fa-user-edit me-2" style="color: #80c956;"></i> তথ্য পরিবর্তন করুন</h2>
 
             <form action="/update-profile" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <div class="section-title"><i class="fas fa-camera me-2"></i> ছবি পরিবর্তন</div>
                 <% if(user.photo) { %>
                     <div style="margin-bottom: 15px; display: flex; align-items: center; gap: 15px;">

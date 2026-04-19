@@ -127,6 +127,7 @@
             </div>
 
             <form action="/submit-form" method="POST">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <div class="section-title"><i class="fas fa-user-circle me-2"></i> ব্যক্তিগত তথ্য</div>
                 <div class="row g-3">
                     <div class="col-md-12">
